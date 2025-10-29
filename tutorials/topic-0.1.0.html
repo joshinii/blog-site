@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Fundamentals & Data Representation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .fun-box {
+            background-color: #ffe6f0;
+            border-left: 4px solid #e91e63;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.4;
+            border: 1px solid #e0e7f0;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .diagram {
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .key-concept {
+            background-color: #e8f4f8;
+            border: 2px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .exercise {
+            background-color: #f0f8ff;
+            border: 2px solid #4169e1;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+
+        .exercise h3 {
+            color: #4169e1;
+            margin-top: 0;
+        }
+
+        .toc {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        .toc h2 {
+            margin-top: 0;
+            border-left: none;
+            padding-left: 0;
+        }
+
+        .toc ul {
+            list-style-type: none;
+            margin-left: 0;
+        }
+
+        .toc li {
+            margin-bottom: 5px;
+        }
+
+        .toc a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        strong {
+            color: #2c3e50;
+        }
+
+        .analogy {
+            font-style: italic;
+            color: #555;
+            margin: 10px 0;
+            padding: 15px;
+            padding-left: 20px;
+            border-left: 3px solid #95a5a6;
+            background-color: #f9f9f9;
+        }
+
+        .visual-example {
+            background-color: #f0f8ff;
+            border: 2px solid #87ceeb;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+        }
+
+        .nav-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: #2980b9;
+        }
+
+        .breadcrumb {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+            font-size: 0.95em;
+        }
+
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+            pre {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="../blog.html">Learning Hub</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="./hubs/fundamentals.html">Fundamentals</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Binary Fundamentals & Data Representation</span>
+    </div>
+
+    <div class="container">
+        <h1>Binary Fundamentals & Data Representation</h1>
+        <p style="color: #666; font-style: italic; margin-bottom: 20px;">Understanding How Computers Store and Represent Information</p>
+
+        <div class="key-concept">
+            <h3>What You'll Learn</h3>
+            <ul>
+                <li><strong>Bits and Bytes</strong> - The fundamental units of computer information</li>
+                <li><strong>Binary Numbers</strong> - How computers count and represent numbers</li>
+                <li><strong>Number Systems</strong> - Binary, decimal, hexadecimal conversions</li>
+                <li><strong>Data Types</strong> - Integers, floats, characters, and how they're stored</li>
+                <li><strong>Character Encoding</strong> - ASCII, Unicode, and text representation</li>
+            </ul>
+        </div>
+
+        <div class="warning-box">
+            <strong>Prerequisites:</strong>
+            <ul style="margin-bottom: 0;">
+                <li>Basic understanding of computers</li>
+                <li>High school level mathematics</li>
+                <li>No programming experience required</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <strong>Why This Matters</strong><br><br>
+            Every piece of information on your computer - text, images, videos, programs - is ultimately stored as patterns of 0s and 1s. Understanding this foundational layer helps you:
+            <ul style="margin-top: 10px;">
+                <li><strong>Debug mysterious issues</strong> - Why does 0.1 + 0.2 ≠ 0.3?</li>
+                <li><strong>Optimize performance</strong> - Choose the right data types</li>
+                <li><strong>Understand security</strong> - How buffer overflows and integer overflows work</li>
+                <li><strong>Make informed decisions</strong> - When to use int vs long, float vs double</li>
+            </ul>
+        </div>
+
+        <h2 id="bits-bytes">1. Understanding Bits and Bytes</h2>
+
+        <h3>What is a Bit?</h3>
+
+        <p>A <strong>bit</strong> (short for <strong>binary digit</strong>) is the smallest unit of information in computing. It can only be one of two values:</p>
+
+        <div class="visual-example">
+            <h4>A Single Bit:</h4>
+            <pre><code>Bit = 0  (light switch OFF)
+  or
+Bit = 1  (light switch ON)</code></pre>
+        </div>
+
+        <p>With just one bit, you can represent only two things (like yes/no, true/false, on/off).</p>
+
+        <div class="analogy">
+            <strong>The Light Switch Analogy</strong><br><br>
+            Think of a computer's memory as a giant room filled with light switches:
+            <ul>
+                <li><strong>OFF (0)</strong> = No electricity flowing = Binary digit "0"</li>
+                <li><strong>ON (1)</strong> = Electricity flowing = Binary digit "1"</li>
+            </ul>
+            By flipping different combinations of switches, you can represent any information - just like Morse code uses dots and dashes to represent letters!
+        </div>
+
+        <h3>What is a Byte?</h3>
+
+        <p>A <strong>byte</strong> is a group of <strong>8 bits</strong>. With 8 switches (bits), you can create 256 different patterns (2<sup>8</sup> = 256).</p>
+
+        <div class="visual-example">
+            <h4>One Byte (8 bits):</h4>
+            <pre><code>┌───┬───┬───┬───┬───┬───┬───┬───┐
+│ 0 │ 1 │ 0 │ 1 │ 1 │ 0 │ 1 │ 0 │  = One byte
+└───┴───┴───┴───┴───┴───┴───┴───┘
+  ↑   ↑   ↑   ↑   ↑   ↑   ↑   ↑
+  Each position is one bit (0 or 1)</code></pre>
+        </div>
+
+        <div class="analogy">
+            <strong>The Combination Lock Analogy</strong><br><br>
+            Imagine a bike lock with 8 wheels, where each wheel can only show 0 or 1:
+            <ul>
+                <li><strong>1 wheel (1 bit)</strong>: Only 2 combinations (0 or 1)</li>
+                <li><strong>2 wheels (2 bits)</strong>: 4 combinations (00, 01, 10, 11)</li>
+                <li><strong>3 wheels (3 bits)</strong>: 8 combinations</li>
+                <li><strong>8 wheels (1 byte)</strong>: 256 combinations!</li>
+            </ul>
+            Each unique combination can represent something different - a number, a letter, a color, etc.
+        </div>
+
+        <h3>Common Units of Storage</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Unit</th>
+                    <th>Number of Bytes</th>
+                    <th>Real-World Comparison</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Bit</strong></td>
+                    <td>1/8 of a byte</td>
+                    <td>One light switch</td>
+                </tr>
+                <tr>
+                    <td><strong>Byte</strong></td>
+                    <td>1 byte (8 bits)</td>
+                    <td>One character (like 'A' or '5')</td>
+                </tr>
+                <tr>
+                    <td><strong>Kilobyte (KB)</strong></td>
+                    <td>1,024 bytes</td>
+                    <td>A short email (~1 page of text)</td>
+                </tr>
+                <tr>
+                    <td><strong>Megabyte (MB)</strong></td>
+                    <td>1,024 KB = ~1 million bytes</td>
+                    <td>A high-quality photo or 1 minute of music</td>
+                </tr>
+                <tr>
+                    <td><strong>Gigabyte (GB)</strong></td>
+                    <td>1,024 MB = ~1 billion bytes</td>
+                    <td>A full-length movie or 200 songs</td>
+                </tr>
+                <tr>
+                    <td><strong>Terabyte (TB)</strong></td>
+                    <td>1,024 GB = ~1 trillion bytes</td>
+                    <td>500 hours of HD video</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="info-box">
+            <strong>Why 1,024 instead of 1,000?</strong><br>
+            Computers use powers of 2 (because they work in binary). 2<sup>10</sup> = 1,024, which is close to 1,000, so we use it as the base for larger units.
+        </div>
+
+        <h2 id="binary-numbers">2. Binary Numbers: How Computers Count</h2>
+
+        <h3>Decimal vs Binary</h3>
+
+        <p>In everyday life, we use the <strong>decimal system</strong> (base 10) because we have 10 fingers. Computers use the <strong>binary system</strong> (base 2) because they only have two states: 0 and 1.</p>
+
+        <div class="visual-example">
+            <h4>Decimal (Base 10) - What We Use:</h4>
+            <pre><code>Digits available: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+
+Position values (right to left):
+  ↓     ↓     ↓     ↓
+1000s  100s  10s   1s
+
+Example: 3,425
+= 3×1000 + 4×100 + 2×10 + 5×1
+= 3,000 + 400 + 20 + 5
+= 3,425</code></pre>
+
+            <h4>Binary (Base 2) - What Computers Use:</h4>
+            <pre><code>Digits available: 0, 1 (that's it!)
+
+Position values (right to left):
+  ↓    ↓    ↓    ↓   ↓   ↓   ↓   ↓
+128s  64s  32s  16s  8s  4s  2s  1s
+
+Example: 01010110 (in binary)
+= 0×128 + 1×64 + 0×32 + 1×16 + 0×8 + 1×4 + 1×2 + 0×1
+= 0 + 64 + 0 + 16 + 0 + 4 + 2 + 0
+= 86 (in decimal)</code></pre>
+        </div>
+
+        <h3>Converting Between Decimal and Binary</h3>
+
+        <h4>Decimal to Binary (Easy Method):</h4>
+
+        <div class="visual-example">
+            <p><strong>Example: Convert 13 to binary</strong></p>
+            <pre><code>Step 1: Find the largest power of 2 that fits
+        13 ÷ 2 = 6 remainder 1 → write down 1
+
+Step 2: Continue with the quotient
+        6 ÷ 2 = 3 remainder 0 → write down 0
+        3 ÷ 2 = 1 remainder 1 → write down 1
+        1 ÷ 2 = 0 remainder 1 → write down 1
+
+Step 3: Read remainders from bottom to top
+        13 in binary = 1101
+
+Check: 1×8 + 1×4 + 0×2 + 1×1 = 8+4+0+1 = 13 ✓</code></pre>
+        </div>
+
+        <h4>Binary to Decimal:</h4>
+
+        <div class="visual-example">
+            <p><strong>Example: Convert 1101 to decimal</strong></p>
+            <pre><code>Position:  ↓   ↓   ↓   ↓
+Binary:    1   1   0   1
+Value:     8s  4s  2s  1s
+
+Calculation: 1×8 + 1×4 + 0×2 + 1×1
+           = 8 + 4 + 0 + 1
+           = 13</code></pre>
+        </div>
+
+        <h3>Practice: Common Numbers in Binary</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Decimal</th>
+                    <th>Binary (8 bits)</th>
+                    <th>Visual Pattern</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>0</td>
+                    <td>00000000</td>
+                    <td>All switches OFF</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>00000001</td>
+                    <td>Only rightmost switch ON</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>00000101</td>
+                    <td>4 + 1 = switches 3 and 1 ON</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>00001010</td>
+                    <td>8 + 2 = switches 4 and 2 ON</td>
+                </tr>
+                <tr>
+                    <td>42</td>
+                    <td>00101010</td>
+                    <td>32 + 8 + 2</td>
+                </tr>
+                <tr>
+                    <td>255</td>
+                    <td>11111111</td>
+                    <td>All switches ON (maximum for 8 bits)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="fun-box">
+            <strong>Fun Fact: Why 255?</strong><br>
+            With 8 bits, you can count from 0 to 255 (that's 256 different numbers). This is why:
+            <ul>
+                <li>RGB colors use values 0-255 for red, green, and blue</li>
+                <li>Old video games had 256 different colors</li>
+                <li>Network addresses sometimes use values 0-255</li>
+            </ul>
+        </div>
+
+        <h2 id="data-types">3. Data Types: Organizing Information</h2>
+
+        <h3>What Are Data Types?</h3>
+
+        <p>A <strong>data type</strong> tells the computer how to interpret a pattern of bits. The same bit pattern can mean different things depending on how you interpret it!</p>
+
+        <div class="analogy">
+            <strong>The Storage Container Analogy</strong><br><br>
+            Imagine you have boxes in a warehouse:
+            <ul>
+                <li><strong>Small box (1 byte)</strong>: Can hold one letter or a small number (0-255)</li>
+                <li><strong>Medium box (4 bytes)</strong>: Can hold a large number or decimal number</li>
+                <li><strong>Large box (8 bytes)</strong>: Can hold a very large number or precise decimal</li>
+            </ul>
+            The <strong>label on the box</strong> (data type) tells you what's inside and how to use it!
+        </div>
+
+        <h3>Common Data Types</h3>
+
+        <h4>1. Integers (Whole Numbers)</h4>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Size</th>
+                    <th>Range</th>
+                    <th>Real-World Use</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>char</code></td>
+                    <td>1 byte</td>
+                    <td>-128 to 127 (or 0 to 255 if unsigned)</td>
+                    <td>Single characters, small counters</td>
+                </tr>
+                <tr>
+                    <td><code>short</code></td>
+                    <td>2 bytes</td>
+                    <td>-32,768 to 32,767</td>
+                    <td>Small numbers, ages, quantities</td>
+                </tr>
+                <tr>
+                    <td><code>int</code></td>
+                    <td>4 bytes</td>
+                    <td>-2 billion to 2 billion</td>
+                    <td>Most everyday numbers</td>
+                </tr>
+                <tr>
+                    <td><code>long</code></td>
+                    <td>8 bytes</td>
+                    <td>-9 quintillion to 9 quintillion</td>
+                    <td>Very large numbers, timestamps</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="visual-example">
+            <h4>Example: Storing the number 42</h4>
+            <pre><code>As 1 byte (char):    00101010
+As 4 bytes (int):    00000000 00000000 00000000 00101010
+                     ↑ extra zeros padded on the left
+
+Both represent 42, but int uses more space for larger numbers</code></pre>
+        </div>
+
+        <h4>2. Characters (Text)</h4>
+
+        <p>Characters are stored using <strong>character encoding</strong>, where each letter/symbol gets a unique number.</p>
+
+        <div class="visual-example">
+            <h4>ASCII Encoding (most common):</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Character</th>
+                        <th>Decimal Value</th>
+                        <th>Binary (8 bits)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>'A'</td>
+                        <td>65</td>
+                        <td>01000001</td>
+                    </tr>
+                    <tr>
+                        <td>'B'</td>
+                        <td>66</td>
+                        <td>01000010</td>
+                    </tr>
+                    <tr>
+                        <td>'a'</td>
+                        <td>97</td>
+                        <td>01100001</td>
+                    </tr>
+                    <tr>
+                        <td>'0'</td>
+                        <td>48</td>
+                        <td>00110000</td>
+                    </tr>
+                    <tr>
+                        <td>' ' (space)</td>
+                        <td>32</td>
+                        <td>00100000</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="visual-example">
+            <h4>Example: The word "Hi!" in memory</h4>
+            <pre><code>H = 72  = 01001000
+i = 105 = 01101001
+! = 33  = 00100001
+
+In computer memory:
+01001000 01101001 00100001
+   ↑        ↑        ↑
+   H        i        !</code></pre>
+        </div>
+
+        <h4>3. Floating-Point Numbers (Decimals)</h4>
+
+        <p>For numbers with decimal points like 3.14 or 0.5, computers use a special format called <strong>floating-point</strong>.</p>
+
+        <div class="analogy">
+            <strong>The Scientific Notation Analogy</strong><br><br>
+            Just like scientists write 300,000,000 as 3.0 × 10<sup>8</sup>, computers store decimals in a similar way:
+            <ul>
+                <li><strong>Sign bit</strong>: Is it positive or negative?</li>
+                <li><strong>Exponent</strong>: Where's the decimal point?</li>
+                <li><strong>Mantissa</strong>: What are the digits?</li>
+            </ul>
+            Example: 3.14 = +1 × 3.14 × 10<sup>0</sup>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Size</th>
+                    <th>Precision</th>
+                    <th>Real-World Use</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>float</code></td>
+                    <td>4 bytes</td>
+                    <td>~6-7 decimal digits</td>
+                    <td>Graphics, games, measurements</td>
+                </tr>
+                <tr>
+                    <td><code>double</code></td>
+                    <td>8 bytes</td>
+                    <td>~15-16 decimal digits</td>
+                    <td>Scientific calculations, finance</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="warning-box">
+            <strong>Floating-Point Gotcha!</strong><br>
+            Computers can't always represent decimals perfectly. Try this in any programming language:
+            <pre><code>0.1 + 0.2 = 0.30000000000000004  (not exactly 0.3!)</code></pre>
+            This is why financial software uses special decimal types instead of float/double.
+        </div>
+
+        <h2 id="character-encoding">4. Character Encoding</h2>
+
+        <h3>ASCII: American Standard Code for Information Interchange</h3>
+
+        <p>ASCII is a character encoding standard that assigns numbers to characters. It uses 7 bits, allowing for 128 different characters.</p>
+
+        <div class="visual-example">
+            <h4>ASCII Character Ranges:</h4>
+            <pre><code>0-31:    Control characters (not printable)
+32-47:   Special characters and punctuation (space, !, ", #, etc.)
+48-57:   Digits ('0' through '9')
+58-64:   More punctuation (: ; < = > ? @)
+65-90:   Uppercase letters ('A' through 'Z')
+91-96:   More symbols ([ \ ] ^ _ `)
+97-122:  Lowercase letters ('a' through 'z')
+123-127: More symbols ({ | } ~ and DEL)
+
+Example:
+'A' = 65 = 01000001
+'a' = 97 = 01100001  (note: lowercase is uppercase + 32)</code></pre>
+        </div>
+
+        <h3>Unicode: Universal Character Set</h3>
+
+        <p>ASCII only supports English characters. <strong>Unicode</strong> was created to support all languages and symbols worldwide.</p>
+
+        <div class="key-concept">
+            <h4>Unicode Basics</h4>
+            <ul>
+                <li><strong>UTF-8</strong>: Variable length (1-4 bytes per character), backward compatible with ASCII</li>
+                <li><strong>UTF-16</strong>: 2 or 4 bytes per character</li>
+                <li><strong>UTF-32</strong>: Fixed 4 bytes per character</li>
+            </ul>
+            <p>Unicode can represent over 1 million different characters, including emojis!</p>
+        </div>
+
+        <div class="visual-example">
+            <h4>UTF-8 Examples:</h4>
+            <pre><code>Character    Code Point    UTF-8 Bytes
+'A'          U+0041       01000001 (1 byte, same as ASCII)
+'©'          U+00A9       11000010 10101001 (2 bytes)
+'世'         U+4E16       11100100 10111000 10010110 (3 bytes)
+'😀'         U+1F600      11110000 10011111 10011000 10000000 (4 bytes)</code></pre>
+        </div>
+
+        <div class="nav-links">
+            <a href="../blog.html" class="nav-link">← Back to Blog</a>
+            <a href="topic-0.1.html" class="nav-link">Back to Overview</a>
+            <a href="topic-0.1.1.html" class="nav-link">Next: Memory & Data Layout →</a>
+        </div>
+
+        <hr style="margin: 40px 0; border: none; border-top: 2px solid #ddd;">
+
+        <div style="background-color: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; margin: 20px 0; border-radius: 5px;">
+            <strong>Related Topics:</strong><br>
+            → <a href="topic-0.1.1.html">Topic 0.1.1: Memory, Pointers & Data Layout</a><br>
+            → <a href="topic-0.2.html">Topic 0.2: Clock Cycles & Timing</a><br>
+            → <a href="topic-0.3.html">Topic 0.3: Memory Addressing & Pointers</a><br>
+            → <a href="topic-1.1.html">Topic 1.1: CPU & Instruction Execution</a><br>
+            → <a href="topic-1.4.html">Topic 1.4: Memory Hierarchy</a>
+        </div>
+    </div>
+</body>
+</html>

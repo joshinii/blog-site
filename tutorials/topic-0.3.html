@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Addressing & Pointers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.4;
+            border: 1px solid #e0e7f0;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .diagram {
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .key-concept {
+            background-color: #e8f4f8;
+            border: 2px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .exercise {
+            background-color: #f0f8ff;
+            border: 2px solid #4169e1;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+
+        .exercise h3 {
+            color: #4169e1;
+            margin-top: 0;
+        }
+
+        .toc {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .toc h3 {
+            margin-top: 0;
+        }
+
+        .toc ol {
+            margin-bottom: 0;
+        }
+
+        .prerequisite {
+            background-color: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .next-topic {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="../blog.html">Learning Hub</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="./hubs/fundamentals.html">Fundamentals</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Memory Addressing & Pointers</span>
+    </div>
+
+    <div class="container">
+        <h1>Memory Addressing & Pointers</h1>
+
+        <div class="prerequisite">
+            <strong>Prerequisite:</strong> Topic 0.1 (Binary & Representation) and Topic 0.2 (Clock Cycles & Timing)
+        </div>
+
+        <div class="toc">
+            <h3>Topics Covered</h3>
+            <ol>
+                <li>Pointer Basics and Syntax</li>
+                <li>The Address Assignment Pipeline</li>
+                <li>Memory Segments</li>
+                <li>Stack vs Heap Allocation</li>
+                <li>Virtual Memory Essentials</li>
+                <li>Practical Pointer Problems</li>
+                <li>Addressing Modes</li>
+            </ol>
+        </div>
+
+        <h2 id="introduction">Introduction: Why Pointers Matter for Professionals</h2>
+
+        <p>Pointers are one of the most misunderstood concepts in computer science, yet they're fundamental to understanding how modern systems work. Whether you're debugging a memory leak, optimizing cache usage, implementing data structures, or understanding security vulnerabilities, you need a solid grasp of memory addressing.</p>
+
+        <p>This topic bridges digital foundations (bits and bytes) with system-level programming. You'll learn not just <em>how</em> pointers work, but <em>why</em> they exist and how the entire address assignment pipeline—from compiler, through operating system, to hardware—coordinates to make your code's memory references work correctly.</p>
+
+        <h2 id="pointer-basics">1. Pointer Basics and Syntax</h2>
+
+        <h3>What Is a Pointer?</h3>
+
+        <p>A pointer is simply a variable that stores a memory address. That's it. Instead of storing data directly (like an integer or character), a pointer stores "where" to find that data in memory.</p>
+
+        <p>Think of it like this: if RAM were a post office, regular variables would be mailboxes with contents, and pointers would be mailbox addresses.</p>
+
+        <h3>Pointer Syntax: The Three Operations</h3>
+
+        <p>Three symbols dominate pointer syntax in C/C++:</p>
+
+        <ul>
+            <li><strong><code>&</code> (address-of operator)</strong> - "Give me the address of this variable"</li>
+            <li><strong><code>*</code> (dereference operator)</strong> - "Give me the data at this address"</li>
+            <li><strong><code>-&gt;</code> (arrow operator)</strong> - "Access a member of the struct that this pointer points to"</li>
+        </ul>
+
+        <div class="key-concept">
+            <h4>Code Example: Basic Pointer Operations</h4>
+            <pre><code>int x = 42;              // Regular integer variable
+int *p = &x;             // p is a pointer to x
+                         // Read as: "p points to the address of x"
+
+printf("%d\n", x);       // Print 42 (value of x)
+printf("%p\n", p);       // Print 0x7fff1234 (address of x)
+printf("%d\n", *p);      // Print 42 (dereference: value at address p)
+
+*p = 100;                // Change the value at address p
+printf("%d\n", x);       // Now prints 100 (x changed through p)</code></pre>
+        </div>
+
+        <h3>Null Pointers and Validity</h3>
+
+        <p>A null pointer is a special pointer that points to nothing. It's the safe default when a pointer shouldn't point anywhere yet.</p>
+
+        <ul>
+            <li><code>NULL</code> - The classic null pointer constant (in C)</li>
+            <li><code>nullptr</code> - C++11's type-safe null pointer</li>
+            <li>Dereferencing a null pointer = crash (segmentation fault)</li>
+        </ul>
+
+        <h3>Pointer Arithmetic</h3>
+
+        <p>You can add and subtract from pointers, but it's more nuanced than regular arithmetic:</p>
+
+        <div class="key-concept">
+            <h4>Example: Pointer Arithmetic</h4>
+            <pre><code>int arr[3] = {10, 20, 30};
+int *p = &arr[0];         // p points to first element
+
+p++;                       // Not address + 1, but address + sizeof(int)
+                           // If int is 4 bytes, p increases by 4
+
+printf("%d\n", *p);        // Prints 20 (second element)
+
+p += 2;                    // Move forward by 2 integers (8 bytes)
+printf("%d\n", *p);        // Out of bounds!</code></pre>
+        </div>
+
+        <p><strong>Key insight:</strong> Pointer arithmetic is <em>scaled</em> by the type size. This is intentional—it makes array traversal natural.</p>
+
+        <h2 id="address-assignment">2. The Address Assignment Pipeline</h2>
+
+        <p>When you write <code>int age = 42;</code>, who decides where this variable lives in memory? The answer is: <em>three layers of the stack work together</em>.</p>
+
+        <h3>Layer 1: The Compiler's Role</h3>
+
+        <p>The compiler is the first stage:</p>
+
+        <ul>
+            <li>Reads your source code: <code>int age = 42;</code></li>
+            <li>Decides the variable belongs in a specific memory region (stack, data segment, or heap)</li>
+            <li>Assigns a <strong>symbolic name</strong> to that location (the variable name "age")</li>
+            <li>Generates machine code that will reference this location</li>
+            <li><strong>Does NOT</strong> assign the final physical address—that comes later</li>
+        </ul>
+
+        <div class="info-box">
+            <strong>Example:</strong> When you write <code>int x = 10; printf("%d", x);</code>, the compiler translates this to machine code like: "Load integer from [memory location marked as 'x'], then print it." But [memory location marked as 'x'] is just a placeholder—not a real address yet.
+        </div>
+
+        <h3>Layer 2: The Operating System's Role</h3>
+
+        <p>At runtime, the OS takes over:</p>
+
+        <ul>
+            <li>Creates a <strong>virtual address space</strong> for your program (typically 0x00000000 to 0xFFFFFFFF on 32-bit, much larger on 64-bit)</li>
+            <li>Assigns your program a <strong>contiguous virtual memory range</strong></li>
+            <li>Maintains page tables: mapping virtual addresses → physical RAM addresses</li>
+            <li>Allocates stack space (for local variables), heap space (for dynamic allocation), and loads your program's code and data segments</li>
+            <li>Assigns the actual virtual addresses your code will use at runtime</li>
+        </ul>
+
+        <div class="info-box">
+            <strong>Example:</strong> The OS assigns your program virtual addresses 0x400000 (code starts here) through 0x500000 (program ends). When your code references variable "x", it now references virtual address 0x401234.
+        </div>
+
+        <h3>Layer 3: The Hardware (Memory Management Unit—MMU)</h3>
+
+        <p>Every single memory access goes through the MMU:</p>
+
+        <ul>
+            <li>CPU generates a virtual address (e.g., 0x401234 where "x" is stored)</li>
+            <li>MMU intercepts this address</li>
+            <li>MMU looks up the page table: virtual 0x401234 → physical 0x87654321</li>
+            <li>MMU translates the address transparently</li>
+            <li>RAM controller accesses physical address 0x87654321</li>
+            <li>This translation happens for <strong>every</strong> memory access, but is invisible to your code</li>
+        </ul>
+
+        <div class="diagram">
+Compilation Phase:
+┌──────────────────────────────────────┐
+│ int x = 42;                          │
+│ printf("%d", x);                     │
+│         ↓                            │
+│ Compiler sees "x" → marks as "int"   │
+│ Allocates to stack region            │
+│ No actual address yet!               │
+└──────────────────────────────────────┘
+
+Runtime Phase:
+┌──────────────────────────────────────┐
+│ OS creates virtual address space     │
+│ Assigns stack region: 0x1000-0x2000  │
+│ Variable x → virtual address 0x1234  │
+└──────────────────────────────────────┘
+          ↓
+┌──────────────────────────────────────┐
+│ CPU executes: Load from 0x1234       │
+│       ↓                              │
+│ MMU looks up page table              │
+│ Virtual 0x1234 → Physical 0xABC123   │
+│       ↓                              │
+│ RAM returns data at 0xABC123         │
+└──────────────────────────────────────┘
+        </div>
+
+        <div class="success-box">
+            <strong>Why three layers?</strong> This design enables:<br>
+            • Multiple processes using same virtual addresses without conflict<br>
+            • Protection: one process can't access another's memory<br>
+            • Flexibility: OS can move physical memory around without program knowing<br>
+            • Security: Can enforce read/write/execute permissions
+        </div>
+
+        <h2 id="memory-segments">3. Memory Segments</h2>
+
+        <p>Virtual address space is divided into distinct regions (segments), each with different purposes and permissions:</p>
+
+        <table>
+            <tr>
+                <th>Segment</th>
+                <th>Contains</th>
+                <th>Read/Write/Execute</th>
+                <th>Lifetime</th>
+            </tr>
+            <tr>
+                <td><strong>Code (Text)</strong></td>
+                <td>Machine instructions</td>
+                <td>R-/X (Read, Execute)</td>
+                <td>Entire program execution</td>
+            </tr>
+            <tr>
+                <td><strong>Data (Initialized)</strong></td>
+                <td>Global/static variables with initial values</td>
+                <td>R-W (Read, Write)</td>
+                <td>Entire program execution</td>
+            </tr>
+            <tr>
+                <td><strong>BSS (Uninitialized)</strong></td>
+                <td>Global/static variables (default to zero)</td>
+                <td>R-W (Read, Write)</td>
+                <td>Entire program execution</td>
+            </tr>
+            <tr>
+                <td><strong>Heap</strong></td>
+                <td>Dynamically allocated memory (malloc/new)</td>
+                <td>R-W (Read, Write)</td>
+                <td>From allocation until free/delete</td>
+            </tr>
+            <tr>
+                <td><strong>Stack</strong></td>
+                <td>Function parameters, local variables, return addresses</td>
+                <td>R-W (Read, Write)</td>
+                <td>From function entry until exit</td>
+            </tr>
+        </table>
+
+        <div class="key-concept">
+            <h4>Memory Layout Visualization</h4>
+            <div class="diagram">
+Virtual Address Space (64-bit example):
+0xFFFFFFFFFFFFFFFF ┌────────────────────────┐
+                   │      Kernel Space      │
+                   │  (not accessible)      │
+                   └────────────────────────┘
+
+0x7FFFFF...        ┌────────────────────────┐
+                   │      Stack ↓           │
+                   │  (grows downward)      │
+                   │                        │
+                   │                        │
+                   │        Heap ↑          │
+                   │ (grows upward)         │
+                   │                        │
+                   ├────────────────────────┤
+                   │   BSS (uninitialized)  │
+                   ├────────────────────────┤
+                   │ Data (initialized)     │
+                   ├────────────────────────┤
+                   │  Code/Text             │
+0x400000           └────────────────────────┘
+            </div>
+        </div>
+
+        <p><strong>Why segments matter:</strong></p>
+        <ul>
+            <li><strong>Security:</strong> Code segment is read-only, preventing code injection</li>
+            <li><strong>Performance:</strong> Permissions allow CPU to cache more aggressively</li>
+            <li><strong>Debugging:</strong> Understanding which segment a variable is in helps diagnose problems</li>
+            <li><strong>Optimization:</strong> Different segments have different access patterns</li>
+        </ul>
+
+        <h2 id="stack-vs-heap">4. Stack vs Heap Allocation</h2>
+
+        <h3>Stack Allocation</h3>
+
+        <p>The stack is the fast, structured way to allocate memory. It's called a "stack" because it operates LIFO (Last-In-First-Out):</p>
+
+        <div class="key-concept">
+            <h4>Stack Frame Structure</h4>
+            <pre><code>// Function definition
+int add(int a, int b) {
+    int result = a + b;  // Local variable
+    return result;
+}
+
+// When called: add(5, 3)
+// Stack grows downward (higher address → lower address)</code></pre>
+            <div class="diagram">
+Stack grows downward ↓
+
+Before call:
+[other frames...]
+[caller's return address]
+[saved registers]
+
+During add():
+Stack Pointer → ┌──────────────────┐
+                │ result = 8       │ ← Local variable
+                ├──────────────────┤
+                │ param b = 3      │ ← Parameter
+                ├──────────────────┤
+                │ param a = 5      │ ← Parameter
+                ├──────────────────┤
+                │ return address   │ ← Where to jump after return
+Base Pointer → ├──────────────────┤
+                │ saved RBP        │ ← Previous frame pointer
+                ├──────────────────┤
+                │ caller's frame   │
+            </div>
+        </div>
+
+        <p><strong>Stack allocation characteristics:</strong></p>
+        <ul>
+            <li><strong>Fast:</strong> Just move stack pointer, no complex allocation</li>
+            <li><strong>Automatic:</strong> Memory freed when function exits</li>
+            <li><strong>Limited size:</strong> Stack is typically smaller than heap (e.g., 8 MB)</li>
+            <li><strong>LIFO order:</strong> Last variable allocated is first to be freed</li>
+            <li><strong>No fragmentation:</strong> Perfect stack discipline prevents fragmentation</li>
+        </ul>
+
+        <h3>Heap Allocation</h3>
+
+        <p>The heap is for dynamic allocation—when you don't know at compile time how much memory you'll need:</p>
+
+        <div class="key-concept">
+            <h4>Heap Allocation Pattern</h4>
+            <pre><code>// Stack-allocated (fixed size known at compile time)
+int arr[100];  // OK, 400 bytes
+
+// Heap-allocated (size determined at runtime)
+int n = get_user_input();
+int *arr = malloc(n * sizeof(int));  // Can be any size
+
+// Use array
+for (int i = 0; i < n; i++)
+    arr[i] = i;
+
+// Must explicitly free
+free(arr);
+arr = NULL;  // Good practice: clear the pointer</code></pre>
+        </div>
+
+        <p><strong>Heap allocation characteristics:</strong></p>
+        <ul>
+            <li><strong>Flexible:</strong> Size determined at runtime</li>
+            <li><strong>Manual management:</strong> You decide when to allocate and free</li>
+            <li><strong>Large capacity:</strong> Limited only by available RAM</li>
+            <li><strong>No automatic cleanup:</strong> Forgetting to free causes memory leaks</li>
+            <li><strong>Fragmentation possible:</strong> Repeated allocations/deallocations can fragment</li>
+        </ul>
+
+        <h3>Stack vs Heap: When to Use Each</h3>
+
+        <table>
+            <tr>
+                <th>Criterion</th>
+                <th>Stack</th>
+                <th>Heap</th>
+            </tr>
+            <tr>
+                <td>Size known at compile time?</td>
+                <td>Use stack</td>
+                <td>Use heap for large/dynamic sizes</td>
+            </tr>
+            <tr>
+                <td>Need to outlive function?</td>
+                <td>No—stack memory freed at exit</td>
+                <td>Yes—heap persists until explicitly freed</td>
+            </tr>
+            <tr>
+                <td>Performance critical?</td>
+                <td>Yes—stack is faster</td>
+                <td>No—heap allocation is slower</td>
+            </tr>
+            <tr>
+                <td>Danger of overflow?</td>
+                <td>Yes—stack is limited</td>
+                <td>Yes—can run out of heap (OOM)</td>
+            </tr>
+        </table>
+
+        <h2 id="virtual-memory">5. Virtual Memory Essentials</h2>
+
+        <h3>Pages and Page Tables</h3>
+
+        <p>Virtual memory divides both virtual and physical memory into fixed-size chunks called pages (typically 4 KB):</p>
+
+        <div class="diagram">
+Virtual Address Space:        Physical RAM:
+┌──────────────┐             ┌──────────────┐
+│ Page 0xF0000 │──────┐      │ Frame 0x10000│
+│ Page 0xE0000 │──┐   │      │ Frame 0x20000│
+│ Page 0xD0000 │──┼───┼─→ ┌──→Frame 0x30000│
+│ Page 0xC0000 │──┤   │   │  │ Frame 0x40000│
+│ Page 0xB0000 │──┤   │   │  │ Frame 0x50000│
+│ Page 0xA0000 │──┤   │   │  │ (unused)     │
+└──────────────┘  │   │   │  └──────────────┘
+                  │   └───┘
+              Page Table
+            (Kernel maintained)
+        </div>
+
+        <p><strong>Benefits of paging:</strong></p>
+        <ul>
+            <li><strong>Efficiency:</strong> Only load pages you actually use into physical RAM</li>
+            <li><strong>Protection:</strong> Each page can have distinct permissions</li>
+            <li><strong>Transparency:</strong> Programs don't know they're using virtual memory</li>
+        </ul>
+
+        <h3>TLB (Translation Lookaside Buffer)</h3>
+
+        <p>Every address translation is fast because of the TLB—a cache of recent translations:</p>
+
+        <div class="key-concept">
+            <h4>TLB Operation</h4>
+            <pre><code>// CPU tries to access virtual address 0x1000
+1. Check TLB: "Have I translated 0x1000 recently?"
+   → TLB hit: Return physical address immediately (nanoseconds)
+   → TLB miss: Look up page table (expensive, ~100 nanoseconds)</code></pre>
+        </div>
+
+        <h3>Page Faults</h3>
+
+        <p>If your program tries to access a page that's not currently in physical RAM, the CPU generates a page fault:</p>
+
+        <ul>
+            <li>OS is notified</li>
+            <li>OS loads the page from disk (slow!)</li>
+            <li>OS updates page tables</li>
+            <li>CPU retries the instruction</li>
+        </ul>
+
+        <p><strong>Page faults are expensive—they cause a 100,000x slowdown</strong> compared to cache hits. Understanding locality of reference (Topic 1.2) helps minimize page faults.</p>
+
+        <h2 id="practical-problems">6. Practical Pointer Problems</h2>
+
+        <h3>Dangling Pointers (Use-After-Free)</h3>
+
+        <p>The most common pointer bug: using a pointer after the memory it points to has been freed.</p>
+
+        <div class="warning-box">
+            <h4>Dangerous Code Example</h4>
+            <pre><code>int *p = malloc(sizeof(int));
+*p = 42;
+free(p);
+
+printf("%d\n", *p);  // BUG! p is dangling
+*p = 100;            // BUG! What are we modifying?
+
+// p now points to freed memory
+// This memory might be reallocated for another variable
+// So you might be corrupting someone else's data!</code></pre>
+        </div>
+
+        <p><strong>Prevention:</strong></p>
+        <ul>
+            <li>Set pointers to NULL after freeing: <code>free(p); p = NULL;</code></li>
+            <li>Use static analysis tools to detect use-after-free</li>
+            <li>Consider reference counting or garbage collection</li>
+        </ul>
+
+        <h3>Null Pointer Dereferences</h3>
+
+        <p>Dereferencing a null pointer causes an immediate crash (segmentation fault).</p>
+
+        <div class="warning-box">
+            <pre><code>int *p = NULL;
+printf("%d\n", *p);  // Immediate crash!
+
+// More subtle:
+void process_data(int *data) {
+    // What if data is NULL?
+    int value = *data;  // Crash if NULL
+}</code></pre>
+        </div>
+
+        <p><strong>Prevention:</strong> Always check for null before dereferencing</p>
+
+        <h3>Buffer Overflow</h3>
+
+        <p>Writing past the end of allocated memory corrupts adjacent data. This is the classic security vulnerability.</p>
+
+        <div class="danger-box">
+            <h4>Buffer Overflow Example</h4>
+            <pre><code>char buffer[10];
+strcpy(buffer, "This is way too long!");
+// strcpy doesn't check bounds
+// Writes beyond the 10-byte buffer
+// Corrupts: local variables, return address, adjacent memory</code></pre>
+        </div>
+
+        <p><strong>Why it's dangerous:</strong></p>
+        <ul>
+            <li>Corrupts local variables (incorrect program behavior)</li>
+            <li>Overwrites return address (attacker can redirect execution)</li>
+            <li>Overwrites function pointers (attacker can call arbitrary code)</li>
+        </ul>
+
+        <p><strong>Prevention:</strong></p>
+        <ul>
+            <li>Use bounds-checking functions: <code>strncpy</code> instead of <code>strcpy</code></li>
+            <li>Use safe libraries: <code>snprintf</code> instead of <code>sprintf</code></li>
+            <li>Enable stack canaries (compiler flag: <code>-fstack-protector</code>)</li>
+            <li>Use AddressSanitizer during testing</li>
+        </ul>
+
+        <h3>Pointer Aliasing Issues</h3>
+
+        <p>When two pointers refer to the same memory, changes through one are visible through the other—sometimes unexpectedly.</p>
+
+        <div class="info-box">
+            <pre><code>int x = 42;
+int *p1 = &x;
+int *p2 = &x;
+
+*p1 = 100;
+printf("%d\n", *p2);  // Also 100—they point to same memory
+
+// Compiler optimization problem:
+// Compiler might assume p1 and p2 point to different memory
+// This can lead to unexpected behavior with aggressive optimization</code></pre>
+        </div>
+
+        <h2 id="addressing-modes">7. Addressing Modes (Introduction)</h2>
+
+        <p>At the assembly level, different addressing modes specify how to calculate the address of an operand. Here's a brief introduction (detailed in Topic 1.6):</p>
+
+        <table>
+            <tr>
+                <th>Mode</th>
+                <th>Example</th>
+                <th>Address Calculated As</th>
+            </tr>
+            <tr>
+                <td>Register</td>
+                <td><code>MOV RAX, RBX</code></td>
+                <td>Address is in the register</td>
+            </tr>
+            <tr>
+                <td>Direct/Absolute</td>
+                <td><code>MOV RAX, [0x1234]</code></td>
+                <td>Literal address 0x1234</td>
+            </tr>
+            <tr>
+                <td>Register Indirect</td>
+                <td><code>MOV RAX, [RBX]</code></td>
+                <td>Address in register RBX</td>
+            </tr>
+            <tr>
+                <td>Indexed</td>
+                <td><code>MOV RAX, [RBX + 8]</code></td>
+                <td>Register + constant offset</td>
+            </tr>
+            <tr>
+                <td>RIP-relative</td>
+                <td><code>MOV RAX, [RIP + offset]</code></td>
+                <td>Current instruction address + offset</td>
+            </tr>
+        </table>
+
+        <p>These addressing modes make pointer arithmetic efficient at the hardware level.</p>
+
+        <h2 id="summary">Summary & Key Takeaways</h2>
+
+        <ul>
+            <li><strong>Pointers store memory addresses</strong>—that's their fundamental purpose</li>
+            <li><strong>Three layers coordinate address assignment:</strong> Compiler (symbolic allocation), OS (virtual address spaces), Hardware (physical translation via MMU)</li>
+            <li><strong>Memory segments have distinct purposes and permissions:</strong> Code (read-only), Data (read-write), Stack (LIFO allocation), Heap (dynamic allocation)</li>
+            <li><strong>Stack is fast and automatic; Heap is flexible but requires manual management</strong></li>
+            <li><strong>Virtual memory enables protection, flexibility, and efficient resource use</strong> through paging and page tables</li>
+            <li><strong>Common pointer bugs</strong> include dangling pointers, null dereference, buffer overflow, and aliasing issues</li>
+            <li><strong>Understanding pointers is prerequisite</strong> for memory management (Topic 1.4), assembly language (Topic 1.6), and security vulnerability analysis (Topic 3.3)</li>
+        </ul>
+
+        <div class="next-topic">
+            <strong>Next topic:</strong> <a href="topic-1.1.html">Topic 1.1: CPU & Instruction Execution</a> — Now that you understand memory addressing, let's see how the CPU actually executes instructions and manages this memory.
+        </div>
+
+    </div>
+</body>
+</html>

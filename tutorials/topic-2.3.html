@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distributed Systems</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 1200px; margin: 0 auto; padding: 20px; background-color: #f5f5f5; }
+        .container { background-color: white; padding: 40px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; border-bottom: 4px solid #3498db; padding-bottom: 15px; margin-bottom: 30px; font-size: 2.5em; }
+        h2 { color: #2980b9; margin-top: 40px; margin-bottom: 20px; font-size: 1.8em; border-left: 5px solid #3498db; padding-left: 15px; }
+        h3 { color: #34495e; margin-top: 30px; margin-bottom: 15px; font-size: 1.4em; }
+        p { margin-bottom: 15px; text-align: justify; }
+        ul, ol { margin-left: 30px; margin-bottom: 15px; }
+        li { margin-bottom: 8px; }
+        .info-box { background-color: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 20px 0; }
+        .warning-box { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; }
+        code { background-color: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; font-size: 0.9em; }
+        pre { background-color: #f8f9fa; color: #2c3e50; padding: 20px; border-radius: 5px; overflow-x: auto; margin: 20px 0; font-family: 'Courier New', monospace; line-height: 1.4; border: 1px solid #e0e7f0; }
+        pre code { background-color: transparent; color: inherit; padding: 0; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th { background-color: #3498db; color: white; padding: 12px; text-align: left; }
+        td { padding: 12px; border-bottom: 1px solid #ddd; }
+        .key-concept { background-color: #e8f4f8; border: 2px solid #3498db; padding: 20px; margin: 20px 0; border-radius: 5px; }
+        .prerequisite { background-color: #fff3e0; border-left: 4px solid #ff9800; padding: 15px; margin: 20px 0; }
+        .next-topic { background-color: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; margin: 20px 0; }
+        .toc { background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 20px; margin: 20px 0; border-radius: 5px; }
+        a { color: #3498db; }
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="../blog.html">Learning Hub</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="./hubs/distributed-systems.html">Distributed Systems</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Distributed Systems</span>
+    </div>
+
+    <div class="container">
+        <h1>Distributed Systems</h1>
+
+        <div class="prerequisite">
+            <strong>Prerequisites:</strong> Topic 1.3 (Operating Systems), Topic 2.1 (Network Fundamentals), Topic 2.2 (Network Performance)
+        </div>
+
+        <div class="toc">
+            <h3>Topics Covered</h3>
+            <ol>
+                <li>Fundamental Challenges</li>
+                <li>The CAP Theorem</li>
+                <li>Fallacies of Distributed Computing</li>
+                <li>Time and Ordering</li>
+                <li>Consensus Algorithms (Raft, Paxos)</li>
+                <li>Replication Strategies</li>
+                <li>Data Consistency Models</li>
+                <li>Failure Detection and Recovery</li>
+                <li>System Design Patterns</li>
+                <li>Real System Examples</li>
+            </ol>
+        </div>
+
+        <h2 id="introduction">Introduction: Distributed Systems as Complexity</h2>
+
+        <p>A distributed system is multiple independent computers working together as a single system. This introduces unprecedented complexity:</p>
+
+        <ul>
+            <li><strong>No shared memory:</strong> Machines only communicate via network messages</li>
+            <li><strong>Asynchrony:</strong> Messages can be delayed arbitrarily</li>
+            <li><strong>Partial failures:</strong> Some machines fail while others continue</li>
+            <li><strong>No global time:</strong> Clocks on different machines drift</li>
+        </ul>
+
+        <p>These challenges make distributed systems fundamentally harder than single-machine systems. This topic covers the theoretical foundations and practical techniques for building reliable distributed systems.</p>
+
+        <h2 id="fundamental-challenges">1. Fundamental Challenges</h2>
+
+        <h3>Partial Failures</h3>
+
+        <p>In a single machine, either it works or it's down. In a distributed system, part of the system can fail while the rest continues—requiring difficult decisions:</p>
+
+        <pre><code>Scenario: Client sends request to Server A
+  ├─ Request lost in network
+  ├─ Server A crashes
+  ├─ Server A processes but response lost
+  ├─ Server A is unreachable due to network partition
+
+Client timeout triggers. Now what?
+  - Retry? (But A might have processed first request)
+  - Give up? (But A might be recovering)
+  - Ask another server?</code></pre>
+
+        <h3>Asynchrony</h3>
+
+        <p>Messages can be delayed indefinitely. You can't distinguish between "slow message" and "failed machine":</p>
+
+        <pre><code>Server A sends heartbeat to Server B
+B receives nothing for 10 seconds
+
+Possibilities:
+  1. Network is slow (message will eventually arrive)
+  2. Server A crashed
+  3. Server B crashed (can't tell)
+  4. Network partition (A and B can't communicate)
+
+B must decide: Is A dead or just slow?
+This decision affects system correctness!</code></pre>
+
+        <h2 id="cap-theorem">2. The CAP Theorem</h2>
+
+        <p>You can guarantee at most 2 of 3 properties:</p>
+
+        <table>
+            <tr>
+                <th>Property</th>
+                <th>Definition</th>
+                <th>Implication</th>
+            </tr>
+            <tr>
+                <td><strong>Consistency</strong></td>
+                <td>All clients see same data</td>
+                <td>Requires coordination, slows writes</td>
+            </tr>
+            <tr>
+                <td><strong>Availability</strong></td>
+                <td>System always responds</td>
+                <td>Might respond with stale data</td>
+            </tr>
+            <tr>
+                <td><strong>Partition Tolerance</strong></td>
+                <td>Survives network partitions</td>
+                <td>Essential requirement (can't avoid)</td>
+            </tr>
+        </table>
+
+        <h3>Trade-offs</h3>
+
+        <p><strong>CA (Consistent & Available, no Partition Tolerance):</strong></p>
+        <ul>
+            <li>Example: Single-machine database</li>
+            <li>Can't survive network issues</li>
+            <li>Usually not practical for distributed systems</li>
+        </ul>
+
+        <p><strong>CP (Consistent & Partition Tolerant):</strong></p>
+        <ul>
+            <li>Examples: HBase, strict relational databases</li>
+            <li>When partition occurs, some nodes go offline</li>
+            <li>Ensures consistency at cost of availability</li>
+        </ul>
+
+        <p><strong>AP (Available & Partition Tolerant):</strong></p>
+        <ul>
+            <li>Examples: Cassandra, DynamoDB, eventually consistent systems</li>
+            <li>Always responds, even with stale data</li>
+            <li>Data converges over time (eventual consistency)</li>
+        </ul>
+
+        <h2 id="fallacies">3. Fallacies of Distributed Computing</h2>
+
+        <p>Eight commonly wrong assumptions about distributed systems:</p>
+
+        <ol>
+            <li><strong>The network is reliable:</strong> False. Packets are lost, duplicated, reordered.</li>
+            <li><strong>Latency is zero:</strong> False. Networks have 1-100+ ms latency.</li>
+            <li><strong>Bandwidth is infinite:</strong> False. Saturation causes queuing and loss.</li>
+            <li><strong>The network is secure:</strong> False. Man-in-the-middle attacks, eavesdropping possible.</li>
+            <li><strong>Topology doesn't change:</strong> False. Servers go down, network topology shifts.</li>
+            <li><strong>There is one administrator:</strong> False. Multiple admins, jurisdictions create complexity.</li>
+            <li><strong>Transport cost is zero:</strong> False. Network bandwidth and latency cost money.</li>
+            <li><strong>The network is homogeneous:</strong> False. Different networks, protocols, reliability levels.</li>
+        </ol>
+
+        <p>Correct assumptions: Assume failures, latency, limited bandwidth, insecurity, changing topology.</p>
+
+        <h2 id="time-and-ordering">4. Time and Ordering</h2>
+
+        <h3>The Clock Synchronization Problem</h3>
+
+        <p>Clocks on different machines drift. You can't rely on wall-clock time for ordering:</p>
+
+        <pre><code>Event ordering problem:
+  Server A: Store data at 10:00:00
+  Server B: Store data at 10:00:01
+
+But clocks might be off:
+  A's clock: 10:00:00 (correct)
+  B's clock: 09:59:59 (1 second slow)
+
+If you ask "which event happened first?", wall-clock time gives wrong answer!</code></pre>
+
+        <h3>Logical Clocks (Lamport Clocks)</h3>
+
+        <p>Solution: Use logical timestamps instead of wall-clock time:</p>
+
+        <pre><code>Algorithm:
+  1. Each process maintains a counter
+  2. Increment counter before each event
+  3. Include counter in all messages
+  4. On receiving message with counter C:
+     Set own counter to max(own counter, C) + 1
+
+Result:
+  Events are totally ordered
+  No need for synchronized clocks</code></pre>
+
+        <h3>Vector Clocks</h3>
+
+        <p>Track causality more precisely:</p>
+
+        <pre><code>Each process maintains vector [c1, c2, c3]
+  c1 = logical clock at process 1
+  c2 = logical clock at process 2
+  c3 = logical clock at process 3
+
+Example:
+  Process 1: [1, 0, 0] → sends to Process 2
+  Process 2 receives: [1, 0, 0]
+  Process 2: [1, 1, 0] → sends to Process 3
+  Process 3 receives: [1, 1, 0]
+  Process 3: [1, 1, 1] → sends back to Process 2
+
+Now you can determine causal dependencies!</code></pre>
+
+        <h2 id="consensus">5. Consensus Algorithms</h2>
+
+        <h3>The Problem</h3>
+
+        <p>Multiple servers must agree on a value, even if some fail or behave badly. Critical for:</p>
+        <ul>
+            <li>Leader election</li>
+            <li>Configuration management</li>
+            <li>Atomic commits</li>
+        </ul>
+
+        <h3>Raft Algorithm (Practical Consensus)</h3>
+
+        <p>Raft is designed for understandability and implementation:</p>
+
+        <pre><code>1. LEADER ELECTION:
+   - Each server starts as "follower"
+   - Followers wait for heartbeat from leader
+   - If no heartbeat, become "candidate"
+   - Candidate requests votes from other servers
+   - First to get majority votes becomes leader
+
+2. LOG REPLICATION:
+   - Leader receives commands from clients
+   - Appends to its log
+   - Sends log entries to followers
+   - Followers append to their logs
+   - Leader waits for majority to acknowledge
+   - Then commits and applies to state machine
+
+3. SAFETY:
+   - Only logs with majority commitment can be lost
+   - On leader failure, election picks new leader
+   - Old leader's uncommitted entries are rolled back</code></pre>
+
+        <h3>Paxos Algorithm (Theory-Optimal)</h3>
+
+        <p>Paxos is proven optimal but complex to implement:</p>
+
+        <ul>
+            <li><strong>Proposer:</strong> Proposes values</li>
+            <li><strong>Acceptor:</strong> Votes on values</li>
+            <li><strong>Learner:</strong> Learns accepted values</li>
+        </ul>
+
+        <p><strong>In practice:</strong> Use Raft (easier to implement) over Paxos (easier to understand theoretically).</p>
+
+        <h2 id="replication">6. Replication Strategies</h2>
+
+        <h3>Master-Slave Replication</h3>
+
+        <pre><code>Master (primary):
+  - Accepts all writes
+  - Sends writes to slaves
+  - Slaves apply writes in order
+
+Advantages:
+  - Strong consistency (master decides order)
+  - Simple to implement
+
+Disadvantages:
+  - Master is bottleneck
+  - If master fails, need to promote slave (data loss possible)
+  - Slaves lag behind master (eventual consistency)</code></pre>
+
+        <h3>Multi-Master Replication</h3>
+
+        <pre><code>All servers accept writes:
+
+Server A:
+  - Accept write from client
+  - Send to Server B
+
+Server B:
+  - Accept write from client
+  - Send to Server A
+
+Advantages:
+  - High availability (any server can fail)
+  - No bottleneck
+  - Lower latency (write locally)
+
+Disadvantages:
+  - Write conflicts (both servers wrote different values)
+  - Eventual consistency required
+  - Conflict resolution complex</code></pre>
+
+        <h2 id="consistency">7. Data Consistency Models</h2>
+
+        <table>
+            <tr>
+                <th>Model</th>
+                <th>Definition</th>
+                <th>Use Case</th>
+                <th>Cost</th>
+            </tr>
+            <tr>
+                <td><strong>Strong</strong></td>
+                <td>All replicas always identical</td>
+                <td>Banking, financial</td>
+                <td>High latency, low throughput</td>
+            </tr>
+            <tr>
+                <td><strong>Eventual</strong></td>
+                <td>Converges after updates stop</td>
+                <td>Caching, social media</td>
+                <td>Low latency, high throughput</td>
+            </tr>
+            <tr>
+                <td><strong>Causal</strong></td>
+                <td>Causally related updates ordered</td>
+                <td>Comment threads, collaborative editing</td>
+                <td>Medium latency/throughput</td>
+            </tr>
+            <tr>
+                <td><strong>Session</strong></td>
+                <td>Consistent within session</td>
+                <td>Web apps, single user</td>
+                <td>Low latency</td>
+            </tr>
+        </table>
+
+        <h2 id="failure-detection">8. Failure Detection and Recovery</h2>
+
+        <h3>Heartbeat Mechanism</h3>
+
+        <pre><code>// Server A pings Server B periodically:
+every 1 second:
+    send(HEARTBEAT) to Server B
+
+// Server B tracks last heartbeat:
+last_heartbeat = now()
+
+// Monitor thread:
+every 5 seconds:
+    if (now() - last_heartbeat) > threshold:
+        B is dead
+
+Problem: If threshold = 5s, you wait 5 seconds to detect failure
+Solution: Adjust threshold based on network latency</code></pre>
+
+        <h3>Merkle Trees for Reconciliation</h3>
+
+        <p>After failure, replicas might diverge. How to efficiently sync?</p>
+
+        <pre><code>Build hash tree of all data:
+
+                    H=hash(H1+H2)
+                    /            \
+                 H1               H2
+               /    \           /    \
+             h1      h2       h3      h4
+            /        /        /        /
+          data1    data2    data3    data4
+
+To sync:
+  1. Exchange root hash
+  2. If same, fully synced
+  3. If different, exchange H1 and H2
+  4. Recursively diff at leaves
+
+Result: Only transmit different data (efficient!)</code></pre>
+
+        <h2 id="design-patterns">9. System Design Patterns</h2>
+
+        <h3>Sharding (Horizontal Partitioning)</h3>
+
+        <pre><code>Single server becomes bottleneck. Shard by key:
+
+Users 0-1M   → Server 1
+Users 1M-2M  → Server 2
+Users 2M-3M  → Server 3
+
+Advantages:
+  - Linear scalability
+  - Distributes load
+
+Disadvantages:
+  - Queries spanning shards are complex
+  - Rebalancing on growth is hard</code></pre>
+
+        <h3>Caching Layers</h3>
+
+        <pre><code>Client → Cache Layer → Database
+
+Benefits:
+  - Reduce database load
+  - Improve latency
+  - Cache misses still work
+
+Challenges:
+  - Keeping cache fresh
+  - Cache invalidation (hard!)
+  - Memory usage</code></pre>
+
+        <h3>Load Balancing</h3>
+
+        <pre><code>Client → Load Balancer → Server Pool
+                           ├─ Server 1
+                           ├─ Server 2
+                           └─ Server 3
+
+Distribution strategies:
+  - Round-robin (simple, fair)
+  - Least-connections (adaptive)
+  - Hash (session affinity)</code></pre>
+
+        <h2 id="real-systems">10. Real System Examples</h2>
+
+        <h3>Apache Cassandra (AP)</h3>
+        <ul>
+            <li><strong>Consistency:</strong> Eventual (tunable)</li>
+            <li><strong>Strategy:</strong> Multi-master replication</li>
+            <li><strong>Consensus:</strong> Quorum-based</li>
+            <li><strong>Use case:</strong> Time-series data, high throughput</li>
+        </ul>
+
+        <h3>Apache Zookeeper (CP)</h3>
+        <ul>
+            <li><strong>Consistency:</strong> Strong</li>
+            <li><strong>Strategy:</strong> Master-slave with Paxos-like consensus</li>
+            <li><strong>Use case:</strong> Configuration management, coordination</li>
+        </ul>
+
+        <h3>etcd (CP)</h3>
+        <ul>
+            <li><strong>Consistency:</strong> Strong</li>
+            <li><strong>Strategy:</strong> Raft consensus</li>
+            <li><strong>Use case:</strong> Kubernetes coordination, configuration</li>
+        </ul>
+
+        <h2 id="summary">Summary & Key Takeaways</h2>
+
+        <ul>
+            <li><strong>Distributed systems are fundamentally complex:</strong> partial failures, asynchrony, no global time</li>
+            <li><strong>CAP Theorem:</strong> Choose 2 of Consistency, Availability, Partition Tolerance</li>
+            <li><strong>Fallacies of distributed computing:</strong> Don't assume reliability, instant latency, infinite bandwidth</li>
+            <li><strong>Logical clocks</strong> solve time ordering without synchronized clocks</li>
+            <li><strong>Consensus algorithms</strong> (Raft, Paxos) enable distributed agreement</li>
+            <li><strong>Replication strategies</strong> trade consistency vs availability</li>
+            <li><strong>Consistency models</strong> range from strong to eventual</li>
+            <li><strong>Failure detection</strong> requires heartbeats and reconciliation mechanisms</li>
+            <li><strong>Design patterns</strong> (sharding, caching, load balancing) enable scalability</li>
+            <li><strong>Real systems</strong> make explicit trade-offs based on requirements</li>
+        </ul>
+
+        <div class="next-topic">
+            <strong>Next: Layer 3 (Optional)</strong> - The next topics (3.1-3.4) cover practical applications: Performance Profiling & Optimization, Debugging Techniques, Security Vulnerability Analysis, and System Design Patterns. These integrate knowledge from all previous topics.
+        </div>
+
+    </div>
+</body>
+</html>

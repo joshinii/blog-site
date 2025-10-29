@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instruction Pipelining & Superscalar Execution</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .danger-box {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .fun-box {
+            background-color: #ffe6f0;
+            border-left: 4px solid #e91e63;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.4;
+            border: 1px solid #e0e7f0;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .diagram {
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .key-concept {
+            background-color: #e8f4f8;
+            border: 2px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .exercise {
+            background-color: #f0f8ff;
+            border: 2px solid #4169e1;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+
+        .exercise h3 {
+            color: #4169e1;
+            margin-top: 0;
+        }
+
+        .toc {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        .toc h2 {
+            margin-top: 0;
+            border-left: none;
+            padding-left: 0;
+        }
+
+        .toc ul {
+            list-style-type: none;
+            margin-left: 0;
+        }
+
+        .toc li {
+            margin-bottom: 5px;
+        }
+
+        .toc a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        strong {
+            color: #2c3e50;
+        }
+
+        .analogy {
+            font-style: italic;
+            color: #555;
+            margin: 10px 0;
+            padding: 15px;
+            padding-left: 20px;
+            border-left: 3px solid #95a5a6;
+            background-color: #f9f9f9;
+        }
+
+        .visual-example {
+            background-color: #f0f8ff;
+            border: 2px solid #87ceeb;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+        }
+
+        .nav-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: #2980b9;
+        }
+
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+            pre {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="../blog.html">Learning Hub</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="./hubs/systems.html">Systems</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Instruction Pipelining & Superscalar Execution</span>
+    </div>
+
+    <div class="container">
+        <h1>Instruction Pipelining & Superscalar Execution</h1>
+        <p style="color: #666; font-style: italic; margin-bottom: 20px;">How Modern CPUs Execute Multiple Instructions in Parallel</p>
+
+        <div style="background-color: #f0f8ff; border-left: 4px solid #3498db; padding: 15px; margin: 20px 0;">
+            <strong>Breadcrumb Navigation:</strong><br>
+            <a href="topic-1.2.html" style="color: #3498db;">CPU Architecture Deep Dive</a> → Pipelining & Superscalar Execution
+        </div>
+
+        <div class="warning-box">
+            <strong>Prerequisites:</strong>
+            <ul style="margin-bottom: 0;">
+                <li><a href="topic-1.1.html" style="color: #856404; font-weight: bold;">Topic 1.1: Computer Systems</a> - Basic CPU architecture and fetch-decode-execute cycle</li>
+                <li><a href="topic-1.2.html" style="color: #856404; font-weight: bold;">Topic 1.2: CPU Architecture Overview</a> - Understanding of CPU optimization fundamentals</li>
+            </ul>
+        </div>
+
+        <div class="key-concept">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Understand how instruction pipelining achieves 5-10× speedup</li>
+                <li>Identify and solve pipeline hazards (structural, data, control)</li>
+                <li>Learn branch prediction strategies (95%+ accuracy)</li>
+                <li>Master superscalar architecture (4-6 instructions per cycle)</li>
+                <li>Understand out-of-order execution and register renaming</li>
+            </ul>
+        </div>
+
+        <h2 id="pipelining">CPU Pipelining: The Assembly Line</h2>
+
+        <h3>What Is Pipelining?</h3>
+
+        <p><strong>Pipelining</strong> breaks instruction execution into stages and overlaps them, like an assembly line in a factory.</p>
+
+        <h4>Classic 5-Stage Pipeline</h4>
+
+        <div class="visual-example">
+            <pre><code><strong>The Five Stages:</strong>
+
+1. IF  - Instruction Fetch    (get instruction from memory)
+2. ID  - Instruction Decode   (figure out what it means)
+3. EX  - Execute              (do the calculation)
+4. MEM - Memory Access        (read/write memory if needed)
+5. WB  - Write Back           (save result to register)
+
+<strong>Traditional (No Pipeline):</strong>
+One instruction takes 5 cycles, then next instruction starts
+
+Cycle: 1    2    3    4    5    6    7    8    9    10
+Inst1: IF - ID - EX - MEM - WB
+Inst2:                        IF - ID - EX - MEM - WB
+
+Result: 2 instructions in 10 cycles = 0.2 IPC (instructions per cycle)
+
+<strong>With Pipeline:</strong>
+New instruction starts every cycle!
+
+Cycle: 1    2    3    4    5    6    7    8    9    10
+Inst1: IF - ID - EX - MEM - WB
+Inst2:      IF - ID - EX - MEM - WB
+Inst3:           IF - ID - EX - MEM - WB
+Inst4:                IF - ID - EX - MEM - WB
+Inst5:                     IF - ID - EX - MEM - WB
+Inst6:                          IF - ID - EX - MEM - WB
+
+Result: 6 instructions in 10 cycles = 0.6 IPC (3x faster!)</code></pre>
+        </div>
+
+        <div class="analogy">
+            <strong>The Burger Assembly Line Analogy</strong><br><br>
+            <strong>Without Pipeline (one cook does everything):</strong>
+            <ul>
+                <li>Cook 1: Takes bun, adds patty, adds toppings, wraps, serves = 5 minutes</li>
+                <li>Next customer waits 5 minutes for their turn</li>
+                <li>Throughput: 1 burger per 5 minutes</li>
+            </ul>
+            <strong>With Pipeline (5 stations):</strong>
+            <ul>
+                <li>Station 1: Prepare bun</li>
+                <li>Station 2: Add patty</li>
+                <li>Station 3: Add toppings</li>
+                <li>Station 4: Wrap</li>
+                <li>Station 5: Serve</li>
+            </ul>
+            <strong>Result:</strong> After the first burger takes 5 minutes, you get one burger <strong>every minute</strong> thereafter!
+            <br><br>
+            Same concept in CPUs: After initial "fill time," you complete one instruction per cycle.
+        </div>
+
+        <h3>Pipeline Speedup Calculation</h3>
+
+        <div class="visual-example">
+            <h4>Theoretical Speedup</h4>
+            <pre><code><strong>Formula:</strong>
+Speedup = Number of Pipeline Stages (in ideal case)
+
+<strong>Example: 5-stage pipeline</strong>
+Without pipeline:
+- 100 instructions × 5 cycles = 500 cycles
+
+With pipeline:
+- Fill pipeline: 5 cycles (first instruction)
+- Remaining: 99 instructions × 1 cycle = 99 cycles
+- Total: 5 + 99 = 104 cycles
+
+<strong>Speedup = 500 / 104 = 4.8x faster!</strong>
+
+(Close to 5x ideal speedup)</code></pre>
+        </div>
+
+        <h3>Real-World Pipeline Depth</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Processor</th>
+                    <th>Pipeline Stages</th>
+                    <th>Year</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Intel 486</td>
+                    <td>5</td>
+                    <td>1989</td>
+                    <td>Classic RISC-like pipeline</td>
+                </tr>
+                <tr>
+                    <td>Intel Pentium</td>
+                    <td>5</td>
+                    <td>1993</td>
+                    <td>Dual pipeline (superscalar)</td>
+                </tr>
+                <tr>
+                    <td>Intel Pentium Pro</td>
+                    <td>14</td>
+                    <td>1995</td>
+                    <td>Out-of-order execution</td>
+                </tr>
+                <tr>
+                    <td>Intel Pentium 4</td>
+                    <td>31</td>
+                    <td>2000</td>
+                    <td>Too deep - lots of branch penalties</td>
+                </tr>
+                <tr>
+                    <td>Intel Core 2</td>
+                    <td>14</td>
+                    <td>2006</td>
+                    <td>Back to moderate depth</td>
+                </tr>
+                <tr>
+                    <td>Intel Core i7 (modern)</td>
+                    <td>14-19</td>
+                    <td>2020s</td>
+                    <td>Optimized depth with good prediction</td>
+                </tr>
+                <tr>
+                    <td>Apple M1</td>
+                    <td>~16</td>
+                    <td>2020</td>
+                    <td>ARM-based, wide execution</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="info-box">
+            <strong>Why not make pipelines infinitely deep?</strong>
+            <ul>
+                <li><strong>Diminishing returns</strong> - Each stage has overhead</li>
+                <li><strong>Branch penalties</strong> - Deeper pipeline = more wasted work on wrong prediction</li>
+                <li><strong>Complexity</strong> - Harder to design and debug</li>
+            </ul>
+            <p>Modern CPUs balance depth with other optimizations (prediction, width, out-of-order execution).</p>
+        </div>
+
+        <h2 id="hazards">Pipeline Hazards and How to Handle Them</h2>
+
+        <p>Pipelining isn't perfect. <strong>Hazards</strong> are situations where instructions can't proceed smoothly through the pipeline.</p>
+
+        <h3>1. Structural Hazards (Hardware Conflicts)</h3>
+
+        <div class="visual-example">
+            <h4>Problem: Two instructions need the same hardware resource</h4>
+            <pre><code><strong>Example:</strong> Only one memory port available
+
+Cycle: 1    2    3    4    5    6
+Inst1: IF - ID - EX - MEM - WB
+Inst4:                IF - ID - ??? ← Wants memory but Inst1 is using it!
+
+<strong>Solution:</strong>
+- Add more hardware (separate instruction/data caches)
+- Stall pipeline (wait one cycle)</code></pre>
+        </div>
+
+        <p><strong>Real-world solution:</strong> Modern CPUs have separate instruction and data caches (Harvard architecture) to avoid this.</p>
+
+        <h3>2. Data Hazards (Dependencies Between Instructions)</h3>
+
+        <p>This is the most common and important hazard type.</p>
+
+        <div class="visual-example">
+            <h4>Read After Write (RAW) - True Dependency</h4>
+            <pre><code><strong>Problem:</strong>
+Inst1: ADD R1, R2, R3    # R1 = R2 + R3
+Inst2: SUB R4, R1, R5    # R4 = R1 - R5  (needs R1 from Inst1!)
+
+Cycle: 1    2    3    4    5    6    7
+Inst1: IF - ID - EX - MEM - WB
+Inst2:      IF - ID - ??? ← R1 not ready yet!
+
+<strong>Without solution:</strong> Inst2 must STALL until R1 is written
+
+Cycle: 1    2    3    4    5    6    7
+Inst1: IF - ID - EX - MEM - WB
+Inst2:      IF - ID - STALL - STALL - EX - MEM - WB
+                         ↑ Wasted cycles!</code></pre>
+        </div>
+
+        <h4>Solution 1: Forwarding (Bypassing)</h4>
+
+        <div class="success-box">
+            <p><strong>Idea:</strong> Don't wait for WB stage - forward result directly from EX stage!</p>
+            <pre><code>Cycle: 1    2    3    4    5    6
+Inst1: IF - ID - EX - MEM - WB
+                  ↓ Forward result
+Inst2:      IF - ID - EX - MEM - WB
+                     ↑ Use forwarded value!
+
+<strong>Result:</strong> No stalls! Instructions run back-to-back.</code></pre>
+        </div>
+
+        <h4>Solution 2: Compiler Reordering</h4>
+
+        <div class="visual-example">
+            <pre><code><strong>Original code (has dependency):</strong>
+ADD R1, R2, R3    # R1 = R2 + R3
+SUB R4, R1, R5    # Needs R1 immediately - STALL!
+MUL R6, R7, R8    # Independent instruction
+
+<strong>Compiler reorders (no stall needed):</strong>
+ADD R1, R2, R3    # R1 = R2 + R3
+MUL R6, R7, R8    # Do this while waiting for R1
+SUB R4, R1, R5    # By now R1 is ready!
+
+<strong>Speedup:</strong> 1-2 cycles saved per dependency</code></pre>
+        </div>
+
+        <h3>3. Control Hazards (Branches)</h3>
+
+        <p>The most expensive hazard type in deep pipelines.</p>
+
+        <div class="danger-box">
+            <h4>The Branch Problem</h4>
+            <pre><code><strong>Code:</strong>
+if (x > 0) {
+    // Branch taken
+} else {
+    // Branch not taken
+}
+
+<strong>Pipeline dilemma:</strong>
+When we FETCH the branch, we don't know which way it goes yet!
+That decision happens in the EX stage (3 cycles later).
+
+Cycle: 1    2    3    4    5
+IF:    BR - ?? - ?? - ?? - ??
+            ↑ What should we fetch?
+            We don't know until cycle 3!
+
+<strong>Result:</strong> 2-3 cycle penalty (pipeline "bubble")</code></pre>
+        </div>
+
+        <h2 id="branch-prediction">Branch Prediction: Guessing the Future</h2>
+
+        <p>Branch instructions (<code>if</code>, <code>for</code>, <code>while</code>) make up ~20% of all instructions. Getting them wrong is expensive, so CPUs became <strong>very good at guessing</strong>.</p>
+
+        <h3>Why Branch Prediction Matters</h3>
+
+        <div class="visual-example">
+            <pre><code><strong>Example: 15-stage pipeline</strong>
+
+If prediction is <strong>CORRECT</strong>:
+- No penalty, instructions flow smoothly
+- Throughput: 1 instruction/cycle
+
+If prediction is <strong>WRONG</strong>:
+- Must flush 15 stages of wrong work
+- Restart with correct path
+- Penalty: 15 wasted cycles
+
+<strong>With 20% branch instructions:</strong>
+- 95% accuracy: Waste 1% of cycles (0.2 × 0.05 × 15 = 0.15)
+- 90% accuracy: Waste 3% of cycles (0.2 × 0.10 × 15 = 0.30)
+- 50% accuracy: Waste 15% of cycles (0.2 × 0.50 × 15 = 1.50)
+
+<strong>Impact on real performance:</strong>
+95% vs 90% prediction = 2-3% slower overall!
+95% vs 50% prediction = 15% slower overall!</code></pre>
+        </div>
+
+        <h3>Branch Prediction Strategies</h3>
+
+        <h4>1. Static Prediction (Compiler-Based)</h4>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Strategy</th>
+                    <th>Rule</th>
+                    <th>Accuracy</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Always Not-Taken</strong></td>
+                    <td>Predict branches never taken</td>
+                    <td>~30-40%</td>
+                </tr>
+                <tr>
+                    <td><strong>Always Taken</strong></td>
+                    <td>Predict branches always taken</td>
+                    <td>~60-70%</td>
+                </tr>
+                <tr>
+                    <td><strong>Backward Taken, Forward Not-Taken (BTFNT)</strong></td>
+                    <td>Loops (backward) taken, <code>if</code> statements (forward) not taken</td>
+                    <td>~65-75%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>Problem:</strong> Too simple, doesn't adapt to program behavior.</p>
+
+        <h4>2. Dynamic Prediction (Hardware-Based)</h4>
+
+        <p><strong>1-Bit Predictor</strong></p>
+        <div class="visual-example">
+            <pre><code><strong>Concept:</strong> Remember last outcome for each branch
+
+Branch Table:
+Address    | Last Outcome
+-----------|-------------
+0x1000     | Taken
+0x1004     | Not Taken
+0x1008     | Taken
+
+<strong>Example:</strong>
+for (int i = 0; i < 100; i++) {
+    // Loop back 99 times, exit once
+}
+
+Predictions: T T T T T T ... T T T NT
+Actual:      T T T T T T ... T T T NT
+                                      ↑ Wrong once at end
+
+<strong>Accuracy: 99/100 = 99%!</strong>
+
+<strong>Problem:</strong> Pattern changes
+if (condition alternates every iteration)
+Actual:   T NT T NT T NT T NT
+Predict:  T T  NT T  NT T  NT T
+            ↑      ↑      ↑      ↑ Wrong every time!
+Accuracy: 0% (worst case)</code></pre>
+        </div>
+
+        <p><strong>2-Bit Saturating Counter (Modern Standard)</strong></p>
+        <div class="visual-example">
+            <pre><code><strong>States:</strong>
+11 - Strongly Taken
+10 - Weakly Taken
+01 - Weakly Not Taken
+00 - Strongly Not Taken
+
+<strong>State Machine:</strong>
+          11 (Strongly Taken)
+         ↗  ↑  ↘
+    Taken    Not Taken
+       ↗        ↘
+    10 (Weakly Taken) ←→ 01 (Weakly Not Taken)
+       ↘        ↗
+    Taken    Not Taken
+         ↘  ↓  ↗
+          00 (Strongly Not Taken)
+
+<strong>Advantage:</strong> Need TWO mistakes to change prediction
+More stable for patterns with occasional exceptions
+
+<strong>Example: Loop</strong>
+for (i = 0; i < 100; i++) { }
+
+States: 11 11 11 11 ... 11 11 10 00
+                              ↑  ↑  ↑
+                          99× correct, 1× wrong
+Accuracy: 99%</code></pre>
+        </div>
+
+        <h4>3. Two-Level Adaptive Predictors</h4>
+
+        <div class="key-concept">
+            <p><strong>Idea:</strong> Use recent branch history to predict current branch</p>
+            <pre><code><strong>Pattern Detection:</strong>
+
+if (a > 0) {        // Branch 1
+    if (b > 0) {    // Branch 2 (correlated with Branch 1!)
+        ...
+    }
+}
+
+If Branch 1 is Taken, Branch 2 likely Taken
+If Branch 1 is Not Taken, Branch 2 likely Not Taken
+
+<strong>Implementation:</strong>
+1. Keep history of last N branch outcomes (e.g., 4 bits: TTNT = 1101)
+2. Use history to index into table of predictors
+3. Each history pattern has its own 2-bit counter
+
+<strong>Example:</strong>
+History: TTNT (last 4 branches)
+→ Look up predictor for pattern "TTNT"
+→ Use that predictor's counter
+
+<strong>Accuracy: 85-95% on most programs!</strong></code></pre>
+        </div>
+
+        <h4>4. Neural Branch Predictors (Cutting Edge)</h4>
+
+        <div class="info-box">
+            <p><strong>Modern High-End CPUs:</strong> Intel, AMD, Apple use perceptron-based predictors</p>
+            <ul>
+                <li>Use <strong>machine learning</strong> techniques</li>
+                <li>Train on program behavior in real-time</li>
+                <li>Track <strong>100+ branch history bits</strong></li>
+                <li>Multiple predictors competing (tournament predictor)</li>
+            </ul>
+            <p><strong>Result: 95-98% accuracy on real workloads!</strong></p>
+        </div>
+
+        <h3>Branch Prediction in Action: Real Code</h3>
+
+        <div class="visual-example">
+            <h4>Example: Sorting Algorithm</h4>
+            <pre><code><strong>C Code:</strong>
+for (int i = 0; i < n; i++) {
+    if (arr[i] < threshold) {
+        // Do something
+    }
+}
+
+<strong>Case 1: Sorted array</strong>
+arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], threshold = 5
+Pattern: T T T T T NT NT NT NT NT
+After learning: 100% prediction accuracy
+
+<strong>Case 2: Random array</strong>
+arr = [5, 2, 8, 1, 9, 3, 7, 4, 6, 10], threshold = 5
+Pattern: NT T NT T NT T NT T NT NT
+Prediction accuracy: ~50% (no pattern)
+
+<strong>Performance impact:</strong>
+Sorted array:   100 cycles
+Random array:   150 cycles (50% slower!)
+
+<strong>This is why sorting before filtering can be faster!</strong></code></pre>
+        </div>
+
+        <div class="warning-box">
+            <strong>Performance Tip: Make Branches Predictable</strong>
+            <pre><code><strong>Unpredictable (slow):</strong>
+if (random_value % 2 == 0) {
+    // 50% of the time
+}
+
+<strong>Predictable (fast):</strong>
+if (i < array_size) {  // Usually true in loop
+    // 99%+ of iterations
+}
+
+<strong>Branch-free (fastest):</strong>
+result = (condition) ? value1 : value2;  // No branch, compiled to CMOV</code></pre>
+        </div>
+
+        <h2 id="superscalar">Superscalar Architecture: Multiple Instructions Per Cycle</h2>
+
+        <p>Pipelining lets you <em>start</em> one instruction per cycle. <strong>Superscalar</strong> lets you start <em>multiple</em> instructions per cycle!</p>
+
+        <div class="analogy">
+            <strong>Multiple Assembly Lines Analogy</strong><br><br>
+            <strong>Scalar Pipeline:</strong> One assembly line making burgers
+            - Output: 1 burger/minute
+            <br><br>
+            <strong>Superscalar (4-wide):</strong> Four parallel assembly lines
+            - Output: 4 burgers/minute
+            <br><br>
+            Same speed per line, but 4× throughput!
+        </div>
+
+        <h3>How Superscalar Works</h3>
+
+        <div class="visual-example">
+            <pre><code><strong>4-way Superscalar Example:</strong>
+
+Cycle 1:
+Pipeline 1: ADD R1, R2, R3
+Pipeline 2: SUB R4, R5, R6
+Pipeline 3: MUL R7, R8, R9
+Pipeline 4: LOAD R10, [addr]
+
+All four instructions start in the SAME cycle!
+
+Cycle: 1    2    3    4    5
+P1:    IF - ID - EX - MEM - WB
+P2:    IF - ID - EX - MEM - WB
+P3:    IF - ID - EX - MEM - WB
+P4:    IF - ID - EX - MEM - WB
+
+<strong>Ideal: 4 IPC (Instructions Per Cycle)</strong>
+In practice: 2-3 IPC due to dependencies</code></pre>
+        </div>
+
+        <h3>Execution Units in Modern CPUs</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Unit Type</th>
+                    <th>Count (Intel i7)</th>
+                    <th>Operations</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>ALU</strong></td>
+                    <td>4-6</td>
+                    <td>Integer add, sub, logic</td>
+                </tr>
+                <tr>
+                    <td><strong>FPU</strong></td>
+                    <td>2-3</td>
+                    <td>Floating-point math</td>
+                </tr>
+                <tr>
+                    <td><strong>Load</strong></td>
+                    <td>2</td>
+                    <td>Read from memory</td>
+                </tr>
+                <tr>
+                    <td><strong>Store</strong></td>
+                    <td>1</td>
+                    <td>Write to memory</td>
+                </tr>
+                <tr>
+                    <td><strong>Branch</strong></td>
+                    <td>1-2</td>
+                    <td>Conditional jumps</td>
+                </tr>
+                <tr>
+                    <td><strong>SIMD (Vector)</strong></td>
+                    <td>2-4</td>
+                    <td>AVX/SSE operations</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>Total: 12-18 execution units!</strong> But limited by dependencies and instruction mix.</p>
+
+        <h3>The Width vs IPC Challenge</h3>
+
+        <div class="visual-example">
+            <pre><code><strong>Why can't we achieve full width?</strong>
+
+<strong>Example: 4-wide superscalar</strong>
+
+Code with dependencies:
+ADD R1, R2, R3
+SUB R4, R1, R5    ← Depends on R1
+MUL R6, R4, R7    ← Depends on R4
+DIV R8, R6, R9    ← Depends on R6
+
+All four must execute sequentially!
+IPC = 1.0 (no parallelism)
+
+Code without dependencies:
+ADD R1, R2, R3
+SUB R4, R5, R6    ← Independent
+MUL R7, R8, R9    ← Independent
+DIV R10, R11, R12 ← Independent
+
+All four can execute in parallel!
+IPC = 4.0 (perfect parallelism)
+
+<strong>Real programs: IPC ≈ 2-3</strong>
+Mix of dependent and independent instructions</code></pre>
+        </div>
+
+        <h3>Modern CPU Width Comparison</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Processor</th>
+                    <th>Decode Width</th>
+                    <th>Execute Width</th>
+                    <th>Typical IPC</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Intel Core 2</td>
+                    <td>4</td>
+                    <td>6</td>
+                    <td>2.0-2.5</td>
+                </tr>
+                <tr>
+                    <td>Intel Core i7 (Skylake)</td>
+                    <td>4</td>
+                    <td>8</td>
+                    <td>2.5-3.0</td>
+                </tr>
+                <tr>
+                    <td>AMD Ryzen (Zen 3)</td>
+                    <td>4</td>
+                    <td>10</td>
+                    <td>2.5-3.5</td>
+                </tr>
+                <tr>
+                    <td>Apple M1</td>
+                    <td>8</td>
+                    <td>12</td>
+                    <td>3.0-4.0</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="success-box">
+            <strong>Why Apple M1 achieves higher IPC:</strong>
+            <ul>
+                <li>Wider decode (8 vs 4)</li>
+                <li>More execution units (12)</li>
+                <li>Larger reorder buffer (630 vs 224)</li>
+                <li>Better branch prediction</li>
+                <li>Optimized for specific workloads (macOS/iOS)</li>
+            </ul>
+        </div>
+
+        <h2 id="out-of-order">Out-of-Order Execution: Smart Scheduling</h2>
+
+        <p>What if we could execute instructions in a <em>different order</em> than the program specified, as long as the result is the same?</p>
+
+        <div class="analogy">
+            <strong>The Restaurant Kitchen Analogy</strong><br><br>
+            <strong>In-Order (traditional):</strong>
+            <ul>
+                <li>Order 1: Steak (15 min) + Salad (2 min)</li>
+                <li>Order 2: Pasta (10 min) + Soup (3 min)</li>
+            </ul>
+            Must finish Order 1 completely before starting Order 2
+            Total time: 15 + 2 + 10 + 3 = 30 minutes
+            <br><br>
+            <strong>Out-of-Order (smart kitchen):</strong>
+            <ul>
+                <li>Start steak (15 min)</li>
+                <li>While steak cooks, make salad (2 min)</li>
+                <li>While steak cooks, make pasta (10 min)</li>
+                <li>While steak cooks, make soup (3 min)</li>
+                <li>Finish steak</li>
+            </ul>
+            Total time: 15 minutes (50% faster!)
+            <br><br>
+            <strong>Key insight:</strong> Do independent work while waiting for long operations.
+        </div>
+
+        <h3>How Out-of-Order Works</h3>
+
+        <div class="diagram">┌─────────────────────────────────────────────┐
+│         FETCH & DECODE (In-Order)          │
+└────────────────┬────────────────────────────┘
+                 ↓
+        ┌────────────────┐
+        │ Reorder Buffer │  ← Holds instructions
+        │   (ROB)        │    in program order
+        └────────┬───────┘
+                 ↓
+        ┌────────────────┐
+        │ Reservation    │  ← Wait for operands
+        │   Stations     │    to be ready
+        └────────┬───────┘
+                 ↓
+        ┌────────────────────────────┐
+        │   Execution Units          │  ← Execute when ready
+        │  (Out-of-Order!)           │    (not program order)
+        │  - ALU 1    - Load Unit    │
+        │  - ALU 2    - Store Unit   │
+        │  - FPU      - Branch Unit  │
+        └────────┬───────────────────┘
+                 ↓
+        ┌────────────────┐
+        │ Reorder Buffer │  ← Results returned
+        │   (Complete)   │    out of order
+        └────────┬───────┘
+                 ↓
+        ┌────────────────┐
+        │ RETIRE         │  ← Commit results
+        │  (In-Order)    │    in program order
+        └────────────────┘</div>
+
+        <h3>Out-of-Order Example</h3>
+
+        <div class="visual-example">
+            <pre><code><strong>Program:</strong>
+1. LOAD  R1, [addr1]     # Slow (100 cycles)
+2. ADD   R2, R3, R4      # Fast (1 cycle) - Independent!
+3. MUL   R5, R6, R7      # Fast (3 cycles) - Independent!
+4. SUB   R8, R1, R9      # Fast (1 cycle) - Depends on R1
+
+<strong>In-Order Execution:</strong>
+Cycle:  1        100      101      104      105
+Inst:   LOAD     wait...  ADD      MUL      SUB
+        ↑                  ↑        ↑        ↑
+        Start    LOAD     ADD      MUL      SUB
+                 finishes starts   starts   starts
+
+Total: 105 cycles
+CPU idle 99% of the time waiting for LOAD!
+
+<strong>Out-of-Order Execution:</strong>
+Cycle:  1     2     5     100   101
+Inst:   LOAD  ADD   MUL   SUB   done
+        ↑     ↑     ↑     ↑
+        All start immediately!
+        Independent ones finish early
+        Dependent SUB waits for LOAD
+
+Total: 101 cycles (small improvement, but no idle time)
+
+<strong>Better code reordering:</strong>
+If you have 30 more independent instructions after LOAD,
+they can all execute during the 100-cycle wait!
+Total: Still ~100 cycles, but completed 33 instructions instead of 1!</code></pre>
+        </div>
+
+        <h3>Reorder Buffer (ROB)</h3>
+
+        <div class="key-concept">
+            <p><strong>Purpose:</strong> Track instructions and ensure results appear in program order</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ROB Entry</th>
+                        <th>Instruction</th>
+                        <th>Status</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>LOAD R1, [addr]</td>
+                        <td>Executing...</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>ADD R2, R3, R4</td>
+                        <td>Complete</td>
+                        <td>R2 = 15</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>MUL R5, R6, R7</td>
+                        <td>Complete</td>
+                        <td>R5 = 42</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>SUB R8, R1, R9</td>
+                        <td>Waiting (needs R1)</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>Retirement (Commit):</strong> Instructions commit in order (1, 2, 3, 4)</p>
+            <p>Even though 2 and 3 finished first, they wait for 1 to complete!</p>
+            <p><strong>Why?</strong> If instruction 1 causes an exception, instructions 2-4 must not have visible effects.</p>
+        </div>
+
+        <h3>Register Renaming</h3>
+
+        <p>Out-of-order execution requires solving <strong>false dependencies</strong>:</p>
+
+        <div class="visual-example">
+            <pre><code><strong>Problem: WAR (Write After Read) hazard</strong>
+
+1. ADD R1, R2, R3    # Read R2
+2. SUB R2, R4, R5    # Write R2 (false dependency!)
+3. MUL R6, R1, R7    # Uses result from instruction 1
+
+Instruction 2 can't execute until 1 reads R2
+But there's no true data dependency!
+R2 in instruction 1 and R2 in instruction 2 are different values
+
+<strong>Solution: Register Renaming</strong>
+
+Rename R2 to physical register P15:
+1. ADD R1, R2, R3    # Read R2 (physical P2)
+2. SUB P15, R4, R5   # Write P15 (renamed!)
+3. MUL R6, R1, R7
+
+Now instruction 2 can execute out of order!
+No conflict between P2 and P15
+
+<strong>CPUs have 168+ physical registers</strong> (Intel)
+Only 16-32 are visible to software (architectural registers)</code></pre>
+        </div>
+
+        <div class="success-box">
+            <h3>Key Takeaways</h3>
+            <ul>
+                <li>Pipelining achieves 5-10× speedup by overlapping instruction execution</li>
+                <li>Hazards (structural, data, control) can stall pipelines - solved by forwarding, reordering, and prediction</li>
+                <li>Branch prediction (95%+ accuracy) is critical for deep pipelines</li>
+                <li>Superscalar execution enables 2-4 IPC by executing multiple instructions in parallel</li>
+                <li>Out-of-order execution hides memory latency by executing independent instructions first</li>
+                <li>Register renaming eliminates false dependencies</li>
+            </ul>
+        </div>
+
+        <div class="nav-links">
+            <a href="topic-1.2.html" class="nav-link">← Previous: CPU Architecture Overview</a>
+            <a href="topic-1.2.2.html" class="nav-link">Next: Caching & Memory →</a>
+        </div>
+
+        <hr style="margin: 40px 0; border: none; border-top: 2px solid #ddd;">
+
+        <div style="background-color: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; margin: 20px 0; border-radius: 5px;">
+            <strong>Deepen your understanding:</strong><br>
+            → <a href="topic-1.2.2.html">Topic 1.2.2: Caching & Memory Hierarchy</a> - Learn how memory optimization achieves 100× speedups<br>
+            → <a href="topic-1.2.3.html">Topic 1.2.3: SIMD & Modern Techniques</a> - Explore vectorization and modern optimizations
+        </div>
+
+        <p style="text-align: center; color: #777; font-size: 0.9em;">
+            <strong>Computer Systems Mastery: Complete Learning Roadmap</strong><br>
+            Phase 1: Foundation — The Machine<br>
+            Topic 1.2.1: Instruction Pipelining & Superscalar Execution
+        </p>
+    </div>
+</body>
+</html>

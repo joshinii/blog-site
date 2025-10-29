@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Memory</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .analogy {
+            font-style: italic;
+            color: #555;
+            margin: 10px 0;
+            padding: 15px;
+            padding-left: 20px;
+            border-left: 3px solid #95a5a6;
+            background-color: #f9f9f9;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.4;
+            border: 1px solid #e0e7f0;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .diagram {
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .key-concept {
+            background-color: #e8f4f8;
+            border: 2px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .visual-example {
+            background-color: #f0f8ff;
+            border: 2px solid #87ceeb;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+        }
+
+        .nav-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: #2980b9;
+        }
+
+        .breadcrumb {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            body {
+                padding: 10px;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        pre:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        a {
+            transition: all 0.2s ease;
+        }
+
+        .info-box, .warning-box, .success-box {
+            transition: transform 0.2s ease;
+        }
+
+        .info-box:hover, .warning-box:hover, .success-box:hover {
+            transform: translateX(5px);
+        }
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="../blog.html">Learning Hub</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="./hubs/systems.html">Systems</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Virtual Memory</span>
+    </div>
+
+    <div class="container">
+        <h1>Virtual Memory</h1>
+        <p style="color: #666; font-style: italic; margin-bottom: 20px;">The Magic Trick: How Your OS Makes Every Process Think It Has All the Memory</p>
+
+        <div class="key-concept">
+            <h3>What You'll Learn</h3>
+            <ul>
+                <li><strong>Virtual Memory Basics</strong> - Why and how virtual memory works</li>
+                <li><strong>Paging</strong> - Pages, frames, and page tables</li>
+                <li><strong>TLB</strong> - Translation Lookaside Buffer for fast lookups</li>
+                <li><strong>Multi-Level Page Tables</strong> - Reducing memory overhead</li>
+                <li><strong>Page Replacement</strong> - LRU, FIFO, and Clock algorithms</li>
+                <li><strong>Demand Paging</strong> - Loading pages on-demand</li>
+            </ul>
+        </div>
+
+        <h2>Virtual Memory: The Magic Trick</h2>
+
+        <p>Virtual memory is one of the OS's greatest achievements. It lets each process think it has the entire address space to itself!</p>
+
+        <div class="analogy">
+            <strong>The Magic Warehouse Analogy</strong><br><br>
+            Imagine you run a warehouse with only 100 storage slots (physical memory). But you have 10 customers (processes), each thinking they have their own private warehouse of 1000 slots (virtual memory)!<br><br>
+            <strong>How?</strong>
+            <ul>
+                <li>Give each customer a <strong>virtual address book</strong> (page table)</li>
+                <li>When they request slot #500, you look up the mapping: "Oh, that's actually in physical slot #37"</li>
+                <li>If they request slot #800 which isn't in physical warehouse? Fetch it from external storage (disk)!</li>
+                <li>If warehouse is full? Evict something you haven't used in a while</li>
+            </ul>
+            This is exactly how virtual memory works!
+        </div>
+
+        <h3>Why Virtual Memory?</h3>
+
+        <div class="key-concept">
+            <ul>
+                <li><strong>Isolation</strong> - Processes can't access each other's memory</li>
+                <li><strong>Simplicity</strong> - Each process sees a simple, contiguous address space</li>
+                <li><strong>Protection</strong> - OS can mark pages as read-only, executable, etc.</li>
+                <li><strong>Overcommit</strong> - Can run programs larger than physical RAM</li>
+                <li><strong>Sharing</strong> - Multiple processes can map same physical page (shared libraries)</li>
+            </ul>
+        </div>
+
+        <h3>Paging</h3>
+
+        <p>Virtual and physical memory are divided into fixed-size chunks:</p>
+        <ul>
+            <li><strong>Page</strong> - Fixed-size chunk of virtual memory (typically 4KB)</li>
+            <li><strong>Frame</strong> - Fixed-size chunk of physical memory (same size as page)</li>
+            <li><strong>Page Table</strong> - Maps virtual pages to physical frames</li>
+        </ul>
+
+        <div class="diagram">
+Virtual Address Translation:
+
+Virtual Address (32-bit):
+┌─────────────────────┬─────────────────────┐
+│  Virtual Page # (20)│  Offset (12)        │
+└─────────────────────┴─────────────────────┘
+           │                    │
+           │                    │
+           ▼                    │
+    ┌─────────────┐             │
+    │ Page Table  │             │
+    │             │             │
+    │ VPN 0 → 5   │             │
+    │ VPN 1 → 12  │             │
+    │ VPN 2 → 3   │◄────────────┘
+    │ VPN 3 → 7   │
+    │ ...         │
+    └─────────────┘
+           │
+           │ (Physical Frame Number)
+           ▼
+Physical Address (32-bit):
+┌─────────────────────┬─────────────────────┐
+│  Physical Frame # (20)│  Offset (12)      │
+└─────────────────────┴─────────────────────┘
+
+Example: Virtual address 0x00003000 (VPN=3, offset=0)
+→ Page table lookup: VPN 3 → Frame 7
+→ Physical address 0x00007000 (Frame=7, offset=0)
+        </div>
+
+        <h4>Page Table Entry (PTE)</h4>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Frame Number</strong></td>
+                    <td>Physical frame this page maps to</td>
+                </tr>
+                <tr>
+                    <td><strong>Present Bit</strong></td>
+                    <td>1 = in physical memory, 0 = on disk</td>
+                </tr>
+                <tr>
+                    <td><strong>Dirty Bit</strong></td>
+                    <td>1 = page modified, must write to disk before evict</td>
+                </tr>
+                <tr>
+                    <td><strong>Referenced Bit</strong></td>
+                    <td>1 = page accessed recently (for LRU)</td>
+                </tr>
+                <tr>
+                    <td><strong>Read/Write</strong></td>
+                    <td>Permission bits</td>
+                </tr>
+                <tr>
+                    <td><strong>Execute</strong></td>
+                    <td>Can execute code from this page?</td>
+                </tr>
+                <tr>
+                    <td><strong>User/Supervisor</strong></td>
+                    <td>Can user-mode code access?</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Translation Lookaside Buffer (TLB)</h3>
+
+        <p>Problem: Every memory access requires 2 accesses (page table + actual data). That's 2× slower!</p>
+        <p>Solution: <strong>TLB</strong> - A fast cache of recent page table translations.</p>
+
+        <div class="visual-example">
+            <h4>Memory Access with TLB</h4>
+            <pre><code>CPU wants to access virtual address 0x00403050:
+
+1. Extract VPN = 0x403 (page 1027)
+
+2. Check TLB (hardware cache):
+   TLB lookup for VPN 1027
+
+   TLB HIT? (90-95% of time)
+   └─ Yes! → Frame = 142
+      Go directly to physical address 0x8E050
+      Total time: ~1-2 CPU cycles
+
+   TLB MISS? (5-10% of time)
+   └─ No → Walk page table in memory
+      Page table lookup (100+ cycles)
+      Update TLB with new mapping
+      Access physical memory
+      Total time: ~100-200 CPU cycles
+
+This is why TLB hit rate is CRITICAL for performance!</code></pre>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Scenario</th>
+                    <th>Time (cycles)</th>
+                    <th>Slowdown</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>TLB hit</td>
+                    <td>1-2</td>
+                    <td>None (baseline)</td>
+                </tr>
+                <tr>
+                    <td>TLB miss, page table in cache</td>
+                    <td>10-20</td>
+                    <td>10-20×</td>
+                </tr>
+                <tr>
+                    <td>TLB miss, page table in RAM</td>
+                    <td>100-200</td>
+                    <td>100-200×</td>
+                </tr>
+                <tr>
+                    <td>Page fault (page on disk)</td>
+                    <td>1,000,000+</td>
+                    <td>1,000,000× (!)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Multi-Level Page Tables</h3>
+
+        <p>Problem: A 32-bit address space with 4KB pages needs 1 million entries (4MB per process!).</p>
+        <p>Solution: Use a hierarchy of page tables, allocating only what's needed.</p>
+
+        <div class="diagram">
+Two-Level Page Table (32-bit):
+
+Virtual Address:
+┌────────────┬────────────┬────────────────────┐
+│ L1 (10)    │ L2 (10)    │ Offset (12)        │
+└────────────┴────────────┴────────────────────┘
+      │           │
+      │           │
+      ▼           │
+┌──────────────┐  │
+│ Page Dir     │  │
+│ (1 page)     │  │
+│              │  │
+│ Entry 0  ────┼──┼────► NULL (not allocated)
+│ Entry 1  ────┼──┼────► NULL
+│ Entry 2  ────┼──┘
+│ ...          │  │
+└──────────────┘  │
+                  ▼
+            ┌──────────────┐
+            │ Page Table   │
+            │ (1 page)     │
+            │              │
+            │ Entry 0 → 5  │
+            │ Entry 1 → 12 │
+            │ ...          │
+            └──────────────┘
+                  │
+                  ▼
+            Physical Frame
+
+Space saved: Only allocate page tables for used regions!
+Sparse address spaces: Only ~2-3 page tables instead of 1 million entries
+        </div>
+
+        <h3>Page Replacement Algorithms</h3>
+
+        <p>When physical memory is full and we need to bring in a new page, which page should we evict?</p>
+
+        <h4>1. First-In, First-Out (FIFO)</h4>
+        <p>Evict the oldest page in memory.</p>
+        <ul>
+            <li>Simple to implement</li>
+            <li>Poor performance (may evict frequently-used page)</li>
+            <li>Belady's anomaly (more frames → more faults, sometimes!)</li>
+        </ul>
+
+        <h4>2. Least Recently Used (LRU)</h4>
+        <p>Evict the page that hasn't been used for the longest time.</p>
+
+        <div class="visual-example">
+            <h4>LRU Example</h4>
+            <pre><code>Reference string: 7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2
+Number of frames: 3
+
+Time:  1   2   3   4   5   6   7   8   9  10  11  12  13
+Ref:   7   0   1   2   0   3   0   4   2   3   0   3   2
+     ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+F0:  │ 7 │ 7 │ 7 │ 2 │ 2 │ 2 │ 2 │ 4 │ 4 │ 4 │ 0 │ 0 │ 0 │
+F1:  │   │ 0 │ 0 │ 0 │ 0 │ 0 │ 0 │ 0 │ 2 │ 2 │ 2 │ 2 │ 2 │
+F2:  │   │   │ 1 │ 1 │ 1 │ 3 │ 3 │ 3 │ 3 │ 3 │ 3 │ 3 │ 3 │
+     └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+Hit:      *       *       *           *   *   *   *   *
+Fault: *   *   *   *       *   *   *   *
+
+Total faults: 9
+Total hits: 4</code></pre>
+        </div>
+
+        <ul>
+            <li>Excellent performance (optimal in practice)</li>
+            <li>Expensive to implement exactly (need timestamp on every access)</li>
+        </ul>
+
+        <h4>3. Clock (Second Chance)</h4>
+        <p>Approximates LRU using a reference bit. Cheap and effective!</p>
+
+        <div class="diagram">
+Clock Algorithm:
+
+    Circular list of pages:
+
+         ┌─────┐
+      ┌─▶│ P3  │◄─┐
+      │  │ R=1 │  │
+      │  └─────┘  │
+      │           │
+  ┌───┴───┐   ┌───┴───┐
+  │  P2   │   │  P4   │
+  │  R=0  │   │  R=1  │
+  └───┬───┘   └───┬───┘
+      │           │
+      │  ┌─────┐  │
+      └─▶│ P1  │◄─┘
+         │ R=1 │  ← hand (current position)
+         └─────┘
+
+When page fault occurs:
+1. Look at current hand position
+2. If R=1, set R=0 and advance hand (second chance!)
+3. If R=0, evict this page
+4. Insert new page here
+        </div>
+
+        <h3>Demand Paging</h3>
+
+        <p>Don't load pages until they're actually needed. Start with empty page table, fault in pages on demand.</p>
+
+        <div class="key-concept">
+            <h4>Page Fault Handling</h4>
+            <ol>
+                <li>CPU tries to access virtual address with Present=0</li>
+                <li>MMU triggers page fault exception</li>
+                <li>OS handles exception:
+                    <ul>
+                        <li>Find free frame (or evict one)</li>
+                        <li>Read page from disk into frame</li>
+                        <li>Update page table entry (set Present=1)</li>
+                        <li>Restart the instruction</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <div class="warning-box">
+            <strong>Thrashing:</strong> If page faults occur constantly (more time paging than executing), the system <strong>thrashes</strong>. Performance drops to nearly zero!<br><br>
+            <strong>Cause:</strong> Too many processes for available memory.<br>
+            <strong>Solution:</strong> Reduce multiprogramming level (kill processes), add more RAM, or improve working set.
+        </div>
+
+        <div class="nav-links">
+            <a href="topic-1.3.1.html" class="nav-link">← Previous: Processes & Scheduling</a>
+            <a href="topic-1.3.3.html" class="nav-link">Next: I/O & File Systems →</a>
+        </div>
+
+        <hr style="margin: 40px 0; border: none; border-top: 2px solid #ddd;">
+
+        <div style="background-color: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; margin: 20px 0; border-radius: 5px;">
+            <strong>Continue Learning:</strong><br>
+            → <a href="topic-1.3.3.html">Topic 1.3.3: I/O & File Systems</a> - Understanding disk I/O and file systems<br>
+            → <a href="topic-1.3.4.html">Topic 1.3.4: Synchronization & Concurrency</a> - Master thread synchronization<br>
+            → <a href="topic-1.3.0.html">Back to Overview</a> - Review OS fundamentals
+        </div>
+    </div>
+</body>
+</html>

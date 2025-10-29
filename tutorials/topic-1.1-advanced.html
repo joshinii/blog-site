@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Topics: Memory Management & Assembly Deep Dive</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #9b59b6;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        
+        h2 {
+            color: #8e44ad;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #9b59b6;
+            padding-left: 15px;
+        }
+        
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .success-box {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .danger-box {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.4;
+            border: 1px solid #e0e7f0;
+        }
+        
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+        }
+        
+        th {
+            background-color: #9b59b6;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .diagram {
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        
+        .key-concept {
+            background-color: #f3e5f5;
+            border: 2px solid #9b59b6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .analogy {
+            font-style: italic;
+            color: #555;
+            margin: 10px 0;
+            padding: 15px;
+            padding-left: 20px;
+            border-left: 3px solid #95a5a6;
+            background-color: #f9f9f9;
+        }
+        
+        .visual-example {
+            background-color: #f0f8ff;
+            border: 2px solid #87ceeb;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .back-link {
+            background-color: #9b59b6;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        
+        .back-link:hover {
+            background-color: #8e44ad;
+        }
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="topic-1.1.html" class="back-link">← Back to Topic 1.1</a>
+        
+        <h1>Topic 1.1-Advanced: Memory Management & Assembly Deep Dive</h1>
+        <p style="color: #666; font-style: italic; margin-bottom: 20px;">Stack, Heap, Garbage Collection, and Assembly Programming — Critical for Performance-Critical Systems and Security</p>
+
+        <p><strong>This is an advanced companion to Topic 1.1.</strong> Here, we dive deep into the memory layout that powers your programs, stack frame mechanics that enable recursion, heap management strategies that impact garbage collector pauses, and assembly language details that affect performance. Essential knowledge for building high-performance systems and understanding security vulnerabilities.</p>
+
+        <h2>Understanding the Stack in Depth</h2>
+        
+        <h3>What Is the Stack?</h3>
+        
+        <p>The <strong>stack</strong> is a region of memory used for temporary storage during function execution. It operates on a <strong>Last-In-First-Out (LIFO)</strong> principle.</p>
+        
+        <div class="analogy">
+            <strong>🥞 The Stack of Plates Analogy</strong><br><br>
+            Imagine a spring-loaded plate dispenser at a cafeteria:
+            <ul>
+                <li>You can only add plates to the top (<strong>push</strong>)</li>
+                <li>You can only remove plates from the top (<strong>pop</strong>)</li>
+                <li>Last plate added is the first one removed (LIFO)</li>
+                <li>If you try to get the bottom plate first, everything crashes!</li>
+            </ul>
+            The function call stack works exactly like this.
+        </div>
+
+        <h3>Stack Frames: The Building Blocks</h3>
+        
+        <p>Each time you call a function, a new <strong>stack frame</strong> (also called activation record) is created. It contains:</p>
+        
+        <div class="key-concept">
+            <strong>Components of a Stack Frame:</strong>
+            <ol>
+                <li><strong>Return address</strong>: Where to go back after function finishes</li>
+                <li><strong>Function parameters</strong>: Arguments passed to the function</li>
+                <li><strong>Local variables</strong>: Variables declared inside the function</li>
+                <li><strong>Saved registers</strong>: Previous values of registers (so we can restore them)</li>
+                <li><strong>Frame pointer</strong>: Pointer to the base of this frame</li>
+            </ol>
+        </div>
+
+        <h3>Step-by-Step: Function Call on the Stack</h3>
+        
+        <p>Let's trace this simple program:</p>
+        
+        <pre><code>int add(int a, int b) {
+    int result = a + b;
+    return result;
+}
+
+int main() {
+    int x = 5;
+    int y = 3;
+    int z = add(x, y);
+    return 0;
+}</code></pre>
+
+        <div class="visual-example">
+            <h4>Stack Evolution:</h4>
+            <pre><code><strong>1. Program starts - main() begins</strong>
+
+High Address
+┌─────────────────┐
+│  Kernel Space   │
+├─────────────────┤
+│                 │
+│   (unused)      │
+│                 │
+├─────────────────┤ ← Stack Pointer (SP)
+│ Return to OS    │
+├─────────────────┤ ← Base Pointer (BP)
+│ x = 5           │  main's local variables
+│ y = 3           │
+│ z = ?           │
+└─────────────────┘
+Low Address
+
+
+<strong>2. Calling add(x, y) - Before the call</strong>
+
+├─────────────────┤
+│ Return to OS    │
+├─────────────────┤ ← BP (main)
+│ x = 5           │
+│ y = 3           │
+│ z = ?           │
+└─────────────────┘
+About to call add(5, 3)...
+
+
+<strong>3. During add() execution - New frame created</strong>
+
+├─────────────────┤
+│ Return to OS    │
+├─────────────────┤
+│ x = 5           │  main's frame
+│ y = 3           │
+│ z = ?           │
+├─────────────────┤ ← Old BP saved here
+│ Return to main  │  (address after add() call)
+├─────────────────┤ ← BP (add)
+│ a = 5           │  add's parameters
+│ b = 3           │
+│ result = ?      │  add's local variables
+├─────────────────┤ ← SP
+│                 │
+└─────────────────┘
+
+
+<strong>4. add() calculates result</strong>
+
+├─────────────────┤
+│ Return to OS    │
+├─────────────────┤
+│ x = 5           │
+│ y = 3           │
+│ z = ?           │
+├─────────────────┤
+│ Return to main  │
+├─────────────────┤ ← BP (add)
+│ a = 5           │
+│ b = 3           │
+│ result = 8      │  ← Computed!
+├─────────────────┤ ← SP
+└─────────────────┘
+
+
+<strong>5. add() returns - Frame destroyed</strong>
+
+├─────────────────┤
+│ Return to OS    │
+├─────────────────┤ ← BP (back to main)
+│ x = 5           │
+│ y = 3           │
+│ z = 8           │  ← Result stored here!
+├─────────────────┤ ← SP (moved back up)
+│                 │
+│  (add's frame   │
+│   is gone!)     │
+└─────────────────┘</code></pre>
+        </div>
+
+        <h3>Assembly Code Explained</h3>
+        
+        <p>Here's the actual assembly with detailed explanation:</p>
+        
+        <pre><code>; Function: add(int a, int b)
+add:
+    pushq   %rbp              ; Save old base pointer on stack
+    movq    %rsp, %rbp        ; Set new base pointer (start of our frame)
+    
+    ; At this point:
+    ; - Parameters a and b are in registers %edi and %esi
+    ; - We need to save them in our stack frame
+    
+    movl    %edi, -4(%rbp)    ; Store 'a' at BP-4 (4 bytes below BP)
+    movl    %esi, -8(%rbp)    ; Store 'b' at BP-8 (4 bytes below that)
+    
+    ; Now compute result
+    movl    -4(%rbp), %eax    ; Load 'a' into register eax
+    addl    -8(%rbp), %eax    ; Add 'b' to eax (result now in eax)
+    
+    ; Clean up and return
+    popq    %rbp              ; Restore old base pointer
+    ret                       ; Return (result in eax)</code></pre>
+
+        <div class="info-box">
+            <strong>Register Name Conventions (x86-64):</strong>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Register</th>
+                        <th>Purpose</th>
+                        <th>Size</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>rax</code></td>
+                        <td>Accumulator / Return value</td>
+                        <td>64-bit (8 bytes)</td>
+                    </tr>
+                    <tr>
+                        <td><code>eax</code></td>
+                        <td>Lower 32 bits of rax</td>
+                        <td>32-bit (4 bytes)</td>
+                    </tr>
+                    <tr>
+                        <td><code>rbp</code></td>
+                        <td>Base Pointer (frame base)</td>
+                        <td>64-bit</td>
+                    </tr>
+                    <tr>
+                        <td><code>rsp</code></td>
+                        <td>Stack Pointer (current top)</td>
+                        <td>64-bit</td>
+                    </tr>
+                    <tr>
+                        <td><code>rdi</code></td>
+                        <td>First function argument</td>
+                        <td>64-bit</td>
+                    </tr>
+                    <tr>
+                        <td><code>edi</code></td>
+                        <td>Lower 32 bits of rdi</td>
+                        <td>32-bit</td>
+                    </tr>
+                    <tr>
+                        <td><code>rsi</code></td>
+                        <td>Second function argument</td>
+                        <td>64-bit</td>
+                    </tr>
+                    <tr>
+                        <td><code>esi</code></td>
+                        <td>Lower 32 bits of rsi</td>
+                        <td>32-bit</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><strong>Naming pattern:</strong> 'r' prefix = 64-bit register, 'e' prefix = 32-bit register</p>
+        </div>
+
+        <h3>Stack Overflow: When Things Go Wrong</h3>
+        
+        <p>A <strong>stack overflow</strong> occurs when the stack runs out of space, typically from:</p>
+        
+        <div class="danger-box">
+            <strong>Common Causes:</strong>
+            
+            <p><strong>1. Infinite Recursion</strong></p>
+            <pre><code>void infinite() {
+    infinite();  // Calls itself forever!
+    // Each call adds a new frame, eventually filling the stack
+}</code></pre>
+
+            <p><strong>2. Very Deep Recursion</strong></p>
+            <pre><code>int factorial(int n) {
+    if (n == 0) return 1;
+    return n * factorial(n - 1);
+}
+
+factorial(1000000);  // Too many frames!</code></pre>
+
+            <p><strong>3. Large Local Arrays</strong></p>
+            <pre><code>void big() {
+    int huge[1000000];  // 4MB array on stack - BAD!
+    // Stack is typically only 1-8 MB total
+}</code></pre>
+        </div>
+
+        <h2>Understanding the Heap in Depth</h2>
+        
+        <h3>What Is the Heap?</h3>
+        
+        <p>The <strong>heap</strong> is a region of memory for <strong>dynamic allocation</strong> — memory that you request at runtime and must manually manage.</p>
+        
+        <div class="analogy">
+            <strong>🏢 The Warehouse Analogy</strong><br><br>
+            <strong>Stack</strong> is like your desk:
+            <ul>
+                <li>Limited space</li>
+                <li>Automatically organized (papers stacked in order)</li>
+                <li>Cleared automatically when you're done with a task</li>
+            </ul>
+            
+            <strong>Heap</strong> is like a warehouse:
+            <ul>
+                <li>Huge space available</li>
+                <li>You must explicitly request storage space</li>
+                <li>You must explicitly free space when done</li>
+                <li>You can access any area at any time (random access)</li>
+                <li>If you forget to return items, warehouse fills up (memory leak!)</li>
+            </ul>
+        </div>
+
+        <h3>How malloc() Works</h3>
+        
+        <p>When you call <code>malloc(size)</code>, here's what happens:</p>
+        
+        <div class="visual-example">
+            <pre><code>int *ptr = malloc(sizeof(int) * 100);  // Request 400 bytes</code></pre>
+            
+            <p><strong>Step-by-step process:</strong></p>
+            <ol>
+                <li><strong>System call:</strong> malloc asks the OS for memory using <code>brk()</code> or <code>mmap()</code></li>
+                <li><strong>Allocation:</strong> Memory manager finds a free block large enough (400 bytes)</li>
+                <li><strong>Bookkeeping:</strong> Adds metadata (size, free/used flag) before the block</li>
+                <li><strong>Return:</strong> Returns pointer to the usable memory (after metadata)</li>
+            </ol>
+        </div>
+
+        <div class="diagram">Memory layout after malloc:
+
+Heap grows upward →
+
+┌─────────────────────────────┐
+│  Metadata (size: 400,       │  ← malloc adds this
+│           used: true)       │     (you don't see it)
+├─────────────────────────────┤  ← ptr points here
+│                             │
+│  Your 400 bytes of memory   │  ← You can use this
+│                             │
+└─────────────────────────────┘</div>
+
+        <h3>Memory Leaks: The Silent Killer</h3>
+        
+        <p>A <strong>memory leak</strong> happens when you allocate memory but forget to free it.</p>
+        
+        <div class="danger-box">
+            <strong>Example: Memory Leak</strong>
+            <pre><code>void leak_example() {
+    int *data = malloc(1000 * sizeof(int));  // Allocate 4KB
+    // ... use data ...
+    // Function ends, but data is never freed!
+    // The 4KB is lost forever (until program exits)
+}
+
+// If this runs 1000 times:
+for (int i = 0; i < 1000; i++) {
+    leak_example();
+}
+// You've leaked 4 MB!</code></pre>
+        </div>
+
+        <div class="success-box">
+            <strong>Correct Version:</strong>
+            <pre><code>void no_leak() {
+    int *data = malloc(1000 * sizeof(int));
+    // ... use data ...
+    free(data);  // ← Always free what you malloc!
+}</code></pre>
+        </div>
+
+        <h3>Fragmentation: Why Heap Management Is Hard</h3>
+        
+        <p><strong>Fragmentation</strong> occurs when free memory is broken into small, non-contiguous pieces.</p>
+        
+        <div class="visual-example">
+            <h4>Example of Fragmentation:</h4>
+            <pre><code><strong>Initial state: 1000 bytes free</strong>
+[                    1000 bytes free                    ]
+
+<strong>Allocate three 200-byte blocks:</strong>
+[Used:200] [Used:200] [Used:200] [Free:400]
+
+<strong>Free the middle block:</strong>
+[Used:200] [Free:200] [Used:200] [Free:400]
+
+<strong>Try to allocate 300 bytes:</strong>
+Problem: We have 600 bytes free total (200+400)
+But no single contiguous block of 300!
+malloc() will fail or need to compact memory.</code></pre>
+        </div>
+
+        <h2>GCC Compiler Commands Explained</h2>
+        
+        <h3>Understanding GCC Flags</h3>
+        
+        <p>When we use <code>gcc -S -O0 -fno-asynchronous-unwind-tables add.c</code>, here's what each flag means:</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Flag</th>
+                    <th>Meaning</th>
+                    <th>Why We Use It</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>-S</code></td>
+                    <td>Stop after generating assembly</td>
+                    <td>We want to see the assembly code, not compile fully</td>
+                </tr>
+                <tr>
+                    <td><code>-O0</code></td>
+                    <td>No optimization</td>
+                    <td>Makes assembly easier to read (matches source code closely)</td>
+                </tr>
+                <tr>
+                    <td><code>-O1</code></td>
+                    <td>Basic optimization</td>
+                    <td>Balance between speed and compile time</td>
+                </tr>
+                <tr>
+                    <td><code>-O2</code></td>
+                    <td>More optimization</td>
+                    <td>Production code - much faster</td>
+                </tr>
+                <tr>
+                    <td><code>-O3</code></td>
+                    <td>Aggressive optimization</td>
+                    <td>Maximum speed (may increase code size)</td>
+                </tr>
+                <tr>
+                    <td><code>-fno-asynchronous-unwind-tables</code></td>
+                    <td>Don't generate exception tables</td>
+                    <td>Removes debug info, makes assembly cleaner</td>
+                </tr>
+                <tr>
+                    <td><code>-c</code></td>
+                    <td>Compile to object file (.o)</td>
+                    <td>Creates machine code but doesn't link</td>
+                </tr>
+                <tr>
+                    <td><code>-o filename</code></td>
+                    <td>Specify output filename</td>
+                    <td>Name the output file</td>
+                </tr>
+                <tr>
+                    <td><code>-g</code></td>
+                    <td>Include debug information</td>
+                    <td>Allows use of debugger (gdb)</td>
+                </tr>
+                <tr>
+                    <td><code>-Wall</code></td>
+                    <td>Enable all warnings</td>
+                    <td>Catch potential bugs</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="visual-example">
+            <h4>Common GCC Command Patterns:</h4>
+            <pre><code># View assembly (for learning)
+gcc -S -O0 program.c
+
+# Compile with debugging
+gcc -g -o program program.c
+
+# Production compile (optimized)
+gcc -O2 -o program program.c
+
+# Compile multiple files
+gcc -o program main.c helper.c utils.c
+
+# Compile to object files first (for large projects)
+gcc -c main.c       # Creates main.o
+gcc -c helper.c     # Creates helper.o
+gcc -o program main.o helper.o  # Link them</code></pre>
+        </div>
+
+        <h2>Assembly Instructions Reference</h2>
+        
+        <h3>Common x86-64 Instructions</h3>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Instruction</th>
+                    <th>Syntax</th>
+                    <th>What It Does</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>mov</code></td>
+                    <td>mov dest, src</td>
+                    <td>Copy src to dest</td>
+                    <td><code>mov rax, 42</code> → rax = 42</td>
+                </tr>
+                <tr>
+                    <td><code>add</code></td>
+                    <td>add dest, src</td>
+                    <td>dest = dest + src</td>
+                    <td><code>add rax, 5</code> → rax = rax + 5</td>
+                </tr>
+                <tr>
+                    <td><code>sub</code></td>
+                    <td>sub dest, src</td>
+                    <td>dest = dest - src</td>
+                    <td><code>sub rax, 3</code> → rax = rax - 3</td>
+                </tr>
+                <tr>
+                    <td><code>push</code></td>
+                    <td>push src</td>
+                    <td>Push src onto stack</td>
+                    <td><code>push rbp</code> → save rbp</td>
+                </tr>
+                <tr>
+                    <td><code>pop</code></td>
+                    <td>pop dest</td>
+                    <td>Pop from stack to dest</td>
+                    <td><code>pop rbp</code> → restore rbp</td>
+                </tr>
+                <tr>
+                    <td><code>call</code></td>
+                    <td>call function</td>
+                    <td>Call function (push return address, jump)</td>
+                    <td><code>call add</code></td>
+                </tr>
+                <tr>
+                    <td><code>ret</code></td>
+                    <td>ret</td>
+                    <td>Return from function (pop return address, jump)</td>
+                    <td><code>ret</code></td>
+                </tr>
+                <tr>
+                    <td><code>lea</code></td>
+                    <td>lea dest, [addr]</td>
+                    <td>Load effective address</td>
+                    <td><code>lea rax, [rbp-8]</code></td>
+                </tr>
+                <tr>
+                    <td><code>cmp</code></td>
+                    <td>cmp a, b</td>
+                    <td>Compare a and b (sets flags)</td>
+                    <td><code>cmp rax, 0</code></td>
+                </tr>
+                <tr>
+                    <td><code>jmp</code></td>
+                    <td>jmp label</td>
+                    <td>Jump to label</td>
+                    <td><code>jmp loop_start</code></td>
+                </tr>
+                <tr>
+                    <td><code>je</code></td>
+                    <td>je label</td>
+                    <td>Jump if equal (after cmp)</td>
+                    <td><code>je done</code></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Memory Addressing Modes</h3>
+        
+        <div class="visual-example">
+            <pre><code><strong>Direct:</strong>
+mov rax, 42          ; rax = 42 (immediate value)
+
+<strong>Register:</strong>
+mov rax, rbx         ; rax = rbx (copy register)
+
+<strong>Memory (absolute):</strong>
+mov rax, [0x1000]    ; rax = value at memory address 0x1000
+
+<strong>Memory (register indirect):</strong>
+mov rax, [rbx]       ; rax = value at address in rbx
+
+<strong>Memory (base + offset):</strong>
+mov rax, [rbp-8]     ; rax = value at (rbp - 8)
+                     ; Common for local variables!
+
+<strong>Memory (base + index):</strong>
+mov rax, [rbx + rcx] ; rax = value at (rbx + rcx)
+                     ; Useful for arrays
+
+<strong>Memory (base + index*scale + offset):</strong>
+mov rax, [rbx + rcx*4 + 8]
+; rax = value at (rbx + rcx*4 + 8)
+; Perfect for accessing array elements:
+; rbx = array base
+; rcx = index
+; 4 = size of int
+; 8 = additional offset</code></pre>
+        </div>
+
+        <h2>Practical Examples</h2>
+        
+        <h3>Example 1: Array Access</h3>
+        
+        <pre><code>// C code
+int array[10];
+int value = array[5];
+
+// Assembly (simplified)
+lea rbx, [array]         ; rbx = address of array
+mov rcx, 5               ; rcx = index
+mov eax, [rbx + rcx*4]   ; eax = array[5]
+                         ; *4 because int is 4 bytes</code></pre>
+
+        <h3>Example 2: Struct Access</h3>
+        
+        <pre><code>// C code
+struct Person {
+    int age;      // offset 0
+    int height;   // offset 4
+};
+
+struct Person p;
+int h = p.height;
+
+// Assembly
+lea rbx, [p]            ; rbx = address of p
+mov eax, [rbx + 4]      ; eax = p.height (offset 4 bytes)</code></pre>
+
+        <h3>Example 3: Loop with Array</h3>
+        
+        <pre><code>// C code
+int sum = 0;
+for (int i = 0; i < 10; i++) {
+    sum += array[i];
+}
+
+// Assembly (simplified)
+    xor eax, eax         ; eax = 0 (sum)
+    xor ecx, ecx         ; ecx = 0 (i)
+loop_start:
+    cmp ecx, 10          ; compare i with 10
+    jge loop_end         ; jump if i >= 10
+    
+    lea rbx, [array]     ; rbx = array address
+    add eax, [rbx + rcx*4]  ; sum += array[i]
+    
+    inc ecx              ; i++
+    jmp loop_start       ; continue loop
+loop_end:
+    ; sum is in eax</code></pre>
+
+        <h2>Summary</h2>
+        
+        <div class="success-box">
+            <h3>You Now Understand:</h3>
+            <ul>
+                <li>✅ How the stack works in detail (stack frames, function calls)</li>
+                <li>✅ How the heap works (malloc, free, fragmentation)</li>
+                <li>✅ What garbage collection is and how it works</li>
+                <li>✅ Common GCC compiler flags and what they do</li>
+                <li>✅ x86-64 assembly instructions and addressing modes</li>
+                <li>✅ How to read and trace assembly code</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h3>Key Takeaways:</h3>
+            <ul>
+                <li><strong>Stack</strong>: Fast, automatic, limited size, LIFO</li>
+                <li><strong>Heap</strong>: Slow(er), manual, huge size, random access</li>
+                <li><strong>Memory management</strong>: Trade-off between control and convenience</li>
+                <li><strong>Assembly</strong>: Understanding it helps you write better high-level code</li>
+            </ul>
+        </div>
+
+        <a href="topic-1.1.html" class="back-link">← Back to Topic 1.1</a>
+
+        <hr style="margin: 40px 0; border: none; border-top: 2px solid #ddd;">
+        
+        <p style="text-align: center; color: #777; font-size: 0.9em;">
+            <strong>Computer Systems Mastery: Complete Learning Roadmap</strong><br>
+            Advanced Topics Companion to Topic 1.1
+        </p>
+    </div>
+</body>
+</html>

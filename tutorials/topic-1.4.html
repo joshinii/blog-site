@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Management & Virtual Memory</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .danger-box {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.4;
+            border: 1px solid #e0e7f0;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .prerequisite {
+            background-color: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .next-topic {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        a {
+            color: #3498db;
+        }
+
+        .toc {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="../blog.html">Learning Hub</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="./hubs/memory-storage.html">Memory Storage</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Memory Management & Virtual Memory</span>
+    </div>
+
+    <div class="container">
+        <h1>Memory Management & Virtual Memory</h1>
+
+        <div class="prerequisite">
+            <strong>Prerequisites:</strong> Topic 0.3 (Memory Addressing & Pointers), Topic 1.1 (CPU & Instruction Execution), Topic 1.3 (Operating Systems)
+        </div>
+
+        <div class="toc">
+            <h3>Topics Covered</h3>
+            <ol>
+                <li>Virtual Memory Concepts</li>
+                <li>Paging and Page Replacement</li>
+                <li>Stack Management</li>
+                <li>Heap Allocation</li>
+                <li>Garbage Collection</li>
+                <li>Memory Protection & Permissions</li>
+                <li>Common Memory Bugs & Defenses</li>
+                <li>Professional Impact</li>
+            </ol>
+        </div>
+
+        <h2 id="introduction">Introduction: Memory as a Managed Resource</h2>
+
+        <p>Memory management is where computer science theory meets practical engineering. Understanding how memory is allocated, protected, and reclaimed is essential for:</p>
+
+        <ul>
+            <li><strong>Performance:</strong> Optimizing cache usage, understanding page faults, efficient allocation</li>
+            <li><strong>Reliability:</strong> Preventing memory leaks, catching buffer overflows, debugging memory corruption</li>
+            <li><strong>Security:</strong> Understanding vulnerabilities like use-after-free, integer overflow in allocation, heap spray attacks</li>
+            <li><strong>System Design:</strong> Choosing between stack/heap, designing data structures, managing resources in long-running services</li>
+        </ul>
+
+        <p><strong>This topic consolidates</strong> the memory management scattered across operating systems, pointers, and low-level programming. By the end, you'll understand the complete memory management pipeline from hardware through OS to application code.</p>
+
+        <h2 id="virtual-memory-concepts">1. Virtual Memory Concepts</h2>
+
+        <p>Virtual memory is the OS's mechanism for giving each process its own address space while sharing limited physical RAM. This section builds on Topic 0.3 (pointers) with deeper technical details.</p>
+
+        <h3>Virtual Address Spaces</h3>
+
+        <p>Each process believes it has a contiguous, private address space. On a 64-bit system, this is 0x0000000000000000 to 0xFFFFFFFFFFFFFFFF—terabytes of address space. But your machine only has gigabytes of physical RAM. How does this work?</p>
+
+        <p><strong>The trick:</strong> The OS divides both virtual and physical memory into pages (typically 4 KB), and maintains page tables that map virtual pages to physical pages.</p>
+
+        <h3>Pages and Page Tables</h3>
+
+        <p>A page is a fixed-size block of memory (4 KB on most systems). Page tables are hierarchical data structures maintained by the OS:</p>
+
+        <pre><code>Virtual Address 0x12345678 (example, simplified):
+  Page Table L1: Look up bits 31-22   → Entry 0x123
+  Page Table L2: Look up bits 21-12   → Entry 0x456
+  Page Offset:   bits 11-0            → Offset 0x678
+
+  Translation: Virtual page 0x12345 → Physical page 0x87654
+             Then add offset: 0x87654000 + 0x678 = 0x87654678</code></pre>
+
+        <p>Why hierarchical? Storing one entry per page would require 2^52 page table entries on 64-bit (terabytes of memory!). Hierarchical page tables are sparse—only allocate entries for regions actually in use.</p>
+
+        <h3>The TLB (Translation Lookaside Buffer)</h3>
+
+        <p>Every address translation requires walking the page table (multiple memory accesses). To speed this up, CPUs have a small, fast cache called the TLB:</p>
+
+        <ul>
+            <li><strong>Stores:</strong> Virtual page number → Physical page number mappings</li>
+            <li><strong>Size:</strong> Typically 64-512 entries (very small)</li>
+            <li><strong>Access time:</strong> 1-2 cycles (vs ~100 cycles for page table walk)</li>
+            <li><strong>Automatic:</strong> CPU updates TLB on page table walks</li>
+        </ul>
+
+        <p>TLB misses are expensive and a major source of performance problems.</p>
+
+        <h2 id="paging">2. Paging and Page Replacement</h2>
+
+        <p>When you request memory via malloc() or stack allocation, if there's no physical RAM available, the OS must decide which pages to evict from RAM to make space.</p>
+
+        <h3>Page Faults and Handling</h3>
+
+        <p>When the CPU tries to access a virtual address whose page is not in physical RAM:</p>
+
+        <ol>
+            <li>MMU checks page table → "Not present" flag set</li>
+            <li>MMU raises page fault exception</li>
+            <li>OS kernel takes over</li>
+            <li>OS checks: Is this a valid access? (If not, kill the process)</li>
+            <li>OS selects a victim page to evict (see replacement algorithms)</li>
+            <li>OS writes victim page to disk if modified</li>
+            <li>OS loads requested page from disk into physical RAM</li>
+            <li>OS updates page tables</li>
+            <li>CPU retries the instruction</li>
+        </ol>
+
+        <p>A page fault costs ~100,000 cycles (compared to ~10 cycles for a cache hit). This is one of the most expensive operations in computer systems.</p>
+
+        <h3>Page Replacement Algorithms</h3>
+
+        <p>When RAM is full, the OS must choose which page to evict. Several algorithms exist:</p>
+
+        <table>
+            <tr>
+                <th>Algorithm</th>
+                <th>Logic</th>
+                <th>Pros</th>
+                <th>Cons</th>
+            </tr>
+            <tr>
+                <td><strong>FIFO</strong></td>
+                <td>Evict oldest page</td>
+                <td>Simple</td>
+                <td>No consideration of frequency</td>
+            </tr>
+            <tr>
+                <td><strong>LRU</strong></td>
+                <td>Evict least recently used</td>
+                <td>Generally good performance</td>
+                <td>Expensive to track (O(n) per access)</td>
+            </tr>
+            <tr>
+                <td><strong>Clock (second chance)</strong></td>
+                <td>LRU approximation with bit flag</td>
+                <td>Efficient LRU-like behavior</td>
+                <td>Slightly worse than true LRU</td>
+            </tr>
+            <tr>
+                <td><strong>Working Set</strong></td>
+                <td>Keep pages active in time window</td>
+                <td>Models program behavior well</td>
+                <td>Complex to implement</td>
+            </tr>
+        </table>
+
+        <h3>Memory Pressure and Thrashing</h3>
+
+        <p>If a process constantly accesses pages faster than the OS can load them, the system enters thrashing: spending more time page faulting than executing actual code. Performance drops from nanoseconds to seconds.</p>
+
+        <div class="warning-box">
+            <strong>Example:</strong> A 10 GB dataset on a 4 GB system accessing random locations will thrash. Each access causes a page fault, OS spends 99% of time disk I/O, 1% executing user code.
+        </div>
+
+        <h2 id="stack-management">3. Stack Management</h2>
+
+        <p>The stack is where function calls, parameters, and local variables live. This section goes deeper than Topic 0.3.</p>
+
+        <h3>Stack Frames in Detail</h3>
+
+        <p>Each function invocation gets a stack frame:</p>
+
+        <pre><code>void function(int a, int b) {
+    int x = a + b;
+    int y = x * 2;
+    helper();          // Creates another frame
+    return;            // Frame popped
+}
+
+// Stack layout during execution:
+Address  │ Stack Frame │ Contents
+0x1100   │ helper()    │ [frame]
+0x1080   │ function()  │ y = x*2
+0x1060   │             │ x = a+b
+0x1040   │             │ return addr
+0x1020   │             │ saved RBP ← Base Pointer
+0x1000   │ main()      │ [main frame]</code></pre>
+
+        <h3>Function Prologue and Epilogue</h3>
+
+        <p>Every function starts with a prologue (setup) and ends with epilogue (cleanup):</p>
+
+        <pre><code>// Prologue:
+push RBP              // Save old base pointer
+mov RBP, RSP          // Set new base pointer
+sub RSP, local_size   // Allocate local variables
+
+// Function body
+...
+
+// Epilogue:
+mov RSP, RBP          // Restore stack pointer
+pop RBP               // Restore old base pointer
+ret                   // Pop return address and jump</code></pre>
+
+        <h3>Stack Overflow</h3>
+
+        <p>Each thread has a limited stack size (typically 8 MB on Linux). Infinite recursion or very large local allocations cause stack overflow:</p>
+
+        <div class="danger-box">
+            <pre><code>// Stack overflow!
+void recurse() {
+    int huge_array[1000000];  // ~4 MB of stack per call
+    recurse();                 // 3 calls = 12 MB > 8 MB stack limit
+}
+
+recurse();  // Crash: stack overflow</code></pre>
+        </div>
+
+        <h2 id="heap-allocation">4. Heap Allocation</h2>
+
+        <p>The heap is for dynamic allocation. Unlike the stack, heap allocation is complex—the allocator must find free memory, track allocated blocks, handle fragmentation, and enable freeing.</p>
+
+        <h3>Malloc/Free Mechanics</h3>
+
+        <p><code>malloc()</code> searches the heap for a free block large enough to satisfy the request:</p>
+
+        <pre><code>ptr = malloc(100);   // Find 100+ bytes of free space
+
+// Allocator might return:
+//  - Exact size: saves space but harder to find
+//  - First available: fast but wastes space
+//  - Best fit: good compromise</code></pre>
+
+        <p><code>free()</code> marks memory as available for reuse:</p>
+
+        <pre><code>free(ptr);     // Mark as free
+               // OS might coalesce adjacent free blocks</code></pre>
+
+        <h3>Heap Metadata</h3>
+
+        <p>The allocator must track which blocks are allocated vs free. Metadata typically stored before each block:</p>
+
+        <pre><code>Heap layout:
+[Metadata: size=100, allocated][100 bytes of data][Metadata: size=256, free][256 bytes]...
+
+When freeing:
+1. Look at metadata before pointer
+2. Check magic number (sanity check)
+3. Mark as free
+4. Check adjacent blocks to coalesce</code></pre>
+
+        <h3>Fragmentation</h3>
+
+        <p>Repeated alloc/free patterns create fragmentation: many small free blocks but no large free blocks.</p>
+
+        <pre><code>// After many allocs/frees:
+[alloc 50][free 40][alloc 30][free 20][alloc 60][free 50]
+
+Want to malloc(100)?
+→ Need 100 contiguous bytes
+→ Can't use: 40+20+50 = 110 bytes (but not contiguous)
+→ malloc fails even though 110 bytes free!</code></pre>
+
+        <p>Solutions: compaction (expensive), segregated free lists (fast), or use garbage collection.</p>
+
+        <h2 id="garbage-collection">5. Garbage Collection</h2>
+
+        <p>Some languages (Java, Python, C#) automate memory reclamation via garbage collection.</p>
+
+        <h3>Mark-and-Sweep Algorithm</h3>
+
+        <ol>
+            <li><strong>Mark:</strong> Walk all reachable objects from root pointers, mark them</li>
+            <li><strong>Sweep:</strong> Walk heap, free unmarked objects</li>
+        </ol>
+
+        <pre><code>// Before GC:
+Heap: [Object A][Object B][Object C][Object D]
+
+References:
+ptr1 → A, ptr2 → C
+ptr3 (freed)
+
+Mark phase:
+[A marked][B][C marked][D]
+
+Sweep phase:
+[A][C]  ← B and D freed</code></pre>
+
+        <h3>Generational Collection</h3>
+
+        <p>Most objects die young. Split heap into generations:</p>
+
+        <ul>
+            <li><strong>Generation 0 (young):</strong> Collect frequently (cheap)</li>
+            <li><strong>Generation 1 (old):</strong> Collect less often</li>
+            <li><strong>Generation 2 (ancient):</strong> Collect rarely</li>
+        </ul>
+
+        <p>This improves performance dramatically—most collection time spent on young generation (which is small).</p>
+
+        <h3>GC Implications for Real-Time Systems</h3>
+
+        <p>Garbage collection pauses can be unpredictable. For real-time systems requiring consistent latency, this is a problem:</p>
+
+        <ul>
+            <li>Java's GC can pause for seconds (in large heaps)</li>
+            <li>High-frequency trading systems can't afford random pauses</li>
+            <li>Embedded systems often can't use GC languages</li>
+        </ul>
+
+        <h2 id="memory-protection">6. Memory Protection & Permissions</h2>
+
+        <p>Each page in the page table has permission bits: Read, Write, Execute.</p>
+
+        <pre><code>Permission bits (simplified):
+[R][W][X] = Read, Write, Execute
+ 1  0  1   = Read and Execute only
+
+Code segment:  R-X (code is readable and executable, but not writable)
+Data segment:  RW- (data is readable and writable, but not executable)
+Stack:         RW- (stack is readable and writable)
+Heap:          RW- (heap is readable and writable)</code></pre>
+
+        <h3>DEP (Data Execution Prevention)</h3>
+
+        <p>The X (execute) bit prevents data regions from containing executable code:</p>
+
+        <ul>
+            <li><strong>Without DEP:</strong> Attacker writes shellcode to stack, overwrites return address, code executes</li>
+            <li><strong>With DEP:</strong> CPU refuses to execute code in non-executable pages, attack fails</li>
+        </ul>
+
+        <h3>ASLR (Address Space Layout Randomization)</h3>
+
+        <p>Randomizes base addresses of memory regions to prevent predictable exploits:</p>
+
+        <pre><code>// Run 1: Stack at 0x7fff0000, Heap at 0x1000000
+// Run 2: Stack at 0x7ffc0000, Heap at 0x2000000
+// Attacker can't hardcode addresses</code></pre>
+
+        <h2 id="memory-bugs">7. Common Memory Bugs & Defenses</h2>
+
+        <h3>Buffer Overflow (CWE-120)</h3>
+
+        <div class="danger-box">
+            <pre><code>char buffer[10];
+strcpy(buffer, "This is way too long");
+// Writes 21 bytes into 10-byte buffer
+// Overwrites local variables, return address, etc.</code></pre>
+        </div>
+
+        <p><strong>Defenses:</strong></p>
+        <ul>
+            <li>Bounds checking: <code>strncpy</code> instead of <code>strcpy</code></li>
+            <li>Stack canaries: magic value before return address</li>
+            <li>Address Sanitizer (ASan): runtime checks</li>
+            <li>DEP/NX bit: prevent code execution from stack</li>
+        </ul>
+
+        <h3>Use-After-Free (CWE-416)</h3>
+
+        <div class="danger-box">
+            <pre><code>int *p = malloc(sizeof(int));
+free(p);
+printf("%d", *p);  // Accessing freed memory
+                   // Might read garbage, might crash, might be exploited</code></pre>
+        </div>
+
+        <p><strong>Defenses:</strong></p>
+        <ul>
+            <li>Clear pointer after freeing: <code>p = NULL</code></li>
+            <li>Use-after-free detectors: Valgrind, ASan</li>
+            <li>Smart pointers: C++'s <code>unique_ptr</code>, <code>shared_ptr</code></li>
+            <li>GC languages avoid this entirely</li>
+        </ul>
+
+        <h3>Memory Leaks</h3>
+
+        <div class="warning-box">
+            <pre><code>void function() {
+    int *p = malloc(1000);
+    // ... do work ...
+    return;  // Never freed!
+}
+
+After 1000 calls: 1 MB leaked
+After 1 million calls: 1 GB leaked</code></pre>
+        </div>
+
+        <p><strong>Defenses:</strong></p>
+        <ul>
+            <li>Valgrind or ASan detects all leaks</li>
+            <li>Smart pointers or GC languages prevent leaks</li>
+            <li>Careful code review and testing</li>
+        </ul>
+
+        <h3>Integer Overflow in Allocation</h3>
+
+        <div class="danger-box">
+            <pre><code>size_t size = n * sizeof(int);  // n is large
+ptr = malloc(size);
+
+// If n = 2^31, and sizeof(int) = 4
+// size = 2^33 (overflows 32-bit size_t)
+// malloc() gets small size, allocates little space
+// Writing "large" buffer overflows heap</code></pre>
+        </div>
+
+        <p><strong>Defense:</strong> Check for overflow before multiplying</p>
+
+        <h2 id="professional-impact">8. Professional Impact & Real-World Examples</h2>
+
+        <h3>Performance Optimization</h3>
+
+        <ul>
+            <li><strong>Cache locality:</strong> Allocate related data together to fit in cache</li>
+            <li><strong>Page faults:</strong> Access memory sequentially to minimize TLB misses</li>
+            <li><strong>GC tuning:</strong> Adjust GC frequency vs pause latency trade-off</li>
+        </ul>
+
+        <h3>Debugging Memory Issues</h3>
+
+        <ul>
+            <li>Valgrind detects leaks and corruption</li>
+            <li>Address Sanitizer (ASan) catches buffer overflows at runtime</li>
+            <li>GDB can inspect memory and stack frames</li>
+        </ul>
+
+        <h3>System Design</h3>
+
+        <ul>
+            <li>Embedded systems: careful manual memory management</li>
+            <li>Web services: use GC languages for safety, accept GC pauses</li>
+            <li>Real-time systems: pre-allocate memory, avoid heap at runtime</li>
+            <li>Databases: pool memory, careful fragmentation management</li>
+        </ul>
+
+        <h2 id="summary">Summary & Key Takeaways</h2>
+
+        <ul>
+            <li><strong>Virtual memory</strong> enables processes to have private address spaces while sharing physical RAM</li>
+            <li><strong>Pages and page tables</strong> translate virtual addresses to physical addresses</li>
+            <li><strong>TLB</strong> is a cache of recent translations—TLB misses are expensive</li>
+            <li><strong>Page replacement algorithms</strong> (LRU, Clock) decide which pages to evict when RAM is full</li>
+            <li><strong>Stack</strong> is fast, automatic, limited size; <strong>Heap</strong> is flexible, manual, unlimited size</li>
+            <li><strong>Garbage collection</strong> automates memory reclamation but introduces unpredictable pauses</li>
+            <li><strong>Memory permissions</strong> (Read/Write/Execute) prevent code injection and unauthorized access</li>
+            <li><strong>Common bugs</strong> (buffer overflow, use-after-free, memory leak) have well-known defenses</li>
+            <li><strong>Understanding memory</strong> is essential for performance optimization, security, and reliability</li>
+        </ul>
+
+        <div class="next-topic">
+            <strong>Next topic:</strong> <a href="topic-1.5.html">Topic 1.5: Storage & I/O Systems</a> — Now that you understand RAM management, let's explore how the OS manages disk I/O and file systems.
+        </div>
+
+    </div>
+</body>
+</html>

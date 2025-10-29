@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPU Architecture & Instruction Execution</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .key-concept {
+            background-color: #e8f4f8;
+            border: 2px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .diagram {
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.4;
+            border: 1px solid #e0e7f0;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .analogy {
+            font-style: italic;
+            color: #555;
+            margin: 10px 0;
+            padding-left: 20px;
+            border-left: 3px solid #95a5a6;
+        }
+
+        .breadcrumb {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+        }
+
+        .nav-button {
+            padding: 12px 24px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #2980b9;
+        }
+
+        strong {
+            color: #2c3e50;
+        }
+
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+            pre {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="../blog.html">Learning Hub</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="./hubs/systems.html">Systems</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">CPU Architecture & Instruction Execution</span>
+    </div>
+
+    <div class="container">
+        <h1>CPU Architecture & Instruction Execution</h1>
+        <p style="color: #666; font-style: italic; margin-bottom: 20px;">Part 2 of 3 — Deep Dive: Inside the Processor</p>
+
+        <div class="info-box">
+            <strong>Tutorial Series Navigation:</strong>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>Part 1:</strong> <a href="topic-1.1.0.html">Computer Systems Fundamentals - Overview</a></li>
+                <li><strong>Part 2 (Current):</strong> CPU Architecture & Instruction Execution</li>
+                <li><strong>Part 3:</strong> <a href="topic-1.1.2.html">From Source Code to Execution: The Complete Pipeline</a></li>
+            </ul>
+        </div>
+
+        <h2 id="inside-cpu">Inside the CPU: Detailed Components</h2>
+
+        <h3>CPU Registers</h3>
+
+        <p><strong>Registers</strong> are the fastest storage locations in a computer, located directly inside the CPU. They're tiny (typically 32 or 64 bits) but incredibly fast.</p>
+
+        <div class="analogy">
+            <strong>Think of registers as:</strong>
+            <ul>
+                <li><strong>Assembly line workbenches</strong> — The CPU's immediate workspace</li>
+                <li><strong>Your hands when cooking</strong> — You can only hold a few things at once, but access is instant</li>
+            </ul>
+        </div>
+
+        <h4>Common Register Types</h4>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Register</th>
+                    <th>Purpose</th>
+                    <th>Example Use</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Program Counter (PC)</strong></td>
+                    <td>Holds address of next instruction</td>
+                    <td>Points to <code>0x1000</code>, fetches instruction there</td>
+                </tr>
+                <tr>
+                    <td><strong>Instruction Register (IR)</strong></td>
+                    <td>Holds current instruction being executed</td>
+                    <td>Contains <code>ADD R1, R2, R3</code></td>
+                </tr>
+                <tr>
+                    <td><strong>Accumulator</strong></td>
+                    <td>Holds results of calculations</td>
+                    <td>Stores result of <code>5 + 3 = 8</code></td>
+                </tr>
+                <tr>
+                    <td><strong>General Purpose</strong></td>
+                    <td>Temporary storage for computations</td>
+                    <td>R1, R2, R3... hold variables during calculation</td>
+                </tr>
+                <tr>
+                    <td><strong>Stack Pointer (SP)</strong></td>
+                    <td>Points to top of stack in memory</td>
+                    <td>Used for function calls, local variables</td>
+                </tr>
+                <tr>
+                    <td><strong>Base Pointer (BP)</strong></td>
+                    <td>Points to base of current stack frame</td>
+                    <td>Used to access function parameters</td>
+                </tr>
+                <tr>
+                    <td><strong>Status/Flags</strong></td>
+                    <td>Holds condition codes</td>
+                    <td>Zero flag, carry flag, overflow flag</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4>Register Example</h4>
+
+        <pre><code>; Simple addition in assembly (x86-64 style)
+MOV RAX, 5      ; RAX = 5  (load immediate value into register)
+MOV RBX, 3      ; RBX = 3
+ADD RAX, RBX    ; RAX = RAX + RBX = 8
+MOV [result], RAX ; Store RAX into memory at address 'result'</code></pre>
+
+        <div class="key-concept">
+            <strong>Speed comparison:</strong>
+            <ul>
+                <li>Register access: <strong>~1 CPU cycle</strong> (~0.3 nanoseconds at 3 GHz)</li>
+                <li>L1 cache access: ~4 cycles</li>
+                <li>RAM access: ~100-300 cycles</li>
+                <li>SSD access: ~100,000 cycles</li>
+            </ul>
+        </div>
+
+        <h3>The Arithmetic Logic Unit (ALU)</h3>
+
+        <p>The <strong>ALU</strong> performs all arithmetic and logical operations.</p>
+
+        <p><strong>Arithmetic operations:</strong></p>
+        <ul>
+            <li>Addition, subtraction, multiplication, division</li>
+            <li>Increment, decrement</li>
+        </ul>
+
+        <p><strong>Logical operations:</strong></p>
+        <ul>
+            <li>AND, OR, NOT, XOR</li>
+            <li>Bit shifts (left shift, right shift)</li>
+            <li>Comparisons (equal, greater than, less than)</li>
+        </ul>
+
+        <div class="diagram">Example: Adding two numbers
+
+Input:    A = 0101 (5 in binary)
+          B = 0011 (3 in binary)
+Operation: ADD
+Output:   0101
+        + 0011
+        ------
+          1000 (8 in binary)
+
+Also sets flags:
+- Zero flag = 0 (result is not zero)
+- Carry flag = 0 (no overflow)
+- Sign flag = 0 (result is positive)</div>
+
+        <h3>The Control Unit (CU)</h3>
+
+        <p>The <strong>Control Unit</strong> is the conductor of the orchestra. It:</p>
+        <ol>
+            <li>Fetches instructions from memory</li>
+            <li>Decodes them (figures out what operation to perform)</li>
+            <li>Coordinates execution (tells ALU what to compute, tells memory when to read/write)</li>
+            <li>Manages timing (everything synchronized by the <strong>clock</strong>)</li>
+        </ol>
+
+        <div class="info-box">
+            <strong>Clock signal:</strong> A regular pulse that synchronizes all operations. If CPU is 3 GHz, the clock ticks 3 billion times per second.
+            <pre><code>Clock:   _|‾|_|‾|_|‾|_|‾|_
+         Tick 1  2  3  4...
+
+Each tick = one cycle
+Simple instruction = 1-4 cycles
+Complex instruction = 10+ cycles</code></pre>
+        </div>
+
+        <h2 id="execution-cycle">The Instruction Execution Cycle</h2>
+
+        <h3>The Fetch-Decode-Execute Cycle</h3>
+
+        <p>This is the <strong>heartbeat of the CPU</strong> — the fundamental loop that runs continuously:</p>
+
+        <div class="diagram">┌─────────────┐
+│   FETCH     │  Get next instruction from memory
+└──────┬──────┘
+       ↓
+┌─────────────┐
+│   DECODE    │  Figure out what the instruction means
+└──────┬──────┘
+       ↓
+┌─────────────┐
+│   EXECUTE   │  Perform the operation
+└──────┬──────┘
+       ↓
+    (Repeat)</div>
+
+        <h3>Detailed Step-by-Step Example</h3>
+
+        <p>Let's trace a simple program that adds two numbers:</p>
+
+        <p><strong>C code:</strong></p>
+        <pre><code>int a = 5;
+int b = 3;
+int c = a + b;</code></pre>
+
+        <p><strong>Assembly (simplified):</strong></p>
+        <pre><code>0x1000: MOV R1, 5      ; Load 5 into R1
+0x1004: MOV R2, 3      ; Load 3 into R2
+0x1008: ADD R3, R1, R2 ; R3 = R1 + R2
+0x100C: STORE R3, [c]  ; Store R3 to memory address 'c'</code></pre>
+
+        <h4>Instruction 1: <code>MOV R1, 5</code></h4>
+
+        <div class="key-concept">
+            <p><strong>FETCH:</strong></p>
+            <ol>
+                <li>PC (Program Counter) = 0x1000</li>
+                <li>Control Unit reads instruction at address 0x1000</li>
+                <li>Instruction "MOV R1, 5" loaded into Instruction Register (IR)</li>
+                <li>PC incremented to 0x1004</li>
+            </ol>
+
+            <p><strong>DECODE:</strong></p>
+            <ol>
+                <li>Control Unit decodes: "This is a MOVE instruction"</li>
+                <li>Operand 1: Register R1</li>
+                <li>Operand 2: Immediate value 5</li>
+            </ol>
+
+            <p><strong>EXECUTE:</strong></p>
+            <ol>
+                <li>ALU (or data path) loads 5 into R1</li>
+                <li>R1 now contains 5</li>
+            </ol>
+        </div>
+
+        <h4>Instruction 3: <code>ADD R3, R1, R2</code></h4>
+
+        <div class="key-concept">
+            <p><strong>FETCH:</strong></p>
+            <ol>
+                <li>PC = 0x1008</li>
+                <li>Read instruction</li>
+                <li>IR = "ADD R3, R1, R2"</li>
+                <li>PC = 0x100C</li>
+            </ol>
+
+            <p><strong>DECODE:</strong></p>
+            <ol>
+                <li>ADD instruction</li>
+                <li>Destination: R3</li>
+                <li>Source 1: R1</li>
+                <li>Source 2: R2</li>
+            </ol>
+
+            <p><strong>EXECUTE:</strong></p>
+            <ol>
+                <li>ALU receives R1 (5) and R2 (3)</li>
+                <li>ALU performs addition: 5 + 3 = 8</li>
+                <li>Result (8) stored in R3</li>
+                <li>Flags updated (zero=0, carry=0)</li>
+            </ol>
+        </div>
+
+        <p><strong>Final state:</strong></p>
+        <pre><code>Registers:
+R1 = 5
+R2 = 3
+R3 = 8
+
+Memory:
+[0x2000] = 8  (variable 'c')</code></pre>
+
+        <h2 id="isa">Instruction Set Architecture (ISA)</h2>
+
+        <p>The <strong>ISA</strong> is the contract between hardware and software — it defines:</p>
+        <ul>
+            <li>What instructions are available</li>
+            <li>How they're encoded</li>
+            <li>What registers exist</li>
+            <li>How memory is addressed</li>
+        </ul>
+
+        <h3>CISC vs RISC</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>CISC (Complex)</th>
+                    <th>RISC (Reduced)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Examples</strong></td>
+                    <td>x86, x86-64</td>
+                    <td>ARM, RISC-V, MIPS</td>
+                </tr>
+                <tr>
+                    <td><strong>Instruction count</strong></td>
+                    <td>Large (~1000s)</td>
+                    <td>Small (~100s)</td>
+                </tr>
+                <tr>
+                    <td><strong>Instruction length</strong></td>
+                    <td>Variable (1-15 bytes)</td>
+                    <td>Fixed (4 bytes)</td>
+                </tr>
+                <tr>
+                    <td><strong>Instructions per operation</strong></td>
+                    <td>1 complex instruction</td>
+                    <td>Multiple simple instructions</td>
+                </tr>
+                <tr>
+                    <td><strong>Philosophy</strong></td>
+                    <td>Hardware does more</td>
+                    <td>Software does more</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>CISC example (x86):</strong></p>
+        <pre><code>; One instruction to add memory to memory
+ADD [address1], [address2]</code></pre>
+
+        <p><strong>RISC example (ARM):</strong></p>
+        <pre><code>; Must load, compute, store
+LDR R1, [address1]    ; Load from memory
+LDR R2, [address2]    ; Load from memory
+ADD R3, R1, R2        ; Add registers
+STR R3, [address1]    ; Store to memory</code></pre>
+
+        <div class="info-box">
+            <strong>Modern reality:</strong> The distinction is blurred. x86 processors internally convert CISC instructions to RISC-like micro-ops.
+        </div>
+
+        <h2 id="summary">Summary</h2>
+
+        <div class="key-concept">
+            <h3>Key Concepts</h3>
+            <ol>
+                <li><strong>Registers:</strong>
+                    <ul>
+                        <li>Fastest storage (inside CPU)</li>
+                        <li>Limited number (16-32 general purpose)</li>
+                        <li>Different registers have different roles (PC, SP, accumulator)</li>
+                    </ul>
+                </li>
+
+                <li><strong>CPU Execution Cycle:</strong>
+                    <ul>
+                        <li>Fetch → Decode → Execute (repeats continuously)</li>
+                        <li>Everything is synchronized by the clock</li>
+                    </ul>
+                </li>
+
+                <li><strong>ALU:</strong>
+                    <ul>
+                        <li>Performs arithmetic and logical operations</li>
+                        <li>Sets status flags based on results</li>
+                    </ul>
+                </li>
+
+                <li><strong>Control Unit:</strong>
+                    <ul>
+                        <li>Orchestrates instruction execution</li>
+                        <li>Manages timing and coordination</li>
+                    </ul>
+                </li>
+
+                <li><strong>ISA (Instruction Set Architecture):</strong>
+                    <ul>
+                        <li>Contract between hardware and software</li>
+                        <li>CISC vs RISC design philosophies</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <hr style="margin: 40px 0; border: none; border-top: 2px solid #ddd;">
+
+        <div style="background-color: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; margin: 20px 0; border-radius: 5px;">
+            <strong>Related Topics:</strong><br>
+            → <a href="topic-1.1-advanced.html">Advanced: Memory Management & Assembly Deep Dive</a><br>
+            → <a href="topic-1.2.html">Topic 1.2: CPU Optimization</a><br>
+            → <a href="topic-1.6.html">Topic 1.6: Assembly Language & Low-Level Programming</a>
+        </div>
+
+        <div class="navigation">
+            <a href="topic-1.1.0.html" class="nav-button">← Previous: Fundamentals</a>
+            <a href="topic-1.1.2.html" class="nav-button">Next: Code to Execution →</a>
+        </div>
+
+        <p style="text-align: center; color: #777; font-size: 0.9em; margin-top: 30px;">
+            <strong>Computer Systems Tutorial Series</strong><br>
+            Part 2 of 3: CPU Architecture & Instruction Execution
+        </p>
+    </div>
+</body>
+</html>

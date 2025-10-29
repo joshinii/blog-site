@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Performance & Debugging</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            transition: transform 0.2s ease;
+        }
+
+        .info-box:hover {
+            transform: translateX(5px);
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            transition: transform 0.2s ease;
+        }
+
+        .warning-box:hover {
+            transform: translateX(5px);
+        }
+
+        .success-box {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            transition: transform 0.2s ease;
+        }
+
+        .success-box:hover {
+            transform: translateX(5px);
+        }
+
+        .danger-box {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+            transition: transform 0.2s ease;
+        }
+
+        .danger-box:hover {
+            transform: translateX(5px);
+        }
+
+        .exercise {
+            background-color: #f0f8ff;
+            border: 2px solid #4169e1;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+
+        .exercise:hover {
+            box-shadow: 0 4px 12px rgba(65, 105, 225, 0.2);
+        }
+
+        .exercise h3 {
+            color: #4169e1;
+            margin-top: 0;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.4;
+            border: 1px solid #e0e7f0;
+        }
+
+        pre:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        strong {
+            color: #2c3e50;
+        }
+
+        .key-concept {
+            background-color: #e8f4f8;
+            border: 2px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+        }
+
+        .nav-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: #2980b9;
+        }
+
+        .breadcrumb {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            body {
+                padding: 10px;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+        }
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="../blog.html">Learning Hub</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="./hubs/networking.html">Networking</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Network Performance & Debugging</span>
+    </div>
+
+    <div class="container">
+        <h1>Network Performance & Debugging</h1>
+        <p style="color: #666; font-style: italic; margin-bottom: 20px;">Optimizing Network Applications and Troubleshooting Common Issues</p>
+
+        <h2 id="exercises">Hands-On Exercises</h2>
+
+        <div class="exercise">
+            <h3>Exercise 1: HTTP Client from Scratch</h3>
+            <p><strong>Difficulty:</strong> Intermediate<br>
+            <strong>Goal:</strong> Build a simple HTTP client using raw sockets</p>
+
+            <p><strong>Task:</strong> Write a Python program that:</p>
+            <ol>
+                <li>Connects to a web server using TCP socket</li>
+                <li>Sends an HTTP GET request</li>
+                <li>Receives and parses the HTTP response</li>
+                <li>Prints status code, headers, and body</li>
+            </ol>
+
+            <p><strong>Starter Code:</strong></p>
+            <pre><code>import socket
+
+def http_get(host, path="/"):
+    # TODO: Create socket
+    # TODO: Connect to host on port 80
+    # TODO: Send HTTP request
+    # TODO: Receive response
+    # TODO: Parse response
+    pass
+
+# Test
+http_get("example.com", "/")</code></pre>
+
+            <p><strong>Expected Output:</strong></p>
+            <pre><code>Status: 200 OK
+Headers:
+  Content-Type: text/html; charset=UTF-8
+  Content-Length: 1256
+Body:
+<!doctype html>
+<html>...</html></code></pre>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercise 2: Chat Server</h3>
+            <p><strong>Difficulty:</strong> Advanced<br>
+            <strong>Goal:</strong> Build a multi-client chat server</p>
+
+            <p><strong>Task:</strong></p>
+            <ul>
+                <li>Server accepts multiple clients</li>
+                <li>When client sends message, broadcast to all others</li>
+                <li>Handle client disconnections gracefully</li>
+                <li>Use select() for multiplexing</li>
+            </ul>
+
+            <p><strong>Features:</strong></p>
+            <ul>
+                <li>Client can set username</li>
+                <li>Messages formatted: "[username]: message"</li>
+                <li>Notify when users join/leave</li>
+            </ul>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercise 3: DNS Resolver</h3>
+            <p><strong>Difficulty:</strong> Advanced<br>
+            <strong>Goal:</strong> Implement a simple DNS resolver</p>
+
+            <p><strong>Task:</strong> Query a DNS server (8.8.8.8) for A records:</p>
+            <pre><code>import socket
+import struct
+
+def dns_query(domain):
+    # TODO: Build DNS query packet
+    # TODO: Send UDP packet to 8.8.8.8:53
+    # TODO: Parse response
+    pass
+
+# Test
+ip = dns_query("example.com")
+print(f"example.com → {ip}")</code></pre>
+
+            <p><strong>Resources:</strong> DNS packet format (RFC 1035)</p>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercise 4: Port Scanner</h3>
+            <p><strong>Difficulty:</strong> Intermediate<br>
+            <strong>Goal:</strong> Scan for open ports on localhost</p>
+
+            <p><strong>Task:</strong></p>
+            <pre><code>def scan_port(host, port, timeout=1.0):
+    # TODO: Try to connect to port
+    # Return True if open, False if closed
+    pass
+
+# Scan common ports
+ports = [21, 22, 23, 80, 443, 3306, 5432, 8080]
+for port in ports:
+    if scan_port('127.0.0.1', port):
+        print(f"Port {port} is OPEN")
+    else:
+        print(f"Port {port} is closed")</code></pre>
+        </div>
+
+        <h2 id="real-world">Real-World Applications</h2>
+
+        <div class="success-box">
+            <h3>Application 1: Google's TCP Fast Open</h3>
+            <p><strong>Company:</strong> Google<br>
+            <strong>Problem:</strong> TCP three-way handshake adds 1 RTT of latency</p>
+
+            <p><strong>Solution: TCP Fast Open (TFO)</strong></p>
+            <ul>
+                <li>Send data in SYN packet (skip handshake for subsequent connections)</li>
+                <li>Use cryptographic cookie to verify client</li>
+                <li>Reduces latency by 10-40% for short connections</li>
+            </ul>
+
+            <p><strong>Results:</strong></p>
+            <ul>
+                <li>200ms faster page loads for mobile users</li>
+                <li>20% increase in user engagement</li>
+                <li>Standardized as RFC 7413</li>
+            </ul>
+        </div>
+
+        <div class="success-box">
+            <h3>Application 2: Netflix Adaptive Streaming</h3>
+            <p><strong>Company:</strong> Netflix<br>
+            <strong>Challenge:</strong> Stream HD video over variable network conditions</p>
+
+            <p><strong>Solution: Adaptive Bitrate Streaming</strong></p>
+            <ul>
+                <li>Encode video at multiple bitrates (240p to 4K)</li>
+                <li>Client measures network throughput</li>
+                <li>Switch quality levels dynamically</li>
+                <li>Use HTTP (not RTSP) for firewall compatibility</li>
+            </ul>
+
+            <p><strong>Network Optimizations:</strong></p>
+            <ul>
+                <li>TCP tuning (larger send/receive buffers)</li>
+                <li>CDN edge servers close to users</li>
+                <li>HTTP/2 for multiplexing</li>
+                <li>Predictive buffering</li>
+            </ul>
+
+            <p><strong>Result:</strong> 99%+ uptime, smooth playback globally</p>
+        </div>
+
+        <div class="success-box">
+            <h3>Application 3: WhatsApp's XMPP Protocol</h3>
+            <p><strong>Company:</strong> WhatsApp (Meta)<br>
+            <strong>Scale:</strong> 2+ billion users, 100+ billion messages daily</p>
+
+            <p><strong>Protocol Choice:</strong></p>
+            <ul>
+                <li>Modified XMPP (Extensible Messaging and Presence Protocol)</li>
+                <li>TCP persistent connections (not polling)</li>
+                <li>Custom binary protocol (more efficient than XML)</li>
+                <li>End-to-end encryption (Signal Protocol)</li>
+            </ul>
+
+            <p><strong>Network Efficiency:</strong></p>
+            <ul>
+                <li>Keep-alive pings every 30 seconds (not continuous)</li>
+                <li>Message compression</li>
+                <li>Efficient reconnection protocol</li>
+                <li>UDP for voice/video (low latency)</li>
+            </ul>
+        </div>
+
+        <h2 id="pitfalls">Common Pitfalls</h2>
+
+        <div class="danger-box">
+            <h3>Mistake 1: Not Handling Partial recv()</h3>
+            <p><strong>The Problem:</strong> <code>recv()</code> might return less data than requested!</p>
+
+            <p><strong>Bad Code:</strong></p>
+            <pre><code># WRONG: Assumes all data arrives at once
+data = sock.recv(1024)
+message = data.decode()  # Might be incomplete!</code></pre>
+
+            <p><strong>Good Code:</strong></p>
+            <pre><code># CORRECT: Receive until delimiter or known length
+def recv_until(sock, delimiter=b'\n'):
+    data = b''
+    while True:
+        chunk = sock.recv(1)
+        if not chunk:
+            break
+        data += chunk
+        if chunk == delimiter:
+            break
+    return data.decode()
+
+# Or for known length:
+def recv_exact(sock, length):
+    data = b''
+    while len(data) < length:
+        chunk = sock.recv(length - len(data))
+        if not chunk:
+            raise ConnectionError("Connection closed")
+        data += chunk
+    return data</code></pre>
+        </div>
+
+        <div class="danger-box">
+            <h3>Mistake 2: Forgetting to Close Sockets</h3>
+            <p><strong>The Problem:</strong> Resource leak! OS has limited file descriptors.</p>
+
+            <p><strong>Bad Code:</strong></p>
+            <pre><code>def connect_and_send(host, port, message):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect((host, port))
+    sock.send(message.encode())
+    # FORGOT TO CLOSE!
+
+# After 1024 calls → "Too many open files"</code></pre>
+
+            <p><strong>Good Code:</strong></p>
+            <pre><code>def connect_and_send(host, port, message):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        sock.connect((host, port))
+        sock.send(message.encode())
+    finally:
+        sock.close()  # ALWAYS close
+
+# Even better: Use context manager
+def connect_and_send(host, port, message):
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.connect((host, port))
+        sock.send(message.encode())
+    # Automatically closed!</code></pre>
+        </div>
+
+        <div class="danger-box">
+            <h3>Mistake 3: Not Setting Socket Timeouts</h3>
+            <p><strong>The Problem:</strong> Blocking operations can hang forever!</p>
+
+            <p><strong>Bad Code:</strong></p>
+            <pre><code>sock.connect((host, port))  # Blocks forever if host down
+data = sock.recv(1024)      # Blocks forever if no data</code></pre>
+
+            <p><strong>Good Code:</strong></p>
+            <pre><code>sock.settimeout(5.0)  # 5 second timeout
+try:
+    sock.connect((host, port))
+    data = sock.recv(1024)
+except socket.timeout:
+    print("Operation timed out!")
+except ConnectionRefusedError:
+    print("Connection refused!")</code></pre>
+        </div>
+
+        <h2 id="summary">Summary & Key Takeaways</h2>
+
+        <div class="key-concept">
+            <h3>Key Concepts Mastered</h3>
+            <ul>
+                <li><strong>Network Models</strong> - OSI vs TCP/IP, encapsulation, layers</li>
+                <li><strong>IP Addressing</strong> - IPv4, IPv6, subnetting, CIDR</li>
+                <li><strong>Transport Protocols</strong> - TCP (reliable) vs UDP (fast)</li>
+                <li><strong>TCP Mechanics</strong> - Three-way handshake, flow control, congestion control</li>
+                <li><strong>Application Protocols</strong> - HTTP, HTTPS, DNS</li>
+                <li><strong>Socket Programming</strong> - Building client-server applications</li>
+            </ul>
+        </div>
+
+        <div class="success-box">
+            <h3>Performance Rules</h3>
+            <ol>
+                <li><strong>Use TCP for reliability</strong> - File transfers, API calls, anything critical</li>
+                <li><strong>Use UDP for speed</strong> - Gaming, VoIP, streaming (occasional loss OK)</li>
+                <li><strong>Reuse connections</strong> - TCP handshake costs 1 RTT (~50-200ms)</li>
+                <li><strong>Set timeouts</strong> - Never block indefinitely</li>
+                <li><strong>Handle partial recv()</strong> - TCP is stream-based, not message-based</li>
+                <li><strong>Use non-blocking I/O</strong> - For servers handling multiple clients</li>
+            </ol>
+        </div>
+
+        <div class="info-box">
+            <h3>Latency Numbers to Remember</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Typical Latency</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>L1 cache reference</td>
+                        <td>1 ns</td>
+                    </tr>
+                    <tr>
+                        <td>RAM access</td>
+                        <td>100 ns</td>
+                    </tr>
+                    <tr>
+                        <td>Send 1KB over 1 Gbps network</td>
+                        <td>10 μs</td>
+                    </tr>
+                    <tr>
+                        <td>SSD random read</td>
+                        <td>150 μs</td>
+                    </tr>
+                    <tr>
+                        <td>Round trip in same datacenter</td>
+                        <td>500 μs</td>
+                    </tr>
+                    <tr>
+                        <td>HDD disk seek</td>
+                        <td>10 ms</td>
+                    </tr>
+                    <tr>
+                        <td>Round trip CA to Netherlands</td>
+                        <td>150 ms</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Further Reading & Resources</h3>
+
+        <h4>Books</h4>
+        <ul>
+            <li><strong>"Computer Networking: A Top-Down Approach"</strong> by Kurose & Ross - Best networking textbook</li>
+            <li><strong>"TCP/IP Illustrated, Volume 1"</strong> by Stevens - Classic deep dive</li>
+            <li><strong>"Unix Network Programming"</strong> by Stevens - Socket programming bible</li>
+            <li><strong>"High Performance Browser Networking"</strong> by Grigorik - Free online, modern web</li>
+        </ul>
+
+        <h4>RFCs (Request for Comments)</h4>
+        <ul>
+            <li><strong>RFC 791</strong> - Internet Protocol (IP)</li>
+            <li><strong>RFC 793</strong> - Transmission Control Protocol (TCP)</li>
+            <li><strong>RFC 768</strong> - User Datagram Protocol (UDP)</li>
+            <li><strong>RFC 2616</strong> - HTTP/1.1</li>
+            <li><strong>RFC 1035</strong> - Domain Name System (DNS)</li>
+        </ul>
+
+        <h4>Online Resources</h4>
+        <ul>
+            <li><strong>Wireshark</strong> - Packet analyzer (see your network traffic!)</li>
+            <li><strong>Beej's Guide to Network Programming</strong> - Free, excellent C socket tutorial</li>
+            <li><strong>High Performance Browser Networking</strong> - hpbn.co (free book online)</li>
+        </ul>
+
+        <h3>Next Steps</h3>
+
+        <p>You've mastered network fundamentals! Here's what to explore next:</p>
+        <ol>
+            <li><strong>Topic 2.2: Distributed Systems</strong> - Build systems that span multiple machines</li>
+            <li><strong>Deep Dive:</strong> Implement your own HTTP server from scratch</li>
+            <li><strong>Practice:</strong> Use Wireshark to analyze real network traffic</li>
+            <li><strong>Advanced:</strong> Learn about HTTP/2, HTTP/3 (QUIC), WebRTC</li>
+        </ol>
+
+        <div class="success-box">
+            <h3>Related Topics</h3>
+            <ul>
+                <li><a href="topic-2.1.0.html">Topic 2.1.0: Network Fundamentals Overview</a></li>
+                <li><a href="topic-2.1.1.html">Topic 2.1.1: TCP/IP & Socket Programming</a></li>
+                <li><a href="topic-2.1.2.html">Topic 2.1.2: HTTP & TLS</a></li>
+                <li><a href="topic-2.2.html">Topic 2.2: Network Performance</a></li>
+            </ul>
+        </div>
+
+        <div class="nav-links">
+            <a href="topic-2.1.2.html" class="nav-link">← Previous: HTTP & TLS</a>
+            <a href="topic-2.1.0.html" class="nav-link">Back to Overview</a>
+        </div>
+
+        <hr style="margin: 40px 0; border: none; border-top: 2px solid #ddd;">
+
+        <div style="background-color: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; margin: 20px 0; border-radius: 5px;">
+            <strong>Continue exploring networks:</strong><br>
+            → <a href="topic-2.2.html">Topic 2.2: Network Performance & Optimization</a> — Optimize latency and throughput<br>
+            → <a href="topic-2.3.html">Topic 2.3: Distributed Systems</a> — Build reliable systems spanning multiple machines<br>
+            → <a href="topic-0.2.html">Topic 0.2: Clock Cycles & Timing</a> — Understand network latency in the complete latency hierarchy
+        </div>
+    </div>
+</body>
+</html>

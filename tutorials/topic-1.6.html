@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assembly Language & Low-Level Programming</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .danger-box {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.4;
+            border: 1px solid #e0e7f0;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .diagram {
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .key-concept {
+            background-color: #e8f4f8;
+            border: 2px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .prerequisite {
+            background-color: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .next-topic {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .toc {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="../blog.html">Learning Hub</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="./hubs/low-level.html">Low Level</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Assembly Language & Low-Level Programming</span>
+    </div>
+
+    <div class="container">
+        <h1>Assembly Language & Low-Level Programming</h1>
+
+        <div class="prerequisite">
+            <strong>Prerequisites:</strong> Topic 0.3 (Memory Addressing & Pointers), Topic 1.1 (CPU & Instruction Execution), Topic 1.4 (Memory Management)
+        </div>
+
+        <div class="toc">
+            <h3>Topics Covered</h3>
+            <ol>
+                <li>x86-64 Architecture Overview</li>
+                <li>Registers and Their Roles</li>
+                <li>Addressing Modes</li>
+                <li>Instruction Set Fundamentals</li>
+                <li>Calling Conventions</li>
+                <li>Stack Frames in Depth</li>
+                <li>Inline Assembly and System Calls</li>
+                <li>Debugging with GDB</li>
+                <li>Practical C to Assembly Walkthroughs</li>
+                <li>Security Implications (ROP, JOP)</li>
+            </ol>
+        </div>
+
+        <h2 id="introduction">Introduction: Assembly Language and Hardware Reality</h2>
+
+        <p>Assembly language is the human-readable representation of machine code—what your CPU actually executes. Understanding assembly is essential for:</p>
+
+        <ul>
+            <li><strong>Performance optimization:</strong> See exactly what the compiler generated, identify inefficiencies</li>
+            <li><strong>Security research:</strong> Understand and analyze exploits, vulnerabilities, and defenses</li>
+            <li><strong>Debugging:</strong> When high-level debuggers aren't enough, read the assembly</li>
+            <li><strong>Systems programming:</strong> Kernel, bootloader, and embedded code require assembly</li>
+            <li><strong>Compiler design:</strong> Back-end compilers target assembly</li>
+        </ul>
+
+        <p>This topic covers x86-64 assembly (the dominant architecture), how function calls work, and practical techniques for analysis and optimization.</p>
+
+        <h2 id="x86-64-architecture">1. x86-64 Architecture Overview</h2>
+
+        <p>x86-64 is the 64-bit extension of the x86 architecture. It maintains backward compatibility while adding 64-bit registers and addressing.</p>
+
+        <h3>Word Sizes and Register Naming</h3>
+
+        <p>Registers can be accessed at different sizes. A single register (like RAX) can be accessed as:</p>
+
+        <table>
+            <tr>
+                <th>Size</th>
+                <th>Bits</th>
+                <th>Register Name</th>
+                <th>Use Case</th>
+            </tr>
+            <tr>
+                <td>64-bit</td>
+                <td>0-63</td>
+                <td>RAX</td>
+                <td>Full 64-bit value (pointers, large integers)</td>
+            </tr>
+            <tr>
+                <td>32-bit</td>
+                <td>0-31</td>
+                <td>EAX</td>
+                <td>32-bit value (zeros upper 32 bits)</td>
+            </tr>
+            <tr>
+                <td>16-bit</td>
+                <td>0-15</td>
+                <td>AX</td>
+                <td>16-bit value (legacy compatibility)</td>
+            </tr>
+            <tr>
+                <td>8-bit high</td>
+                <td>8-15</td>
+                <td>AH</td>
+                <td>Byte access (legacy only)</td>
+            </tr>
+            <tr>
+                <td>8-bit low</td>
+                <td>0-7</td>
+                <td>AL</td>
+                <td>Byte access</td>
+            </tr>
+        </table>
+
+        <p><strong>Important:</strong> Writing a 32-bit register (EAX) automatically zeros the upper 32 bits. This is useful for clearing a register efficiently.</p>
+
+        <h2 id="registers">2. Registers and Their Roles</h2>
+
+        <h3>General Purpose Registers</h3>
+
+        <table>
+            <tr>
+                <th>Register</th>
+                <th>Conventional Use</th>
+                <th>Notes</th>
+            </tr>
+            <tr>
+                <td>RAX</td>
+                <td>Accumulator, return value</td>
+                <td>Return values from functions go here</td>
+            </tr>
+            <tr>
+                <td>RBX</td>
+                <td>Base register, callee-saved</td>
+                <td>Preserved across function calls</td>
+            </tr>
+            <tr>
+                <td>RCX</td>
+                <td>Counter, 4th parameter</td>
+                <td>Used for loop counts and 4th function parameter</td>
+            </tr>
+            <tr>
+                <td>RDX</td>
+                <td>Data, 3rd parameter</td>
+                <td>Third function parameter</td>
+            </tr>
+            <tr>
+                <td>RSI</td>
+                <td>Source index, 2nd parameter</td>
+                <td>Second function parameter, string operations</td>
+            </tr>
+            <tr>
+                <td>RDI</td>
+                <td>Destination index, 1st parameter</td>
+                <td>First function parameter, string operations</td>
+            </tr>
+            <tr>
+                <td>R8-R15</td>
+                <td>5th-12th parameters</td>
+                <td>Additional function parameters</td>
+            </tr>
+        </table>
+
+        <h3>Special Purpose Registers</h3>
+
+        <ul>
+            <li><strong>RSP (Stack Pointer):</strong> Points to top of stack, decreases as you push, increases as you pop</li>
+            <li><strong>RBP (Base Pointer):</strong> Points to base of current stack frame, used for accessing local variables</li>
+            <li><strong>RIP (Instruction Pointer):</strong> Points to next instruction to execute, automatically updated by CPU</li>
+            <li><strong>RFLAGS:</strong> Status flags (Zero, Carry, Sign, Overflow, etc.) set by instructions</li>
+        </ul>
+
+        <h2 id="addressing-modes">3. Addressing Modes</h2>
+
+        <p>Addressing modes specify how to calculate the address of an operand. This is what makes x86-64 flexible and powerful:</p>
+
+        <pre><code>Addressing Mode Syntax (Intel syntax):
+  [base + index*scale + displacement]
+
+Where:
+  base = register (RAX, RBX, etc.)
+  index = register (cannot be RSP)
+  scale = 1, 2, 4, or 8 (usually matches operand size)
+  displacement = constant offset
+
+Examples:
+  MOV RAX, [RBX]              // base only
+  MOV RAX, [RBX + 8]          // base + displacement
+  MOV RAX, [RBX + RCX*4]      // base + index*scale
+  MOV RAX, [RBX + RCX*8 + 16] // all components
+  MOV RAX, [RIP + offset]     // RIP-relative (position-independent)</code></pre>
+
+        <h3>Why Addressing Modes Matter</h3>
+
+        <p>They implement pointer arithmetic efficiently in hardware:</p>
+
+        <pre><code>// C code:
+int array[100];
+int x = array[i + 5];
+
+// Becomes assembly (conceptually):
+MOV RAX, [array_base + RAX*4 + 20]
+     ↑     ↑              ↑    ↑
+     |     |              |    20-byte offset (5 elements * 4 bytes)
+     |     |              multiply by 4 (sizeof(int))
+     |     base address
+     scale calculation in addressing mode</code></pre>
+
+        <h2 id="instruction-set">4. Instruction Set Fundamentals</h2>
+
+        <h3>Instruction Categories</h3>
+
+        <p><strong>Arithmetic Instructions:</strong></p>
+        <pre><code>ADD RAX, RBX      // RAX += RBX
+SUB RAX, RBX      // RAX -= RBX
+MUL RBX           // RAX *= RBX (product in RAX)
+DIV RBX           // RAX /= RBX (quotient in RAX, remainder in RDX)
+INC RAX           // RAX += 1 (faster than ADD RAX, 1)
+DEC RAX           // RAX -= 1</code></pre>
+
+        <p><strong>Logic Instructions:</strong></p>
+        <pre><code>AND RAX, RBX      // RAX &= RBX (bitwise AND)
+OR RAX, RBX       // RAX |= RBX (bitwise OR)
+XOR RAX, RBX      // RAX ^= RBX (bitwise XOR)
+NOT RAX           // RAX = ~RAX (bitwise NOT)
+SHL RAX, 3        // RAX <<= 3 (shift left by 3)
+SHR RAX, 1        // RAX >>= 1 (logical shift right)
+SAR RAX, 1        // RAX >>= 1 (arithmetic shift, preserves sign)</code></pre>
+
+        <p><strong>Memory Instructions:</strong></p>
+        <pre><code>MOV RAX, RBX           // RAX = RBX
+MOV RAX, [RBX]         // RAX = *(RBX) - load from memory
+MOV [RAX], RBX         // *(RAX) = RBX - store to memory
+LEA RAX, [RBX + 8]     // RAX = &(RBX[1]) - load effective address
+PUSH RAX               // *--RSP = RAX, then RSP -= 8
+POP RAX                // RAX = *RSP, then RSP += 8</code></pre>
+
+        <p><strong>Control Flow Instructions:</strong></p>
+        <pre><code>JMP label              // Unconditional jump to label
+JZ label               // Jump if Zero flag set (result was 0)
+JNZ label              // Jump if Zero flag not set (result was non-zero)
+CMP RAX, RBX           // Compare RAX with RBX (sets flags, doesn't store result)
+TEST RAX, RAX          // Bitwise AND with itself (tests if zero)
+CALL function          // Call function (pushes return address, jumps)
+RET                    // Return from function (pops return address, jumps)</code></pre>
+
+        <h2 id="calling-conventions">5. Calling Conventions</h2>
+
+        <p>A calling convention defines how function parameters are passed and how registers are managed across function calls.</p>
+
+        <h3>System V AMD64 ABI (Linux, BSD, macOS)</h3>
+
+        <p><strong>Parameter passing (first 6 integer arguments):</strong></p>
+
+        <pre><code>1st parameter  → RDI
+2nd parameter  → RSI
+3rd parameter  → RDX
+4th parameter  → RCX
+5th parameter  → R8
+6th parameter  → R9
+7th+ parameters → Stack
+
+Float parameters use XMM0-XMM7
+
+Return values:
+  RAX = first 64-bit return value
+  RDX = second 64-bit return value (for 128-bit returns)
+  XMM0-XMM1 = floating-point returns</code></pre>
+
+        <p><strong>Caller-saved vs Callee-saved:</strong></p>
+
+        <pre><code>Caller-saved (destroyed by function call):
+  RAX, RCX, RDX, RSI, RDI, R8-R11, XMM0-XMM15
+  Caller must save these before calling a function if needed
+
+Callee-saved (must preserve):
+  RBX, RSP, RBP, R12-R15
+  Function must restore these before returning
+
+Stack pointer (RSP) must be 16-byte aligned when entering a function
+(This allows SSE instructions that require alignment)</code></pre>
+
+        <h2 id="stack-frames">6. Stack Frames in Depth</h2>
+
+        <h3>Stack Frame Layout</h3>
+
+        <pre><code>// Function definition:
+void func(int a, int b) {
+    int x = 1;
+}
+
+// When func() is called:
+// First, CALL pushes return address onto stack
+// Then function prologue executes
+
+Stack Layout (top to bottom):
+Higher addresses  │
+                  │ [caller's frame]
+                  │
+    RSP at entry→ │ [return address] ← pushed by CALL instruction
+                  │
+                  │ [saved RBP]      ← pushed by prologue
+                  │
+         RBP now→ │ [x (local var)]  ← allocated by prologue
+                  │
+Lower addresses   │</code></pre>
+
+        <h3>Function Prologue and Epilogue</h3>
+
+        <pre><code>// Prologue (setup):
+PUSH RBP              // Save old base pointer
+MOV RBP, RSP          // New base pointer = stack pointer
+SUB RSP, 16           // Allocate 16 bytes for locals
+
+// Function body:
+MOV DWORD [RBP-4], 1  // x = 1 (at RBP-4)
+...
+
+// Epilogue (cleanup):
+MOV RSP, RBP          // Restore stack pointer
+POP RBP               // Restore old base pointer
+RET                   // Pop return address and jump</code></pre>
+
+        <h2 id="inline-assembly">7. Inline Assembly and System Calls</h2>
+
+        <h3>Inline Assembly (GCC/Clang)</h3>
+
+        <p>You can embed assembly in C code:</p>
+
+        <pre><code>// Simple inline assembly
+int a = 5, b = 3, result;
+asm("addl %1, %0" : "=r"(result) : "r"(b), "0"(a));
+// result = a + b
+
+Syntax explanation:
+  "addl %1, %0"     - assembly instruction
+  : "=r"(result)    - output operand (result in register)
+  : "r"(b), "0"(a)  - input operands (b in register, a in same as output)
+
+Constraints:
+  r = general register
+  m = memory
+  i = immediate constant
+  = write-only
+  + read-write
+  g = register, memory, or immediate</code></pre>
+
+        <h3>System Calls</h3>
+
+        <p>System calls transition from user mode to kernel mode:</p>
+
+        <pre><code>// In x86-64 Linux:
+MOV RAX, 1            // syscall number (write)
+MOV RDI, 1            // 1st parameter: file descriptor
+MOV RSI, buffer       // 2nd parameter: buffer address
+MOV RDX, count        // 3rd parameter: byte count
+SYSCALL               // Invoke kernel
+
+// Common syscalls:
+0 = read
+1 = write
+2 = open
+3 = close
+59 = execve
+60 = fork
+...
+
+// After syscall:
+// RAX = return value
+// If RAX < 0, it's an error code (-errno)</code></pre>
+
+        <h2 id="gdb-debugging">8. Debugging with GDB</h2>
+
+        <p>GDB (GNU Debugger) is essential for low-level analysis:</p>
+
+        <pre><code>// Start program in debugger:
+gdb ./program
+
+// Basic commands:
+(gdb) break main                 // Set breakpoint at main
+(gdb) run                        // Run until breakpoint
+(gdb) disassemble main           // Show disassembly
+(gdb) info registers             // Show all register values
+(gdb) print $rax                 // Print RAX value
+(gdb) step                       // Execute next instruction
+(gdb) next                       // Step over function calls
+(gdb) continue                   // Continue until breakpoint
+(gdb) x/16 $rsp                  // Examine 16 words at stack pointer
+(gdb) backtrace                  // Show call stack
+
+// Advanced:
+(gdb) watch $rax                 // Break if RAX changes
+(gdb) info breakpoints           // List all breakpoints
+(gdb) delete 1                   // Delete breakpoint 1</code></pre>
+
+        <h2 id="c-to-assembly">9. Practical C to Assembly Walkthroughs</h2>
+
+        <h3>Simple Function Example</h3>
+
+        <div class="key-concept">
+            <h4>C Code:</h4>
+            <pre><code>int add(int a, int b) {
+    return a + b;
+}</code></pre>
+
+            <h4>Compiled Assembly (System V calling convention):</h4>
+            <pre><code>add:
+    PUSH RBP                    // Prologue: save old base pointer
+    MOV RBP, RSP                // Prologue: set up new frame
+    MOV EAX, EDI                // EAX = a (1st parameter in RDI)
+    ADD EAX, ESI                // EAX += b (2nd parameter in RSI)
+    POP RBP                     // Epilogue: restore base pointer
+    RET                         // Epilogue: return (pops return address)
+
+Analysis:
+  - Prologue/epilogue for stack frame
+  - Parameters passed in RDI/RSI
+  - Result returned in RAX
+  - Uses 32-bit operations (int)</code></pre>
+        </div>
+
+        <h3>Loop Example</h3>
+
+        <pre><code>// C code:
+int sum_array(int *arr, int len) {
+    int sum = 0;
+    for (int i = 0; i < len; i++)
+        sum += arr[i];
+    return sum;
+}
+
+// Compiled assembly:
+sum_array:
+    XORAXA, RAX            // sum = 0 (RAX = 0)
+    TEST EDI, EDI          // if (len == 0)
+    JLE .L1                // jump to return
+    XOR ECX, ECX           // i = 0 (RCX)
+.L2:                       // Loop label
+    MOVSUB, [RSI + RCX*4]  // EBX = arr[i]
+    ADD EAX, EBX           // sum += arr[i]
+    ADD RCX, 1             // i++
+    CMP RCX, RDI           // compare i with len
+    JL .L2                 // if (i < len) jump to loop
+.L1:
+    RET</code></pre>
+
+        <h2 id="security-implications">10. Security Implications: ROP and JOP Attacks</h2>
+
+        <p>Understanding assembly is critical for security research:</p>
+
+        <h3>Buffer Overflow + Return-Oriented Programming (ROP)</h3>
+
+        <div class="danger-box">
+            <p><strong>Classic buffer overflow:</strong> Overwrite return address on stack, jump to attacker's shellcode</p>
+
+            <p>Modern defenses (DEP/NX) prevent this by making stack non-executable</p>
+
+            <p><strong>ROP Attack:</strong> Instead of injecting code, reuse existing code (gadgets):</p>
+
+            <pre><code>// Attacker finds gadgets in binary:
+// Gadget 1: MOV RAX, [RBX]; RET
+// Gadget 2: ADD RAX, RCX; RET
+// Gadget 3: SYSCALL; RET
+
+// Overwrite stack to chain gadgets:
+Stack:
+  [gadget1_address]  ← RET jumps here
+  [gadget2_address]  ← RET jumps here
+  [gadget3_address]  ← RET jumps here
+  [actual syscall_number]
+
+// Effect: Execute syscall with attacker's chosen arguments</code></pre>
+        </div>
+
+        <h3>Defenses</h3>
+
+        <ul>
+            <li><strong>DEP/NX:</strong> Mark memory non-executable, prevent code injection</li>
+            <li><strong>ASLR:</strong> Randomize code/stack layout, prevent hardcoded addresses</li>
+            <li><strong>Stack canaries:</strong> Magic value before return address, detect overflow</li>
+            <li><strong>Control Flow Guard (CFG):</strong> Validate indirect branches</li>
+            <li><strong>Pointer authentication:</strong> Sign pointers, verify before use</li>
+        </ul>
+
+        <h2 id="professional-impact">Professional Impact: Why Assembly Matters</h2>
+
+        <h3>Performance Optimization</h3>
+        <ul>
+            <li>Identify compiler inefficiencies</li>
+            <li>Understand cache behavior</li>
+            <li>Profile to find hotspots</li>
+            <li>Write critical sections in assembly if needed</li>
+        </ul>
+
+        <h3>Security Research</h3>
+        <ul>
+            <li>Analyze vulnerabilities and exploits</li>
+            <li>Understand exploitation techniques</li>
+            <li>Develop defenses and patches</li>
+            <li>Reverse engineer malware</li>
+        </ul>
+
+        <h3>Systems Programming</h3>
+        <ul>
+            <li>Kernel development requires assembly</li>
+            <li>Context switching, interrupt handling</li>
+            <li>Low-level hardware interaction</li>
+        </ul>
+
+        <h2 id="summary">Summary & Key Takeaways</h2>
+
+        <ul>
+            <li><strong>x86-64 registers</strong> follow naming conventions (RAX/EAX/AX/AL for different sizes)</li>
+            <li><strong>General purpose registers</strong> have conventional uses (parameters, return values, etc.)</li>
+            <li><strong>Addressing modes</strong> calculate memory addresses in hardware (base + index*scale + offset)</li>
+            <li><strong>Instruction set</strong> has arithmetic, logic, memory, and control flow categories</li>
+            <li><strong>Calling conventions</strong> define how parameters are passed and registers preserved</li>
+            <li><strong>Stack frames</strong> organize return addresses, saved registers, and local variables</li>
+            <li><strong>System calls</strong> transition from user mode to kernel mode</li>
+            <li><strong>GDB</strong> is essential for debugging and analyzing assembly</li>
+            <li><strong>Understanding assembly</strong> is essential for performance optimization, security research, and systems programming</li>
+            <li><strong>Modern defenses</strong> (DEP, ASLR, canaries) prevent classic exploits but sophisticated attacks persist</li>
+        </ul>
+
+        <div class="next-topic">
+            <strong>Next topic:</strong> <a href="topic-2.1.html">Topic 2.1: Network Fundamentals</a> — Now that you understand how single machines execute instructions and manage resources, let's explore how multiple machines communicate over networks.
+        </div>
+
+    </div>
+</body>
+</html>

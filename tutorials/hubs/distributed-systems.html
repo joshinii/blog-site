@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distributed Systems Hub - Computer Systems Learning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdance, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .breadcrumb {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        .breadcrumb span {
+            color: white;
+            opacity: 0.7;
+        }
+
+        .hub-header {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .hub-title {
+            font-size: 42px;
+            font-weight: 800;
+            color: #38f9d7;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .hub-icon {
+            font-size: 50px;
+        }
+
+        .hub-description {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .learning-path-indicator {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .path-badge {
+            display: inline-block;
+            background: #ccfbf1;
+            color: #0d9488;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .hub-section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-badge {
+            background: rgba(255,255,255,0.3);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .topic-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            border-left: 5px solid #38f9d7;
+        }
+
+        .topic-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(56, 249, 215, 0.1) 0%, rgba(67, 233, 123, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(56, 249, 215, 0.2);
+        }
+
+        .topic-card:hover::before {
+            opacity: 1;
+        }
+
+        .topic-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .topic-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .topic-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .topic-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .difficulty-advanced {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .topic-parts {
+            font-size: 13px;
+            color: #999;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+        }
+
+        .part-list {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .part-item {
+            background: #f5f5f5;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .topic-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .topic-link {
+            padding: 10px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .link-primary {
+            background: #38f9d7;
+            color: #003d38;
+        }
+
+        .link-primary:hover {
+            background: #14b8a6;
+        }
+
+        .info-box {
+            background: #ccfbf1;
+            border-left: 4px solid #38f9d7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-box-title {
+            font-weight: 600;
+            color: #0d9488;
+            margin-bottom: 8px;
+        }
+
+        .info-box-text {
+            color: #0d7377;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .related-hubs {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-top: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .related-hubs-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+        .related-hubs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .hub-link {
+            padding: 20px;
+            border: 2px solid #ccfbf1;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #38f9d7;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .hub-link:hover {
+            border-color: #38f9d7;
+            background: #ccfbf1;
+            transform: translateY(-3px);
+        }
+
+        .hub-footer {
+            background: white;
+            padding: 30px 40px;
+            border-radius: 12px;
+            margin-top: 40px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .footer-text {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: #38f9d7;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: #14b8a6;
+        }
+
+        @media (max-width: 768px) {
+            .hub-header {
+                padding: 30px 20px;
+            }
+
+            .hub-title {
+                font-size: 28px;
+            }
+
+            .topics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="../../blog.html">Learning Hub</a>
+            <span>/</span>
+            <span>Distributed Systems</span>
+        </div>
+
+        <!-- Header -->
+        <div class="hub-header">
+            <div class="hub-title">
+                <span class="hub-icon">🌍</span>
+                <span>Distributed Systems Hub</span>
+            </div>
+            <p class="hub-description">
+                Master the art of building systems that span multiple computers. Learn about distributed architectures,
+                consensus, scalability, and the challenges of coordinating systems at scale.
+            </p>
+            <div class="learning-path-indicator">
+                <span class="path-badge">📍 Advanced Level</span>
+                <span class="path-badge">⏱️ 2-3 hours</span>
+                <span class="path-badge">🎯 System Design</span>
+            </div>
+        </div>
+
+        <!-- Info Box -->
+        <div class="info-box">
+            <div class="info-box-title">🎓 This is an advanced topic!</div>
+            <div class="info-box-text">
+                This hub builds on knowledge from Fundamentals, Computer Systems, and Networking.
+                Make sure you've completed those hubs first for the best understanding.
+            </div>
+        </div>
+
+        <!-- Distributed Systems Section -->
+        <div class="hub-section">
+            <div class="section-title">
+                <span>Building Distributed Systems</span>
+                <span class="section-badge">Advanced Topic</span>
+            </div>
+
+            <div class="topics-grid">
+                <div class="topic-card" onclick="window.location='../topic-2.3.html'">
+                    <div class="topic-content">
+                        <div class="topic-icon">🚀</div>
+                        <h3 class="topic-name">Distributed Systems</h3>
+                        <span class="difficulty-badge difficulty-advanced">Advanced</span>
+                        <p class="topic-description">
+                            Comprehensive guide to distributed systems. Learn about network failures, consensus algorithms,
+                            data consistency, and strategies for building reliable distributed applications.
+                        </p>
+                        <div class="topic-parts">
+                            <strong>What you'll learn:</strong>
+                            <div class="part-list">
+                                <span class="part-item">Distributed Architectures</span>
+                                <span class="part-item">Consensus Algorithms</span>
+                                <span class="part-item">Scalability Patterns</span>
+                                <span class="part-item">Failure Handling</span>
+                            </div>
+                        </div>
+                        <div class="topic-links">
+                            <a href="../topic-2.3.html" class="topic-link link-primary">Start Reading →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prerequisites Section -->
+        <div class="related-hubs">
+            <h3 class="related-hubs-title">📚 Required Prerequisites</h3>
+            <p style="color: #666; margin-bottom: 20px;">
+                Before diving into Distributed Systems, make sure you're comfortable with these foundations:
+            </p>
+            <div class="related-hubs-grid">
+                <a href="fundamentals.html" class="hub-link">
+                    Fundamentals
+                    <br><small style="font-size: 12px; opacity: 0.7;">Binary & Data</small>
+                </a>
+                <a href="systems.html" class="hub-link">
+                    Computer Systems
+                    <br><small style="font-size: 12px; opacity: 0.7;">OS & Concurrency</small>
+                </a>
+                <a href="networking.html" class="hub-link">
+                    Networking
+                    <br><small style="font-size: 12px; opacity: 0.7;">Protocols & Communication</small>
+                </a>
+                <a href="memory-storage.html" class="hub-link">
+                    Memory & Storage
+                    <br><small style="font-size: 12px; opacity: 0.7;">Data Organization</small>
+                </a>
+            </div>
+        </div>
+
+        <!-- Learning Path Info -->
+        <div style="background: white; padding: 40px; border-radius: 12px; margin-top: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <h3 style="font-size: 22px; font-weight: 700; color: #2c3e50; margin-bottom: 20px;">🎯 Complete Learning Path to Distributed Systems</h3>
+            <ol style="color: #666; line-height: 1.8; margin-left: 20px;">
+                <li><strong>Start with Fundamentals Hub</strong> - Learn binary, data representation, timing, and memory basics</li>
+                <li><strong>Progress to Computer Systems Hub</strong> - Understand CPU, OS, and system architecture</li>
+                <li><strong>Explore Networking Hub</strong> - Master network protocols and communication fundamentals</li>
+                <li><strong>Study Memory & Storage Hub</strong> - Learn memory management and storage systems</li>
+                <li><strong>Then tackle Distributed Systems</strong> - Build scalable systems using knowledge from all previous hubs</li>
+            </ol>
+        </div>
+
+        <!-- Footer -->
+        <div class="hub-footer">
+            <p class="footer-text">
+                💡 Tip: Distributed systems is a capstone topic. Review Networking and Computer Systems if you find concepts challenging.
+            </p>
+            <div class="footer-links">
+                <a href="../../blog.html" class="footer-link">← Back to Learning Hub</a>
+                <a href="../../index.html" class="footer-link">Home</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

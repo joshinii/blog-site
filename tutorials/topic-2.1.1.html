@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TCP/IP & Socket Programming</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .breadcrumb {
+            background-color: #f8f9fa;
+            padding: 12px 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+            font-size: 0.95em;
+        }
+
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb span {
+            color: #6c757d;
+            margin: 0 8px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            transition: transform 0.2s ease;
+        }
+
+        .info-box:hover {
+            transform: translateX(5px);
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            transition: transform 0.2s ease;
+        }
+
+        .warning-box:hover {
+            transform: translateX(5px);
+        }
+
+        .success-box {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            transition: transform 0.2s ease;
+        }
+
+        .success-box:hover {
+            transform: translateX(5px);
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.4;
+            border: 1px solid #e0e7f0;
+        }
+
+        pre:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .diagram {
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .key-concept {
+            background-color: #e8f4f8;
+            border: 2px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .visual-example {
+            background-color: #f0f8ff;
+            border: 2px solid #87ceeb;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: #2980b9;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        a {
+            transition: all 0.2s ease;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            body {
+                padding: 10px;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            .nav-links {
+                flex-direction: column;
+            }
+        }
+
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+            pre {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="../blog.html">Learning Hub</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="./hubs/networking.html">Networking</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">TCP/IP & Socket Programming</span>
+    </div>
+
+    <div class="container">
+        <h1>TCP/IP & Socket Programming</h1>
+        <p style="color: #666; font-style: italic; margin-bottom: 20px;">Deep Dive into IP Addressing, Transport Protocols, and Building Networked Applications</p>
+
+        <h2 id="ip-addressing">IP Addressing</h2>
+
+        <h3>IPv4 Addresses</h3>
+
+        <p>An <strong>IPv4 address</strong> is a 32-bit number written as four octets (0-255) separated by dots.</p>
+
+        <div class="visual-example">
+            <h4>IPv4 Address Breakdown</h4>
+            <pre><code>Example: 192.168.1.100
+
+Decimal:    192      .    168      .    1        .    100
+Binary:  11000000   .  10101000   .  00000001   .  01100100
+Bits:    [8 bits]   .  [8 bits]   .  [8 bits]   .  [8 bits]
+         └──────────────────────────────────────────────┘
+                        32 bits total
+
+Each octet: 0-255 (2^8 = 256 values)
+Total addresses: 2^32 = 4,294,967,296 (~4.3 billion)</code></pre>
+        </div>
+
+        <h3>IP Address Classes (Historical)</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Class</th>
+                    <th>First Octet</th>
+                    <th>Default Mask</th>
+                    <th>Hosts per Network</th>
+                    <th>Use</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>A</strong></td>
+                    <td>1-126</td>
+                    <td>255.0.0.0 (/8)</td>
+                    <td>16,777,214</td>
+                    <td>Large organizations</td>
+                </tr>
+                <tr>
+                    <td><strong>B</strong></td>
+                    <td>128-191</td>
+                    <td>255.255.0.0 (/16)</td>
+                    <td>65,534</td>
+                    <td>Medium organizations</td>
+                </tr>
+                <tr>
+                    <td><strong>C</strong></td>
+                    <td>192-223</td>
+                    <td>255.255.255.0 (/24)</td>
+                    <td>254</td>
+                    <td>Small organizations</td>
+                </tr>
+                <tr>
+                    <td><strong>D</strong></td>
+                    <td>224-239</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>Multicast</td>
+                </tr>
+                <tr>
+                    <td><strong>E</strong></td>
+                    <td>240-255</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>Experimental</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Special IP Addresses</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Address/Range</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>0.0.0.0</td>
+                    <td>Default route / unspecified</td>
+                </tr>
+                <tr>
+                    <td>127.0.0.0/8</td>
+                    <td>Loopback (127.0.0.1 = localhost)</td>
+                </tr>
+                <tr>
+                    <td>10.0.0.0/8</td>
+                    <td>Private (Class A)</td>
+                </tr>
+                <tr>
+                    <td>172.16.0.0/12</td>
+                    <td>Private (Class B)</td>
+                </tr>
+                <tr>
+                    <td>192.168.0.0/16</td>
+                    <td>Private (Class C)</td>
+                </tr>
+                <tr>
+                    <td>169.254.0.0/16</td>
+                    <td>Link-local (APIPA)</td>
+                </tr>
+                <tr>
+                    <td>255.255.255.255</td>
+                    <td>Broadcast</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Subnetting and CIDR</h3>
+
+        <p><strong>CIDR (Classless Inter-Domain Routing)</strong> allows flexible network sizes using slash notation.</p>
+
+        <div class="visual-example">
+            <h4>CIDR Notation Examples</h4>
+            <pre><code>192.168.1.0/24
+            └─────┬─────┘ └┬┘
+                  │        └─ Network bits (24)
+                  └────────── Network address
+
+/24 means:
+- First 24 bits = Network portion
+- Last 8 bits = Host portion
+- Subnet mask: 255.255.255.0
+- Available hosts: 2^8 - 2 = 254 (minus network and broadcast)
+
+Examples:
+192.168.1.0/24   → 256 addresses (254 usable hosts)
+192.168.1.0/25   → 128 addresses (126 usable hosts)
+192.168.1.0/26   → 64 addresses (62 usable hosts)
+10.0.0.0/8       → 16,777,216 addresses</code></pre>
+        </div>
+
+        <h3>IPv6 Addresses</h3>
+
+        <p>IPv6 uses <strong>128-bit addresses</strong> to solve IPv4 exhaustion:</p>
+
+        <div class="visual-example">
+            <h4>IPv6 Format</h4>
+            <pre><code>Full form:
+2001:0db8:85a3:0000:0000:8a2e:0370:7334
+
+Compressed (remove leading zeros):
+2001:db8:85a3:0:0:8a2e:370:7334
+
+Further compressed (:: for consecutive zeros):
+2001:db8:85a3::8a2e:370:7334
+
+Special addresses:
+::1             → Loopback (localhost)
+::              → Unspecified address
+fe80::/10       → Link-local addresses
+fc00::/7        → Unique local addresses (private)
+ff00::/8        → Multicast
+
+Total addresses: 2^128 = 340 undecillion!</code></pre>
+        </div>
+
+        <h2 id="transport-layer">Transport Layer: TCP vs UDP</h2>
+
+        <h3>TCP vs UDP: The Great Debate</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>TCP (Transmission Control Protocol)</th>
+                    <th>UDP (User Datagram Protocol)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Connection</strong></td>
+                    <td>Connection-oriented (handshake)</td>
+                    <td>Connectionless</td>
+                </tr>
+                <tr>
+                    <td><strong>Reliability</strong></td>
+                    <td>Guaranteed delivery</td>
+                    <td>Best effort (no guarantee)</td>
+                </tr>
+                <tr>
+                    <td><strong>Ordering</strong></td>
+                    <td>Packets arrive in order</td>
+                    <td>No ordering</td>
+                </tr>
+                <tr>
+                    <td><strong>Error Checking</strong></td>
+                    <td>Extensive</td>
+                    <td>Basic checksum</td>
+                </tr>
+                <tr>
+                    <td><strong>Flow Control</strong></td>
+                    <td>Yes (sliding window)</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td><strong>Congestion Control</strong></td>
+                    <td>Yes</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td><strong>Speed</strong></td>
+                    <td>Slower (overhead)</td>
+                    <td>Faster (minimal overhead)</td>
+                </tr>
+                <tr>
+                    <td><strong>Header Size</strong></td>
+                    <td>20-60 bytes</td>
+                    <td>8 bytes</td>
+                </tr>
+                <tr>
+                    <td><strong>Use Cases</strong></td>
+                    <td>Web, email, file transfer</td>
+                    <td>Streaming, gaming, DNS</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>TCP Three-Way Handshake</h3>
+
+        <p>Before data transfer, TCP establishes a connection through a three-step process:</p>
+
+        <div class="diagram">
+TCP Three-Way Handshake:
+
+Client                              Server
+  │                                   │
+  │  1. SYN (seq=100)                │
+  ├──────────────────────────────────►│  "Hello, want to connect?"
+  │                                   │
+  │                                   │
+  │  2. SYN-ACK (seq=300, ack=101)   │
+  │◄──────────────────────────────────┤  "Yes! Let's connect"
+  │                                   │
+  │                                   │
+  │  3. ACK (seq=101, ack=301)       │
+  ├──────────────────────────────────►│  "Great, connection established!"
+  │                                   │
+  │                                   │
+  │  ═══ DATA TRANSFER ═══           │
+  │◄─────────────────────────────────►│
+  │                                   │
+
+SYN = Synchronize (sequence number)
+ACK = Acknowledgment
+seq = Sequence number (for ordering)
+ack = Acknowledgment number (received up to)
+
+Time: ~1.5 RTT (Round-Trip Times)
+        </div>
+
+        <div class="visual-example">
+            <h4>Handshake Explanation</h4>
+            <pre><code>Step 1 - SYN:
+  Client: "I want to connect. My starting sequence number is 100."
+  Flags: SYN=1
+  Client enters SYN-SENT state
+
+Step 2 - SYN-ACK:
+  Server: "OK! My starting sequence number is 300. I got your 100."
+  Flags: SYN=1, ACK=1
+  Server enters SYN-RECEIVED state
+
+Step 3 - ACK:
+  Client: "Got it! I received your 300."
+  Flags: ACK=1
+  Both enter ESTABLISHED state
+
+Now data can flow in both directions!</code></pre>
+        </div>
+
+        <h3>TCP Data Transfer</h3>
+
+        <div class="diagram">
+Reliable Data Transfer with Acknowledgments:
+
+Sender                              Receiver
+  │                                   │
+  │  Segment 1 (seq=100, data)       │
+  ├──────────────────────────────────►│
+  │                                   │  ✓ Received
+  │  ACK (ack=100+len)               │
+  │◄──────────────────────────────────┤
+  │                                   │
+  │  Segment 2 (seq=200, data)       │
+  ├────────────────X  LOST!           │
+  │                                   │
+  │  (timeout...)                     │
+  │                                   │
+  │  Segment 2 (seq=200, data)       │  Retransmit!
+  ├──────────────────────────────────►│
+  │                                   │  ✓ Received
+  │  ACK (ack=200+len)               │
+  │◄──────────────────────────────────┤
+  │                                   │
+
+Features:
+- Sequence numbers track every byte
+- ACKs confirm receipt
+- Timeouts trigger retransmission
+- Duplicate detection (same seq number)
+        </div>
+
+        <h3>TCP Flow Control: Sliding Window</h3>
+
+        <p>TCP prevents sender from overwhelming receiver using a <strong>sliding window</strong>:</p>
+
+        <div class="visual-example">
+            <pre><code>Receiver advertises window size in every ACK:
+"I have 4KB of buffer space available"
+
+Sender can send up to window size without waiting for ACK:
+
+Window = 4KB:
+┌──────┬──────┬──────┬──────┐
+│ 1KB  │ 2KB  │ 3KB  │ 4KB  │  Can send all 4KB
+└──────┴──────┴──────┴──────┘
+
+After ACK for first 2KB, window slides:
+        ┌──────┬──────┬──────┬──────┐
+        │ 3KB  │ 4KB  │ 5KB  │ 6KB  │  Can send 5KB and 6KB now
+        └──────┴──────┴──────┴──────┘
+
+Benefits:
+- Efficient: Don't wait for each byte's ACK
+- Safe: Don't overflow receiver's buffer
+- Adaptive: Window size changes based on receiver capacity</code></pre>
+        </div>
+
+        <h3>TCP Congestion Control</h3>
+
+        <p>TCP also prevents overwhelming the network (not just the receiver):</p>
+
+        <div class="key-concept">
+            <h4>Congestion Control Algorithms</h4>
+            <ul>
+                <li><strong>Slow Start</strong> - Start small, grow exponentially until threshold</li>
+                <li><strong>Congestion Avoidance</strong> - Grow linearly after threshold</li>
+                <li><strong>Fast Retransmit</strong> - 3 duplicate ACKs → immediate retransmit</li>
+                <li><strong>Fast Recovery</strong> - Halve window on congestion, don't restart from 1</li>
+            </ul>
+        </div>
+
+        <h3>UDP: Simple and Fast</h3>
+
+        <p>UDP is much simpler - just send packets without connection setup:</p>
+
+        <div class="visual-example">
+            <h4>UDP Header (Only 8 Bytes!)</h4>
+            <pre><code>UDP Header Format:
+┌─────────────────┬─────────────────┐
+│  Source Port    │  Dest Port      │  (2 bytes each)
+├─────────────────┼─────────────────┤
+│  Length         │  Checksum       │  (2 bytes each)
+└─────────────────┴─────────────────┘
+         └────────────────┘
+                │
+                └──► Data follows immediately
+
+TCP Header: 20-60 bytes (10x larger!)
+UDP Header: 8 bytes only
+
+UDP Example:
+Client: [send packet]  →  Server: [receive or not, who cares?]
+Client: [send packet]  →  Server: [might arrive out of order]
+Client: [send packet]  X  Server: [packet lost, no retransmit]
+
+Use UDP when:
+- Speed > Reliability (gaming, VoIP)
+- Small requests (DNS queries)
+- Streaming (video - occasional loss OK)
+- Multicast/broadcast needed</code></pre>
+        </div>
+
+        <h2 id="socket-programming">Socket Programming</h2>
+
+        <h3>What is a Socket?</h3>
+
+        <p>A <strong>socket</strong> is an endpoint for sending/receiving data across a network. Think of it as a phone number for your program!</p>
+
+        <div class="key-concept">
+            <h4>Socket = IP Address + Port Number</h4>
+            <ul>
+                <li><strong>IP Address</strong> identifies the machine (like a building address)</li>
+                <li><strong>Port Number</strong> identifies the application (like an apartment number)</li>
+                <li>Example: 192.168.1.100:8080 = machine 192.168.1.100, application on port 8080</li>
+            </ul>
+        </div>
+
+        <h4>Common Port Numbers</h4>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Port</th>
+                    <th>Protocol</th>
+                    <th>Service</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>20, 21</td>
+                    <td>FTP</td>
+                    <td>File Transfer Protocol</td>
+                </tr>
+                <tr>
+                    <td>22</td>
+                    <td>SSH</td>
+                    <td>Secure Shell</td>
+                </tr>
+                <tr>
+                    <td>23</td>
+                    <td>Telnet</td>
+                    <td>Remote terminal (insecure)</td>
+                </tr>
+                <tr>
+                    <td>25</td>
+                    <td>SMTP</td>
+                    <td>Email sending</td>
+                </tr>
+                <tr>
+                    <td>53</td>
+                    <td>DNS</td>
+                    <td>Domain Name System</td>
+                </tr>
+                <tr>
+                    <td>80</td>
+                    <td>HTTP</td>
+                    <td>Web traffic</td>
+                </tr>
+                <tr>
+                    <td>443</td>
+                    <td>HTTPS</td>
+                    <td>Secure web traffic</td>
+                </tr>
+                <tr>
+                    <td>3306</td>
+                    <td>MySQL</td>
+                    <td>MySQL database</td>
+                </tr>
+                <tr>
+                    <td>5432</td>
+                    <td>PostgreSQL</td>
+                    <td>PostgreSQL database</td>
+                </tr>
+                <tr>
+                    <td>27017</td>
+                    <td>MongoDB</td>
+                    <td>MongoDB database</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>TCP Socket Programming</h3>
+
+        <div class="visual-example">
+            <h4>TCP Server (Python)</h4>
+            <pre><code>#!/usr/bin/env python3
+import socket
+
+# Create TCP socket
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# Allow port reuse (useful during development)
+server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+# Bind to address and port
+host = '0.0.0.0'  # Listen on all interfaces
+port = 8080
+server_socket.bind((host, port))
+
+# Listen for connections (backlog=5)
+server_socket.listen(5)
+print(f"Server listening on {host}:{port}")
+
+while True:
+    # Accept client connection (blocks until client connects)
+    client_socket, client_address = server_socket.accept()
+    print(f"Connection from {client_address}")
+
+    try:
+        # Receive data (up to 1024 bytes)
+        data = client_socket.recv(1024)
+        print(f"Received: {data.decode()}")
+
+        # Send response
+        response = f"Echo: {data.decode()}"
+        client_socket.send(response.encode())
+
+    finally:
+        # Close client connection
+        client_socket.close()
+        print(f"Connection closed")
+
+# Never reached in this example (infinite loop)
+server_socket.close()</code></pre>
+
+            <h4>TCP Client (Python)</h4>
+            <pre><code>#!/usr/bin/env python3
+import socket
+
+# Create TCP socket
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# Connect to server
+host = '127.0.0.1'  # localhost
+port = 8080
+print(f"Connecting to {host}:{port}...")
+client_socket.connect((host, port))
+print("Connected!")
+
+try:
+    # Send data
+    message = "Hello, Server!"
+    client_socket.send(message.encode())
+    print(f"Sent: {message}")
+
+    # Receive response
+    data = client_socket.recv(1024)
+    print(f"Received: {data.decode()}")
+
+finally:
+    # Close connection
+    client_socket.close()
+    print("Connection closed")</code></pre>
+        </div>
+
+        <h3>UDP Socket Programming</h3>
+
+        <div class="visual-example">
+            <h4>UDP Server (Python)</h4>
+            <pre><code>#!/usr/bin/env python3
+import socket
+
+# Create UDP socket
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+# Bind to address and port
+host = '0.0.0.0'
+port = 9090
+server_socket.bind((host, port))
+print(f"UDP Server listening on {host}:{port}")
+
+while True:
+    # Receive datagram (no connection needed!)
+    # recvfrom returns (data, client_address)
+    data, client_address = server_socket.recvfrom(1024)
+    print(f"Received from {client_address}: {data.decode()}")
+
+    # Send response directly to client
+    response = f"Echo: {data.decode()}"
+    server_socket.sendto(response.encode(), client_address)
+
+# Never reached
+server_socket.close()</code></pre>
+
+            <h4>UDP Client (Python)</h4>
+            <pre><code>#!/usr/bin/env python3
+import socket
+
+# Create UDP socket
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+# Server address
+host = '127.0.0.1'
+port = 9090
+
+try:
+    # Send datagram (no connection needed!)
+    message = "Hello, UDP Server!"
+    client_socket.sendto(message.encode(), (host, port))
+    print(f"Sent: {message}")
+
+    # Set timeout (UDP might not respond)
+    client_socket.settimeout(5.0)
+
+    # Receive response
+    data, server_address = client_socket.recvfrom(1024)
+    print(f"Received from {server_address}: {data.decode()}")
+
+except socket.timeout:
+    print("No response from server (timeout)")
+
+finally:
+    client_socket.close()</code></pre>
+        </div>
+
+        <h3>Socket Programming in C</h3>
+
+        <div class="visual-example">
+            <h4>TCP Server (C)</h4>
+            <pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;arpa/inet.h&gt;
+
+#define PORT 8080
+#define BUFFER_SIZE 1024
+
+int main() {
+    int server_fd, client_fd;
+    struct sockaddr_in server_addr, client_addr;
+    socklen_t client_len = sizeof(client_addr);
+    char buffer[BUFFER_SIZE];
+
+    // 1. Create socket
+    server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (server_fd < 0) {
+        perror("socket failed");
+        exit(1);
+    }
+
+    // 2. Set socket options (reuse address)
+    int opt = 1;
+    setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+
+    // 3. Bind to address
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = INADDR_ANY;
+    server_addr.sin_port = htons(PORT);
+
+    if (bind(server_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+        perror("bind failed");
+        exit(1);
+    }
+
+    // 4. Listen for connections
+    if (listen(server_fd, 5) < 0) {
+        perror("listen failed");
+        exit(1);
+    }
+
+    printf("Server listening on port %d\n", PORT);
+
+    while (1) {
+        // 5. Accept client connection
+        client_fd = accept(server_fd, (struct sockaddr*)&client_addr, &client_len);
+        if (client_fd < 0) {
+            perror("accept failed");
+            continue;
+        }
+
+        printf("Client connected: %s:%d\n",
+               inet_ntoa(client_addr.sin_addr),
+               ntohs(client_addr.sin_port));
+
+        // 6. Receive and send data
+        memset(buffer, 0, BUFFER_SIZE);
+        int bytes_read = read(client_fd, buffer, BUFFER_SIZE - 1);
+        if (bytes_read > 0) {
+            printf("Received: %s\n", buffer);
+            write(client_fd, buffer, bytes_read);  // Echo back
+        }
+
+        // 7. Close client connection
+        close(client_fd);
+    }
+
+    close(server_fd);
+    return 0;
+}</code></pre>
+        </div>
+
+        <h3>Non-Blocking Sockets & select()</h3>
+
+        <p>Handle multiple clients simultaneously using <code>select()</code>:</p>
+
+        <div class="visual-example">
+            <pre><code>#!/usr/bin/env python3
+import socket
+import select
+
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+server_socket.bind(('0.0.0.0', 8080))
+server_socket.listen(5)
+
+# List of sockets to monitor
+sockets_list = [server_socket]
+clients = {}
+
+print("Multi-client server started")
+
+while True:
+    # select() blocks until socket is ready
+    # Returns (readable, writable, exceptional)
+    read_sockets, _, exception_sockets = select.select(
+        sockets_list, [], sockets_list
+    )
+
+    for notified_socket in read_sockets:
+        # New connection
+        if notified_socket == server_socket:
+            client_socket, client_address = server_socket.accept()
+            sockets_list.append(client_socket)
+            clients[client_socket] = client_address
+            print(f"New connection from {client_address}")
+
+        # Existing client sent data
+        else:
+            try:
+                data = notified_socket.recv(1024)
+                if data:
+                    print(f"Received from {clients[notified_socket]}: {data.decode()}")
+                    notified_socket.send(f"Echo: {data.decode()}".encode())
+                else:
+                    # Client disconnected
+                    print(f"Closed connection from {clients[notified_socket]}")
+                    sockets_list.remove(notified_socket)
+                    del clients[notified_socket]
+                    notified_socket.close()
+            except:
+                # Error occurred
+                sockets_list.remove(notified_socket)
+                del clients[notified_socket]
+                notified_socket.close()
+
+    # Handle exceptions
+    for notified_socket in exception_sockets:
+        sockets_list.remove(notified_socket)
+        del clients[notified_socket]
+        notified_socket.close()</code></pre>
+        </div>
+
+        <div class="success-box">
+            <h3>Key Takeaways</h3>
+            <ul>
+                <li>IPv4 uses 32-bit addresses (4.3 billion), IPv6 uses 128-bit (340 undecillion)</li>
+                <li>CIDR notation (e.g., /24) defines network size flexibly</li>
+                <li>TCP provides reliable, ordered delivery with flow/congestion control</li>
+                <li>UDP is faster but unreliable - use for speed-critical applications</li>
+                <li>Sockets = IP address + port number (e.g., 192.168.1.1:8080)</li>
+                <li>TCP requires connect/accept, UDP uses sendto/recvfrom directly</li>
+                <li>Use select() or similar mechanisms for handling multiple connections</li>
+            </ul>
+        </div>
+
+        <div class="nav-links">
+            <a href="topic-2.1.0.html" class="nav-link">← Previous: Overview</a>
+            <a href="topic-2.1.2.html" class="nav-link">Next: HTTP & TLS →</a>
+        </div>
+
+        <hr style="margin: 40px 0; border: none; border-top: 2px solid #ddd;">
+
+        <div style="background-color: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; margin: 20px 0; border-radius: 5px;">
+            <strong>Continue your networking journey:</strong><br>
+            → <a href="topic-2.1.2.html">Next: HTTP & TLS - Learn application layer protocols</a><br>
+            → <a href="topic-2.1.0.html">Back to Overview</a>
+        </div>
+    </div>
+</body>
+</html>

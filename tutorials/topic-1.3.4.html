@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synchronization & Concurrency</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .danger-box {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.4;
+            border: 1px solid #e0e7f0;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .diagram {
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .key-concept {
+            background-color: #e8f4f8;
+            border: 2px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .visual-example {
+            background-color: #f0f8ff;
+            border: 2px solid #87ceeb;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+        }
+
+        .nav-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: #2980b9;
+        }
+
+        .breadcrumb {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            body {
+                padding: 10px;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        pre:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        a {
+            transition: all 0.2s ease;
+        }
+
+        .info-box, .danger-box {
+            transition: transform 0.2s ease;
+        }
+
+        .info-box:hover, .danger-box:hover {
+            transform: translateX(5px);
+        }
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="../blog.html">Learning Hub</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="./hubs/systems.html">Systems</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Synchronization & Concurrency</span>
+    </div>
+
+    <div class="container">
+        <h1>Synchronization & Concurrency</h1>
+        <p style="color: #666; font-style: italic; margin-bottom: 20px;">Managing Shared Resources and Preventing Race Conditions in Concurrent Systems</p>
+
+        <div class="key-concept">
+            <h3>What You'll Learn</h3>
+            <ul>
+                <li><strong>Race Conditions</strong> - What goes wrong with concurrent access</li>
+                <li><strong>Critical Sections</strong> - Code that needs protection</li>
+                <li><strong>Mutex & Semaphores</strong> - Synchronization primitives</li>
+                <li><strong>Deadlock</strong> - When processes wait forever</li>
+                <li><strong>Classic Problems</strong> - Producer-Consumer, Readers-Writers</li>
+            </ul>
+        </div>
+
+        <h2>Synchronization & Concurrency</h2>
+
+        <h3>The Race Condition Problem</h3>
+
+        <p>When multiple threads access shared data concurrently, we can get <strong>race conditions</strong> - the result depends on execution timing!</p>
+
+        <div class="visual-example">
+            <h4>Example: Bank Account Race Condition</h4>
+            <pre><code>// Shared variable
+int balance = 100;
+
+// Thread 1: Deposit $50
+void deposit() {
+    int temp = balance;  // Read: temp = 100
+    temp = temp + 50;    // temp = 150
+    balance = temp;      // Write: balance = 150
+}
+
+// Thread 2: Deposit $30
+void deposit2() {
+    int temp = balance;  // Read: temp = 100
+    temp = temp + 30;    // temp = 130
+    balance = temp;      // Write: balance = 130
+}
+
+EXPECTED: 100 + 50 + 30 = 180
+
+ACTUAL if interleaved:
+Thread 1: temp = balance (100)
+Thread 2: temp = balance (100)  ← Both read 100!
+Thread 1: temp = 100 + 50 (150)
+Thread 2: temp = 100 + 30 (130)
+Thread 1: balance = 150
+Thread 2: balance = 130  ← Overwrites Thread 1's update!
+
+RESULT: balance = 130 (Lost $50!)</code></pre>
+        </div>
+
+        <h3>Critical Section</h3>
+
+        <p>The <strong>critical section</strong> is code that accesses shared resources. Only ONE thread should execute it at a time.</p>
+
+        <div class="key-concept">
+            <h4>Critical Section Requirements</h4>
+            <ul>
+                <li><strong>Mutual Exclusion</strong> - Only one thread in critical section at a time</li>
+                <li><strong>Progress</strong> - If no thread in CS, one waiting thread should be able to enter</li>
+                <li><strong>Bounded Waiting</strong> - A thread shouldn't wait forever</li>
+            </ul>
+        </div>
+
+        <h3>Mutex (Mutual Exclusion Lock)</h3>
+
+        <p>A <strong>mutex</strong> is a lock that ensures mutual exclusion.</p>
+
+        <div class="visual-example">
+            <h4>Example: Mutex in C (pthread)</h4>
+            <pre><code>#include &lt;pthread.h&gt;
+#include &lt;stdio.h&gt;
+
+int balance = 100;
+pthread_mutex_t lock;  // Declare mutex
+
+void* deposit(void* arg) {
+    int amount = *(int*)arg;
+
+    pthread_mutex_lock(&lock);    // LOCK (enter critical section)
+    // ──────────── CRITICAL SECTION START ────────────
+    int temp = balance;
+    temp = temp + amount;
+    printf("Depositing %d, new balance: %d\n", amount, temp);
+    balance = temp;
+    // ──────────── CRITICAL SECTION END ──────────────
+    pthread_mutex_unlock(&lock);  // UNLOCK (leave critical section)
+
+    return NULL;
+}
+
+int main() {
+    pthread_t t1, t2;
+    int amt1 = 50, amt2 = 30;
+
+    pthread_mutex_init(&lock, NULL);  // Initialize mutex
+
+    pthread_create(&t1, NULL, deposit, &amt1);
+    pthread_create(&t2, NULL, deposit, &amt2);
+
+    pthread_join(t1, NULL);
+    pthread_join(t2, NULL);
+
+    printf("Final balance: %d\n", balance);  // Always 180!
+
+    pthread_mutex_destroy(&lock);
+    return 0;
+}</code></pre>
+        </div>
+
+        <h3>Semaphore</h3>
+
+        <p>A <strong>semaphore</strong> is a generalized lock with a counter.</p>
+
+        <ul>
+            <li><strong>Binary Semaphore</strong> - Value 0 or 1 (like mutex)</li>
+            <li><strong>Counting Semaphore</strong> - Value 0 to N (control N resources)</li>
+        </ul>
+
+        <div class="visual-example">
+            <h4>Semaphore Operations</h4>
+            <pre><code>// Initialize semaphore with value 3 (3 resources available)
+sem_t sem;
+sem_init(&sem, 0, 3);
+
+// wait() or P() or down() - Acquire resource
+void wait(sem_t* sem) {
+    while (sem->value <= 0) {
+        // Block and wait
+    }
+    sem->value--;  // Decrement
+}
+
+// signal() or V() or up() - Release resource
+void signal(sem_t* sem) {
+    sem->value++;  // Increment
+}
+
+Example: Limiting concurrent database connections
+sem_init(&db_connections, 0, 10);  // Max 10 connections
+
+void query_database() {
+    sem_wait(&db_connections);  // Wait if 10 already connected
+    // ... use database ...
+    sem_post(&db_connections);  // Release connection
+}</code></pre>
+        </div>
+
+        <h3>Deadlock</h3>
+
+        <p>A <strong>deadlock</strong> occurs when processes wait for each other in a cycle, and none can proceed.</p>
+
+        <div class="diagram">
+Deadlock Example:
+
+Thread 1                        Thread 2
+────────────────────────────────────────────────
+lock(mutex_A)                   lock(mutex_B)
+  // Has A, wants B                // Has B, wants A
+  lock(mutex_B) ◄──DEADLOCK!──► lock(mutex_A)
+
+Neither can proceed! Both waiting forever.
+
+Visualization:
+  T1 ──holds──► Mutex A ──wanted_by──► T2
+   ▲                                    │
+   │                                    │
+   │                                    │
+wanted_by                            holds
+   │                                    │
+   │                                    ▼
+  T1 ◄──wanted_by── Mutex B ◄──holds── T2
+
+Cycle detected = Deadlock!
+        </div>
+
+        <h4>Deadlock Conditions (ALL must be true)</h4>
+
+        <ol>
+            <li><strong>Mutual Exclusion</strong> - Resources can't be shared</li>
+            <li><strong>Hold and Wait</strong> - Process holds resources while waiting for more</li>
+            <li><strong>No Preemption</strong> - Resources can't be forcibly taken</li>
+            <li><strong>Circular Wait</strong> - Cycle in resource dependency graph</li>
+        </ol>
+
+        <h4>Deadlock Prevention</h4>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Strategy</th>
+                    <th>How It Works</th>
+                    <th>Downside</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Lock Ordering</strong></td>
+                    <td>Always acquire locks in same order</td>
+                    <td>Hard to enforce in large systems</td>
+                </tr>
+                <tr>
+                    <td><strong>Lock Timeout</strong></td>
+                    <td>Release all locks if can't acquire in time</td>
+                    <td>Livelock possible</td>
+                </tr>
+                <tr>
+                    <td><strong>No Hold and Wait</strong></td>
+                    <td>Acquire all locks at once or none</td>
+                    <td>Low resource utilization</td>
+                </tr>
+                <tr>
+                    <td><strong>Preemption</strong></td>
+                    <td>Forcibly take resources from processes</td>
+                    <td>Not always possible</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Classic Synchronization Problems</h3>
+
+        <h4>1. Producer-Consumer Problem</h4>
+
+        <div class="visual-example">
+            <pre><code>// Shared buffer
+#define BUFFER_SIZE 5
+int buffer[BUFFER_SIZE];
+int count = 0;  // Items in buffer
+
+sem_t empty;  // Count empty slots
+sem_t full;   // Count full slots
+pthread_mutex_t mutex;  // Protect buffer access
+
+void init() {
+    sem_init(&empty, 0, BUFFER_SIZE);  // Initially all empty
+    sem_init(&full, 0, 0);             // Initially none full
+    pthread_mutex_init(&mutex, NULL);
+}
+
+void* producer(void* arg) {
+    while (1) {
+        int item = produce_item();  // Generate item
+
+        sem_wait(&empty);  // Wait for empty slot
+        pthread_mutex_lock(&mutex);
+
+        buffer[count++] = item;  // Add to buffer
+        printf("Produced: %d (count=%d)\n", item, count);
+
+        pthread_mutex_unlock(&mutex);
+        sem_post(&full);  // Signal that slot is full
+    }
+}
+
+void* consumer(void* arg) {
+    while (1) {
+        sem_wait(&full);  // Wait for full slot
+        pthread_mutex_lock(&mutex);
+
+        int item = buffer[--count];  // Remove from buffer
+        printf("Consumed: %d (count=%d)\n", item, count);
+
+        pthread_mutex_unlock(&mutex);
+        sem_post(&empty);  // Signal that slot is empty
+
+        consume_item(item);  // Process item
+    }
+}</code></pre>
+        </div>
+
+        <h4>2. Readers-Writers Problem</h4>
+
+        <p><strong>Goal:</strong> Multiple readers can read simultaneously, but writers need exclusive access.</p>
+
+        <div class="visual-example">
+            <pre><code>int read_count = 0;  // Number of active readers
+pthread_mutex_t read_count_mutex;  // Protect read_count
+pthread_mutex_t write_mutex;       // Protect write access
+
+void* reader(void* arg) {
+    pthread_mutex_lock(&read_count_mutex);
+    read_count++;
+    if (read_count == 1) {
+        pthread_mutex_lock(&write_mutex);  // First reader blocks writers
+    }
+    pthread_mutex_unlock(&read_count_mutex);
+
+    // ──── READING ────
+    printf("Reading data...\n");
+    // ─────────────────
+
+    pthread_mutex_lock(&read_count_mutex);
+    read_count--;
+    if (read_count == 0) {
+        pthread_mutex_unlock(&write_mutex);  // Last reader unblocks writers
+    }
+    pthread_mutex_unlock(&read_count_mutex);
+}
+
+void* writer(void* arg) {
+    pthread_mutex_lock(&write_mutex);  // Exclusive access
+
+    // ──── WRITING ────
+    printf("Writing data...\n");
+    // ─────────────────
+
+    pthread_mutex_unlock(&write_mutex);
+}</code></pre>
+        </div>
+
+        <h3>Synchronization Primitives Comparison</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Primitive</th>
+                    <th>Purpose</th>
+                    <th>When to Use</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Mutex</strong></td>
+                    <td>Mutual exclusion</td>
+                    <td>Protecting critical sections</td>
+                </tr>
+                <tr>
+                    <td><strong>Binary Semaphore</strong></td>
+                    <td>Signaling between threads</td>
+                    <td>Synchronization events</td>
+                </tr>
+                <tr>
+                    <td><strong>Counting Semaphore</strong></td>
+                    <td>Resource counting</td>
+                    <td>Limited resource pools</td>
+                </tr>
+                <tr>
+                    <td><strong>Condition Variable</strong></td>
+                    <td>Wait for condition</td>
+                    <td>Producer-consumer patterns</td>
+                </tr>
+                <tr>
+                    <td><strong>Spinlock</strong></td>
+                    <td>Busy-wait lock</td>
+                    <td>Very short critical sections</td>
+                </tr>
+                <tr>
+                    <td><strong>Read-Write Lock</strong></td>
+                    <td>Multiple readers, one writer</td>
+                    <td>Read-heavy workloads</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="danger-box">
+            <strong>Common Pitfalls:</strong>
+            <ul>
+                <li><strong>Forgetting to unlock</strong> - Always unlock in finally blocks or use RAII</li>
+                <li><strong>Wrong lock order</strong> - Always acquire locks in consistent order</li>
+                <li><strong>Too much locking</strong> - Reduces parallelism, hurts performance</li>
+                <li><strong>Too little locking</strong> - Race conditions and corruption</li>
+                <li><strong>Priority inversion</strong> - Low-priority thread holds lock needed by high-priority thread</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <strong>Best Practices:</strong>
+            <ul>
+                <li>Keep critical sections as short as possible</li>
+                <li>Use higher-level abstractions when available (e.g., concurrent data structures)</li>
+                <li>Test thoroughly with tools like ThreadSanitizer or Helgrind</li>
+                <li>Document locking protocols clearly</li>
+                <li>Consider lock-free algorithms for high-performance scenarios</li>
+            </ul>
+        </div>
+
+        <div class="nav-links">
+            <a href="topic-1.3.3.html" class="nav-link">← Previous: I/O & File Systems</a>
+            <a href="topic-1.3.0.html" class="nav-link">Back to Overview</a>
+        </div>
+
+        <hr style="margin: 40px 0; border: none; border-top: 2px solid #ddd;">
+
+        <div style="background-color: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; margin: 20px 0; border-radius: 5px;">
+            <strong>Congratulations!</strong> You've completed the Operating Systems Fundamentals series.<br><br>
+            <strong>Review and Explore:</strong><br>
+            → <a href="topic-1.3.0.html">Topic 1.3.0: Overview</a> - Review OS basics<br>
+            → <a href="topic-1.3.1.html">Topic 1.3.1: Processes & Scheduling</a> - Process management<br>
+            → <a href="topic-1.3.2.html">Topic 1.3.2: Virtual Memory</a> - Memory management<br>
+            → <a href="topic-1.3.3.html">Topic 1.3.3: I/O & File Systems</a> - Disk and file operations<br>
+            → <a href="../blog.html">Back to Blog</a> - Explore more topics
+        </div>
+    </div>
+</body>
+</html>

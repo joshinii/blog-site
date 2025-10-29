@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTP & TLS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .breadcrumb {
+            background-color: #f8f9fa;
+            padding: 12px 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+            font-size: 0.95em;
+        }
+
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb span {
+            color: #6c757d;
+            margin: 0 8px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            transition: transform 0.2s ease;
+        }
+
+        .info-box:hover {
+            transform: translateX(5px);
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            transition: transform 0.2s ease;
+        }
+
+        .warning-box:hover {
+            transform: translateX(5px);
+        }
+
+        .success-box {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            transition: transform 0.2s ease;
+        }
+
+        .success-box:hover {
+            transform: translateX(5px);
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.4;
+            border: 1px solid #e0e7f0;
+        }
+
+        pre:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .diagram {
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .key-concept {
+            background-color: #e8f4f8;
+            border: 2px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .visual-example {
+            background-color: #f0f8ff;
+            border: 2px solid #87ceeb;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: #2980b9;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        a {
+            transition: all 0.2s ease;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            body {
+                padding: 10px;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            .nav-links {
+                flex-direction: column;
+            }
+        }
+
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+            pre {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="../blog.html">Learning Hub</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="./hubs/networking.html">Networking</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">HTTP & TLS</span>
+    </div>
+
+    <div class="container">
+        <h1>HTTP & TLS - Application Layer Protocols</h1>
+        <p style="color: #666; font-style: italic; margin-bottom: 20px;">Understanding How Web Applications Communicate Securely</p>
+
+        <h2 id="http-https">HTTP/HTTPS: The Web</h2>
+
+        <p><strong>HTTP (HyperText Transfer Protocol)</strong> powers the web. It's a request-response protocol running over TCP.</p>
+
+        <div class="visual-example">
+            <h4>HTTP Request</h4>
+            <pre><code>GET /index.html HTTP/1.1
+Host: www.example.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0)
+Accept: text/html,application/xhtml+xml
+Accept-Language: en-US,en;q=0.9
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+
+[Request Line: Method, Path, Version]
+[Headers: Key-Value pairs]
+[Blank line]
+[Optional body for POST/PUT]</code></pre>
+
+            <h4>HTTP Response</h4>
+            <pre><code>HTTP/1.1 200 OK
+Date: Mon, 27 Jan 2025 12:00:00 GMT
+Server: Apache/2.4.41
+Content-Type: text/html; charset=UTF-8
+Content-Length: 1234
+Connection: keep-alive
+
+<!DOCTYPE html>
+<html>
+<head><title>Example</title></head>
+<body>Hello, World!</body>
+</html>
+
+[Status Line: Version, Status Code, Reason]
+[Headers]
+[Blank line]
+[Body: HTML, JSON, etc.]</code></pre>
+        </div>
+
+        <h4>Common HTTP Methods</h4>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Purpose</th>
+                    <th>Has Body?</th>
+                    <th>Idempotent?</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>GET</strong></td>
+                    <td>Retrieve resource</td>
+                    <td>No</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td><strong>POST</strong></td>
+                    <td>Create resource / submit data</td>
+                    <td>Yes</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td><strong>PUT</strong></td>
+                    <td>Update/replace resource</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td><strong>PATCH</strong></td>
+                    <td>Partial update</td>
+                    <td>Yes</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td><strong>DELETE</strong></td>
+                    <td>Remove resource</td>
+                    <td>No</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td><strong>HEAD</strong></td>
+                    <td>GET without body (metadata only)</td>
+                    <td>No</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td><strong>OPTIONS</strong></td>
+                    <td>Query supported methods</td>
+                    <td>No</td>
+                    <td>Yes</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4>Common HTTP Status Codes</h4>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Meaning</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>200</td>
+                    <td>OK</td>
+                    <td>Request succeeded</td>
+                </tr>
+                <tr>
+                    <td>201</td>
+                    <td>Created</td>
+                    <td>Resource created successfully</td>
+                </tr>
+                <tr>
+                    <td>204</td>
+                    <td>No Content</td>
+                    <td>Success, but no body to return</td>
+                </tr>
+                <tr>
+                    <td>301</td>
+                    <td>Moved Permanently</td>
+                    <td>Resource has new URL</td>
+                </tr>
+                <tr>
+                    <td>304</td>
+                    <td>Not Modified</td>
+                    <td>Use cached version</td>
+                </tr>
+                <tr>
+                    <td>400</td>
+                    <td>Bad Request</td>
+                    <td>Malformed request</td>
+                </tr>
+                <tr>
+                    <td>401</td>
+                    <td>Unauthorized</td>
+                    <td>Authentication required</td>
+                </tr>
+                <tr>
+                    <td>403</td>
+                    <td>Forbidden</td>
+                    <td>No permission</td>
+                </tr>
+                <tr>
+                    <td>404</td>
+                    <td>Not Found</td>
+                    <td>Resource doesn't exist</td>
+                </tr>
+                <tr>
+                    <td>429</td>
+                    <td>Too Many Requests</td>
+                    <td>Rate limited</td>
+                </tr>
+                <tr>
+                    <td>500</td>
+                    <td>Internal Server Error</td>
+                    <td>Server crashed</td>
+                </tr>
+                <tr>
+                    <td>503</td>
+                    <td>Service Unavailable</td>
+                    <td>Server overloaded</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Important HTTP Headers</h3>
+
+        <div class="key-concept">
+            <h4>Request Headers</h4>
+            <ul>
+                <li><strong>Host:</strong> Target server (required in HTTP/1.1)</li>
+                <li><strong>User-Agent:</strong> Client identification (browser, bot, etc.)</li>
+                <li><strong>Accept:</strong> Content types client can handle (e.g., text/html, application/json)</li>
+                <li><strong>Authorization:</strong> Credentials (e.g., Bearer token)</li>
+                <li><strong>Cookie:</strong> Session information</li>
+                <li><strong>Content-Type:</strong> Type of request body (e.g., application/json)</li>
+                <li><strong>Content-Length:</strong> Size of request body in bytes</li>
+            </ul>
+
+            <h4>Response Headers</h4>
+            <ul>
+                <li><strong>Content-Type:</strong> Type of response body</li>
+                <li><strong>Content-Length:</strong> Size of response body</li>
+                <li><strong>Set-Cookie:</strong> Create/update cookie</li>
+                <li><strong>Cache-Control:</strong> Caching directives (e.g., max-age=3600)</li>
+                <li><strong>Location:</strong> Redirect target (with 3xx status)</li>
+                <li><strong>Server:</strong> Server software identification</li>
+                <li><strong>Access-Control-Allow-Origin:</strong> CORS policy</li>
+            </ul>
+        </div>
+
+        <h3>Cookies and Sessions</h3>
+
+        <p>Cookies enable stateful HTTP (which is stateless by design):</p>
+
+        <div class="visual-example">
+            <pre><code><strong>1. Server sends cookie in response:</strong>
+HTTP/1.1 200 OK
+Set-Cookie: session_id=abc123; HttpOnly; Secure; Path=/; Max-Age=3600
+
+<strong>2. Browser stores cookie and includes it in future requests:</strong>
+GET /profile HTTP/1.1
+Host: example.com
+Cookie: session_id=abc123
+
+<strong>3. Server uses cookie to identify user/session</strong>
+
+<strong>Cookie attributes:</strong>
+- HttpOnly: Not accessible via JavaScript (prevents XSS)
+- Secure: Only sent over HTTPS
+- SameSite: Prevents CSRF attacks (Strict/Lax/None)
+- Domain: Which domains can access the cookie
+- Path: Which paths can access the cookie
+- Max-Age / Expires: When cookie expires</code></pre>
+        </div>
+
+        <h3>HTTPS: Secure HTTP</h3>
+
+        <p>HTTPS = HTTP over TLS/SSL. All data is encrypted between client and server.</p>
+
+        <div class="diagram">
+HTTPS Handshake (TLS 1.3 simplified):
+
+Client                              Server
+  │                                   │
+  │  ClientHello                     │
+  │  (supported cipher suites)        │
+  ├──────────────────────────────────►│
+  │                                   │
+  │  ServerHello                     │
+  │  (chosen cipher, certificate)     │
+  │◄──────────────────────────────────┤
+  │                                   │
+  │  (Verify certificate)             │
+  │                                   │
+  │  Finished                         │
+  │  (encrypted)                      │
+  ├──────────────────────────────────►│
+  │                                   │
+  │  ═══ Encrypted Data ═══          │
+  │◄─────────────────────────────────►│
+  │                                   │
+
+Benefits:
+- Confidentiality (encrypted)
+- Integrity (can't be tampered)
+- Authentication (server verified)
+        </div>
+
+        <h3>TLS/SSL Encryption</h3>
+
+        <p>TLS (Transport Layer Security) provides secure communication through:</p>
+
+        <div class="key-concept">
+            <h4>TLS Components</h4>
+            <ul>
+                <li><strong>Encryption:</strong> Data is encrypted so eavesdroppers can't read it
+                    <ul>
+                        <li>Symmetric encryption (AES) for data (fast)</li>
+                        <li>Asymmetric encryption (RSA/ECDSA) for key exchange</li>
+                    </ul>
+                </li>
+                <li><strong>Authentication:</strong> Verify server identity via certificates
+                    <ul>
+                        <li>Certificate Authority (CA) signs server certificates</li>
+                        <li>Browser verifies certificate chain</li>
+                        <li>Prevents man-in-the-middle attacks</li>
+                    </ul>
+                </li>
+                <li><strong>Integrity:</strong> Detect if data was modified
+                    <ul>
+                        <li>HMAC (Hash-based Message Authentication Code)</li>
+                        <li>Each message has a checksum</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <h4>How TLS Encryption Works</h4>
+
+        <div class="visual-example">
+            <pre><code><strong>Step 1: Client sends ClientHello</strong>
+- Supported TLS versions (1.2, 1.3)
+- Supported cipher suites (encryption algorithms)
+- Random number (for key generation)
+
+<strong>Step 2: Server sends ServerHello + Certificate</strong>
+- Chosen TLS version and cipher
+- Server's public key certificate
+- Random number
+
+<strong>Step 3: Client verifies certificate</strong>
+- Check certificate is signed by trusted CA
+- Check certificate is valid (not expired, correct domain)
+- Check certificate is not revoked
+
+<strong>Step 4: Key Exchange</strong>
+- Client generates "pre-master secret"
+- Encrypts it with server's public key
+- Only server can decrypt (has private key)
+
+<strong>Step 5: Both derive session keys</strong>
+- Use pre-master secret + random numbers
+- Generate symmetric encryption keys (AES)
+- Much faster than asymmetric encryption
+
+<strong>Step 6: Encrypted communication</strong>
+- All data encrypted with session keys
+- Each message authenticated (can't be tampered)
+- Forward secrecy: Keys change frequently</code></pre>
+        </div>
+
+        <h3>Certificate Validation</h3>
+
+        <div class="info-box">
+            <strong>What is an SSL/TLS Certificate?</strong>
+            <p>A certificate is a digital document that proves a server's identity:</p>
+            <ul>
+                <li><strong>Domain name:</strong> example.com</li>
+                <li><strong>Public key:</strong> Used to encrypt data</li>
+                <li><strong>Issuer:</strong> Certificate Authority (CA) that verified the server</li>
+                <li><strong>Validity period:</strong> Start and expiration dates</li>
+                <li><strong>Signature:</strong> CA's digital signature proving authenticity</li>
+            </ul>
+        </div>
+
+        <div class="warning-box">
+            <strong>Certificate Validation Process</strong>
+            <ol>
+                <li><strong>Check domain match:</strong> Certificate domain matches requested URL</li>
+                <li><strong>Check validity period:</strong> Certificate not expired or not yet valid</li>
+                <li><strong>Check certificate chain:</strong> Verify CA signatures up to root CA</li>
+                <li><strong>Check revocation:</strong> Certificate not revoked (CRL/OCSP)</li>
+            </ol>
+            <p>If any check fails → Browser shows warning or blocks connection</p>
+        </div>
+
+        <h2 id="dns">DNS: The Internet's Phone Book</h2>
+
+        <p><strong>DNS (Domain Name System)</strong> translates domain names to IP addresses.</p>
+
+        <div class="diagram">
+DNS Resolution Process:
+
+Browser wants: www.example.com
+
+1. Check browser cache → Not found
+2. Check OS cache → Not found
+3. Query DNS Resolver (ISP):
+
+   User                  Resolver              Root NS        TLD NS         Auth NS
+    │                       │                     │              │              │
+    │ www.example.com?     │                     │              │              │
+    ├──────────────────────►│                     │              │              │
+    │                       │  .com servers?      │              │              │
+    │                       ├─────────────────────►│              │              │
+    │                       │◄─────────────────────┤              │              │
+    │                       │  example.com server? │              │              │
+    │                       ├──────────────────────┼──────────────►│              │
+    │                       │◄──────────────────────────────────────┤              │
+    │                       │  www.example.com IP? │              │              │
+    │                       ├──────────────────────┼──────────────┼──────────────►│
+    │                       │◄──────────────────────────────────────────────────────┤
+    │  93.184.216.34       │                     │              │              │
+    │◄──────────────────────┤                     │              │              │
+    │                       │                     │              │              │
+
+Typical time: 20-120ms for initial query
+Subsequent queries: <1ms (cached)
+        </div>
+
+        <div class="visual-example">
+            <h4>DNS Record Types</h4>
+            <pre><code>A Record:      example.com → 93.184.216.34 (IPv4)
+AAAA Record:   example.com → 2606:2800:220:1:... (IPv6)
+CNAME Record:  www.example.com → example.com (alias)
+MX Record:     example.com → mail.example.com (email)
+TXT Record:    example.com → "v=spf1 include:..." (text data)
+NS Record:     example.com → ns1.example.com (nameserver)
+
+DNS Query (UDP, port 53):
+- Question: "What is www.example.com?"
+- Answer: "93.184.216.34"
+- Small messages → UDP perfect fit
+- Fallback to TCP if response > 512 bytes</code></pre>
+        </div>
+
+        <h3>DNS Caching</h3>
+
+        <div class="key-concept">
+            <p>DNS responses are cached at multiple levels to improve performance:</p>
+            <ul>
+                <li><strong>Browser cache:</strong> ~1 minute (very fast, per-application)</li>
+                <li><strong>OS cache:</strong> ~5-10 minutes (shared across apps)</li>
+                <li><strong>Router cache:</strong> ~30-60 minutes (shared across devices)</li>
+                <li><strong>ISP resolver cache:</strong> Based on TTL (shared across customers)</li>
+            </ul>
+            <p><strong>TTL (Time To Live):</strong> DNS record specifies how long to cache (e.g., 3600 seconds = 1 hour)</p>
+        </div>
+
+        <h2 id="http-versions">HTTP Versions: Evolution</h2>
+
+        <h3>HTTP/1.1 vs HTTP/2 vs HTTP/3</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>HTTP/1.1</th>
+                    <th>HTTP/2</th>
+                    <th>HTTP/3</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Transport</strong></td>
+                    <td>TCP</td>
+                    <td>TCP</td>
+                    <td>UDP (QUIC)</td>
+                </tr>
+                <tr>
+                    <td><strong>Multiplexing</strong></td>
+                    <td>No (1 request per connection)</td>
+                    <td>Yes (many streams)</td>
+                    <td>Yes (many streams)</td>
+                </tr>
+                <tr>
+                    <td><strong>Header Compression</strong></td>
+                    <td>No</td>
+                    <td>HPACK</td>
+                    <td>QPACK</td>
+                </tr>
+                <tr>
+                    <td><strong>Server Push</strong></td>
+                    <td>No</td>
+                    <td>Yes</td>
+                    <td>Yes (improved)</td>
+                </tr>
+                <tr>
+                    <td><strong>Head-of-Line Blocking</strong></td>
+                    <td>Yes (application + TCP)</td>
+                    <td>Partial (TCP only)</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td><strong>Connection Setup</strong></td>
+                    <td>TCP handshake</td>
+                    <td>TCP handshake</td>
+                    <td>0-RTT (zero round-trip)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="info-box">
+            <strong>HTTP/2 Improvements:</strong>
+            <ul>
+                <li><strong>Binary protocol:</strong> More efficient parsing (vs text-based HTTP/1.1)</li>
+                <li><strong>Multiplexing:</strong> Multiple requests on single connection (no more 6 connection limit)</li>
+                <li><strong>Header compression:</strong> Reduces overhead (headers often repeat)</li>
+                <li><strong>Server push:</strong> Server can send resources before client requests them</li>
+            </ul>
+        </div>
+
+        <div class="success-box">
+            <strong>HTTP/3 Advantages:</strong>
+            <ul>
+                <li><strong>QUIC protocol:</strong> Built on UDP instead of TCP</li>
+                <li><strong>Faster connection setup:</strong> 0-RTT for repeat connections</li>
+                <li><strong>No head-of-line blocking:</strong> Lost packet only affects one stream</li>
+                <li><strong>Better mobility:</strong> Connection survives IP address changes (switching Wi-Fi → 4G)</li>
+            </ul>
+        </div>
+
+        <h3>RESTful APIs</h3>
+
+        <p>REST (Representational State Transfer) is an architectural style for building web APIs:</p>
+
+        <div class="key-concept">
+            <h4>REST Principles</h4>
+            <ul>
+                <li><strong>Stateless:</strong> Each request contains all information needed (no server-side session)</li>
+                <li><strong>Resource-based:</strong> URLs identify resources (not actions)
+                    <ul>
+                        <li>Good: <code>GET /users/123</code></li>
+                        <li>Bad: <code>GET /getUser?id=123</code></li>
+                    </ul>
+                </li>
+                <li><strong>HTTP methods:</strong> Use verbs for actions (GET, POST, PUT, DELETE)</li>
+                <li><strong>Representations:</strong> Resources can have multiple formats (JSON, XML, HTML)</li>
+                <li><strong>HATEOAS:</strong> Responses include links to related resources</li>
+            </ul>
+        </div>
+
+        <div class="visual-example">
+            <h4>RESTful API Example</h4>
+            <pre><code><strong>Create user:</strong>
+POST /api/users
+Content-Type: application/json
+
+{"name": "Alice", "email": "alice@example.com"}
+
+Response: 201 Created
+Location: /api/users/123
+{"id": 123, "name": "Alice", "email": "alice@example.com"}
+
+<strong>Get user:</strong>
+GET /api/users/123
+
+Response: 200 OK
+{"id": 123, "name": "Alice", "email": "alice@example.com"}
+
+<strong>Update user:</strong>
+PUT /api/users/123
+{"name": "Alice Smith", "email": "alice@example.com"}
+
+Response: 200 OK
+{"id": 123, "name": "Alice Smith", "email": "alice@example.com"}
+
+<strong>Delete user:</strong>
+DELETE /api/users/123
+
+Response: 204 No Content</code></pre>
+        </div>
+
+        <div class="success-box">
+            <h3>Key Takeaways</h3>
+            <ul>
+                <li>HTTP is request-response protocol with methods (GET, POST, etc.) and status codes (200, 404, 500)</li>
+                <li>Headers carry metadata (Content-Type, Authorization, Cache-Control)</li>
+                <li>Cookies enable stateful interactions in stateless HTTP</li>
+                <li>HTTPS encrypts HTTP using TLS (confidentiality, authentication, integrity)</li>
+                <li>Certificates verify server identity; CAs sign certificates</li>
+                <li>DNS translates domain names to IP addresses (cached at multiple levels)</li>
+                <li>HTTP/2 adds multiplexing and compression; HTTP/3 uses QUIC (UDP) for faster connections</li>
+                <li>REST APIs use HTTP methods and resource-based URLs</li>
+            </ul>
+        </div>
+
+        <div class="nav-links">
+            <a href="topic-2.1.1.html" class="nav-link">← Previous: TCP/IP & Sockets</a>
+            <a href="topic-2.1.3.html" class="nav-link">Next: Performance & Debugging →</a>
+        </div>
+
+        <hr style="margin: 40px 0; border: none; border-top: 2px solid #ddd;">
+
+        <div style="background-color: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; margin: 20px 0; border-radius: 5px;">
+            <strong>Continue your networking journey:</strong><br>
+            → <a href="topic-2.1.3.html">Next: Performance & Debugging - Master network optimization</a><br>
+            → <a href="topic-2.1.0.html">Back to Overview</a>
+        </div>
+    </div>
+</body>
+</html>

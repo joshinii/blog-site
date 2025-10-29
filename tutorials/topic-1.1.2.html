@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From Source Code to Execution: The Complete Pipeline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .fun-box {
+            background-color: #ffe6f0;
+            border-left: 4px solid #e91e63;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .visual-example {
+            background-color: #f0f8ff;
+            border: 2px solid #87ceeb;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .key-concept {
+            background-color: #e8f4f8;
+            border: 2px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .exercise {
+            background-color: #f0f8ff;
+            border: 2px solid #4169e1;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+
+        .exercise h3 {
+            color: #4169e1;
+            margin-top: 0;
+        }
+
+        .diagram {
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.4;
+            border: 1px solid #e0e7f0;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .analogy {
+            font-style: italic;
+            color: #555;
+            margin: 10px 0;
+            padding-left: 20px;
+            border-left: 3px solid #95a5a6;
+        }
+
+        .breadcrumb {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+        }
+
+        .nav-button {
+            padding: 12px 24px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #2980b9;
+        }
+
+        .nav-button.disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        strong {
+            color: #2c3e50;
+        }
+
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+            pre {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="../blog.html">Learning Hub</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="./hubs/systems.html">Systems</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">From Source Code to Execution: The Complete Pipeline</span>
+    </div>
+
+    <div class="container">
+        <h1>From Source Code to Execution: The Complete Pipeline</h1>
+        <p style="color: #666; font-style: italic; margin-bottom: 20px;">Part 3 of 3 — Understanding How Your Code Becomes Machine Instructions</p>
+
+        <div class="info-box">
+            <strong>Tutorial Series Navigation:</strong>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>Part 1:</strong> <a href="topic-1.1.0.html">Computer Systems Fundamentals - Overview</a></li>
+                <li><strong>Part 2:</strong> <a href="topic-1.1.1.html">CPU Architecture & Instruction Execution</a></li>
+                <li><strong>Part 3 (Current):</strong> From Source Code to Execution: The Complete Pipeline</li>
+            </ul>
+        </div>
+
+        <h2 id="machine-code">Machine Code and Assembly Language</h2>
+
+        <h3>Machine Code (Binary)</h3>
+
+        <p><strong>Machine code</strong> is what the CPU actually executes — pure binary.</p>
+
+        <p><strong>Example:</strong> The instruction <code>ADD R1, R2, R3</code> might be encoded as:</p>
+
+        <pre><code>Binary:     0001 0001 0010 0011
+            ↑    ↑    ↑    ↑
+            |    |    |    └─ R3 (source 2)
+            |    |    └────── R2 (source 1)
+            |    └─────────── R1 (destination)
+            └──────────────── Opcode for ADD
+
+Hexadecimal: 0x1123</code></pre>
+
+        <div class="info-box">
+            <strong>Instruction format</strong> (simplified RISC style):
+            <pre><code>[Opcode: 4 bits][Dest Reg: 4 bits][Src1 Reg: 4 bits][Src2 Reg: 4 bits]</code></pre>
+        </div>
+
+        <h3>Assembly Language</h3>
+
+        <p><strong>Assembly</strong> is a human-readable representation of machine code. There's a <strong>1-to-1 correspondence</strong> between assembly instructions and machine code.</p>
+
+        <p><strong>x86-64 Assembly Example:</strong></p>
+        <pre><code>section .data
+    msg db "Hello, World!", 0
+
+section .text
+    global _start
+
+_start:
+    ; Write system call
+    mov rax, 1          ; syscall number for write
+    mov rdi, 1          ; file descriptor (stdout)
+    mov rsi, msg        ; pointer to message
+    mov rdx, 13         ; message length
+    syscall             ; invoke kernel
+
+    ; Exit system call
+    mov rax, 60         ; syscall number for exit
+    xor rdi, rdi        ; exit code 0
+    syscall</code></pre>
+
+        <div class="key-concept">
+            <strong>Key insight:</strong> Every high-level language (C, Python, Java) eventually compiles down to machine code. Understanding assembly helps you understand what your code <em>actually does</em>.
+        </div>
+
+        <h2 id="compilation">From High-Level Code to Execution</h2>
+
+        <h3>The Compilation Pipeline</h3>
+
+        <div class="diagram">┌──────────────┐
+│  Source Code │  int main() { return 0; }
+│   (C/C++)    │
+└──────┬───────┘
+       ↓
+┌──────────────┐
+│ Preprocessor │  Handle #include, #define
+└──────┬───────┘
+       ↓
+┌──────────────┐
+│   Compiler   │  Generate assembly code
+└──────┬───────┘
+       ↓
+┌──────────────┐
+│  Assembler   │  Convert assembly to machine code (object file)
+└──────┬───────┘
+       ↓
+┌──────────────┐
+│    Linker    │  Combine object files, resolve references
+└──────┬───────┘
+       ↓
+┌──────────────┐
+│  Executable  │  Final runnable program
+└──────────────┘</div>
+
+        <h3>Example: Compiling a Simple Program</h3>
+
+        <p><strong>C code</strong> (<code>add.c</code>):</p>
+        <pre><code>int add(int a, int b) {
+    return a + b;
+}
+
+int main() {
+    int result = add(5, 3);
+    return 0;
+}</code></pre>
+
+        <p><strong>Compile to assembly:</strong></p>
+        <pre><code>gcc -S -O0 add.c  # -S = stop after assembly, -O0 = no optimization</code></pre>
+
+        <p><strong>Generated assembly</strong> (<code>add.s</code>, simplified):</p>
+        <pre><code>add:
+    push rbp              ; Save old base pointer
+    mov rbp, rsp          ; Set up new stack frame
+    mov [rbp-4], edi      ; Store first arg (a)
+    mov [rbp-8], esi      ; Store second arg (b)
+    mov eax, [rbp-4]      ; Load a into eax
+    add eax, [rbp-8]      ; Add b to eax
+    pop rbp               ; Restore base pointer
+    ret                   ; Return (result in eax)
+
+main:
+    push rbp
+    mov rbp, rsp
+    mov esi, 3            ; Second argument: 3
+    mov edi, 5            ; First argument: 5
+    call add              ; Call add function
+    mov [rbp-4], eax      ; Store result in 'result'
+    mov eax, 0            ; Return 0
+    pop rbp
+    ret</code></pre>
+
+        <h2 id="system-calls">System Calls: How Software Talks to Hardware</h2>
+
+        <h3>What Are System Calls?</h3>
+
+        <p><strong>System calls</strong> are the interface between <strong>user programs</strong> and the <strong>operating system kernel</strong>. They allow programs to request services from the OS.</p>
+
+        <div class="analogy">
+            <strong>Analogy:</strong> Think of system calls as <strong>calling the front desk at a hotel</strong>:
+            <ul>
+                <li>You (application) can't directly access the kitchen (hardware)</li>
+                <li>You call the front desk (system call)</li>
+                <li>The hotel staff (OS kernel) fulfills your request</li>
+            </ul>
+        </div>
+
+        <h3>Common System Calls</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>System Call</th>
+                    <th>Purpose</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>open()</code></td>
+                    <td>Open a file</td>
+                    <td><code>fd = open("file.txt", O_RDONLY)</code></td>
+                </tr>
+                <tr>
+                    <td><code>read()</code></td>
+                    <td>Read from file</td>
+                    <td><code>read(fd, buffer, 100)</code></td>
+                </tr>
+                <tr>
+                    <td><code>write()</code></td>
+                    <td>Write to file</td>
+                    <td><code>write(fd, "hello", 5)</code></td>
+                </tr>
+                <tr>
+                    <td><code>close()</code></td>
+                    <td>Close a file</td>
+                    <td><code>close(fd)</code></td>
+                </tr>
+                <tr>
+                    <td><code>fork()</code></td>
+                    <td>Create new process</td>
+                    <td><code>pid = fork()</code></td>
+                </tr>
+                <tr>
+                    <td><code>exec()</code></td>
+                    <td>Execute a program</td>
+                    <td><code>execve("/bin/ls", args, env)</code></td>
+                </tr>
+                <tr>
+                    <td><code>exit()</code></td>
+                    <td>Terminate process</td>
+                    <td><code>exit(0)</code></td>
+                </tr>
+                <tr>
+                    <td><code>socket()</code></td>
+                    <td>Create network socket</td>
+                    <td><code>sock = socket(AF_INET, SOCK_STREAM, 0)</code></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>How System Calls Work</h3>
+
+        <div class="diagram">Normal function call:
+User code → Function → User code
+(all in user space)
+
+System call:
+User code → System call → KERNEL MODE → Hardware → KERNEL MODE → User code
+           (trap)         (privileged)              (return)</div>
+
+        <h4>System Call Execution (Linux x86-64)</h4>
+
+        <ol>
+            <li><strong>User code</strong> prepares arguments in registers</li>
+            <li><strong>System call number</strong> loaded into <code>rax</code></li>
+            <li><strong><code>syscall</code> instruction</strong> executed (triggers trap)</li>
+            <li><strong>CPU switches to kernel mode</strong> (privileged)</li>
+            <li><strong>Kernel</strong> looks up handler for system call number</li>
+            <li><strong>Handler executes</strong> (accesses hardware, performs operation)</li>
+            <li><strong>Kernel returns</strong> to user mode</li>
+            <li><strong>Result</strong> placed in <code>rax</code></li>
+        </ol>
+
+        <p><strong>Example:</strong> <code>write</code> system call</p>
+        <pre><code>// C code
+write(1, "Hello", 5);
+
+// Assembly
+mov rax, 1          ; syscall number for write (sys_write)
+mov rdi, 1          ; arg 1: file descriptor (stdout)
+mov rsi, msg        ; arg 2: buffer pointer
+mov rdx, 5          ; arg 3: count
+syscall             ; invoke kernel
+
+; Result in rax (number of bytes written, or -1 on error)</code></pre>
+
+        <h3>Why System Calls Are Expensive</h3>
+
+        <p>Each system call involves:</p>
+        <ol>
+            <li><strong>Mode switch</strong> (user → kernel → user): ~100-300 cycles</li>
+            <li><strong>Context save/restore</strong>: Save registers, restore registers</li>
+            <li><strong>Privilege level change</strong>: Security overhead</li>
+            <li><strong>Kernel code execution</strong>: Varies by operation</li>
+        </ol>
+
+        <div class="warning-box">
+            <strong>Cost comparison:</strong>
+            <ul>
+                <li>Function call: ~1-5 cycles</li>
+                <li>System call: ~100-1000 cycles</li>
+                <li>Network round-trip: ~100,000-1,000,000 cycles</li>
+            </ul>
+            <p><strong>Optimization insight:</strong> Minimize system calls in performance-critical code. Use buffering (e.g., <code>fwrite</code> in C buffers data and makes fewer <code>write</code> system calls).</p>
+        </div>
+
+        <h2 id="boot-process">The Boot Process: How Computers Start</h2>
+
+        <h3>What Happens When You Press the Power Button?</h3>
+
+        <div class="diagram">1. Power-On Self Test (POST)
+   ↓
+2. BIOS/UEFI Initialization
+   ↓
+3. Bootloader Execution
+   ↓
+4. Kernel Loading
+   ↓
+5. Init System
+   ↓
+6. User Space Initialization
+   ↓
+7. Login Prompt / Desktop</div>
+
+        <h3>Detailed Boot Sequence</h3>
+
+        <h4>1. Power-On Self Test (POST)</h4>
+        <ul>
+            <li><strong>CPU</strong> starts executing code at a fixed address (reset vector)</li>
+            <li><strong>BIOS/UEFI firmware</strong> (stored in ROM on motherboard) runs</li>
+            <li><strong>Tests</strong>: Check RAM, CPU, peripherals</li>
+            <li><strong>Beep codes</strong>: Indicate hardware problems</li>
+        </ul>
+
+        <h4>2. BIOS/UEFI Initialization</h4>
+        <ul>
+            <li><strong>Detect hardware</strong>: Enumerate devices (disk, keyboard, graphics)</li>
+            <li><strong>Initialize devices</strong>: Set up interrupt handlers</li>
+            <li><strong>Boot order</strong>: Check which device to boot from (HDD, USB, network)</li>
+        </ul>
+
+        <h4>3. Bootloader Execution</h4>
+        <p><strong>BIOS Legacy:</strong></p>
+        <ul>
+            <li>Reads <strong>Master Boot Record (MBR)</strong> from first sector of disk (512 bytes)</li>
+            <li>MBR contains bootloader code (e.g., GRUB stage 1)</li>
+            <li>Bootloader loads larger second stage from disk</li>
+        </ul>
+
+        <p><strong>UEFI Modern:</strong></p>
+        <ul>
+            <li>Reads <strong>EFI System Partition (ESP)</strong></li>
+            <li>Executes bootloader (e.g., GRUB, systemd-boot)</li>
+            <li>More flexible, supports larger disks (&gt;2TB)</li>
+        </ul>
+
+        <h4>4. Kernel Loading</h4>
+        <ul>
+            <li>Kernel image loaded into RAM</li>
+            <li>Kernel decompresses itself (if compressed)</li>
+            <li><strong>Early initialization</strong>:
+                <ul>
+                    <li>Set up interrupt descriptor table (IDT)</li>
+                    <li>Initialize memory management</li>
+                    <li>Detect and initialize hardware</li>
+                    <li>Mount root filesystem (read-only initially)</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h4>5. Init System (PID 1)</h4>
+        <ul>
+            <li>Kernel starts first user-space process: <strong>init</strong> (PID 1)</li>
+            <li>Modern Linux: <strong>systemd</strong>, <strong>upstart</strong>, or classic <strong>SysV init</strong></li>
+            <li>Init system:
+                <ul>
+                    <li>Mounts remaining filesystems</li>
+                    <li>Starts system services (networking, logging, cron)</li>
+                    <li>Manages service dependencies</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h4>6. User Space Initialization</h4>
+        <ul>
+            <li>Start graphical display manager (if GUI)</li>
+            <li>Start background daemons (sshd, httpd, etc.)</li>
+            <li>Set up user environment</li>
+        </ul>
+
+        <h4>7. Login Prompt</h4>
+        <ul>
+            <li>System ready for user login</li>
+            <li>From power-on to login: typically 10-30 seconds</li>
+        </ul>
+
+        <h2 id="memory-layout">Memory Layout of a Running Program</h2>
+
+        <p>When a program runs, memory is organized into <strong>segments</strong>:</p>
+
+        <div class="diagram">High Address (0xFFFFFFFF...)
+┌─────────────────────────┐
+│    Kernel Space         │  OS kernel (protected, user can't access)
+├─────────────────────────┤
+│        Stack            │  ↓ Grows downward
+│   (local variables,     │    Function calls, return addresses
+│    function frames)     │
+├─────────────────────────┤
+│          ↓              │
+│      (free space)       │
+│          ↑              │
+├─────────────────────────┤
+│         Heap            │  ↑ Grows upward
+│   (dynamic memory:      │    malloc(), new
+│    malloc, new)         │
+├─────────────────────────┤
+│    BSS Segment          │  Uninitialized global/static variables
+│  (uninitialized data)   │  (zeroed by OS)
+├─────────────────────────┤
+│    Data Segment         │  Initialized global/static variables
+│  (initialized data)     │
+├─────────────────────────┤
+│    Text Segment         │  Program code (instructions)
+│     (code/text)         │  Read-only
+└─────────────────────────┘
+Low Address (0x00000000)</div>
+
+        <h3>Example Program</h3>
+
+        <pre><code>#include &lt;stdlib.h&gt;
+
+// Global variables
+int global_init = 42;      // Data segment
+int global_uninit;         // BSS segment
+
+void function(int param) { // Text segment (code)
+    int local = 5;         // Stack
+    int *heap_ptr = malloc(sizeof(int)); // Heap
+    *heap_ptr = 10;
+    free(heap_ptr);
+}
+
+int main() {
+    function(100);
+    return 0;
+}</code></pre>
+
+        <p><strong>Memory layout:</strong></p>
+        <pre><code>Text:   [main code][function code]
+Data:   [global_init = 42]
+BSS:    [global_uninit = 0]
+Heap:   [allocated block for heap_ptr] ← malloc creates this
+Stack:  [main's frame][function's frame: param=100, local=5, heap_ptr=address]</code></pre>
+
+        <h2 id="exercise">Real-Time Exercise: Assembly Exploration</h2>
+
+        <div class="exercise">
+            <h3>Objective</h3>
+            <p>Write a simple C function, compile it to assembly, and trace how it executes at the machine level.</p>
+
+            <h3>Step 1: Write the C Code</h3>
+            <p>Create <code>add.c</code>:</p>
+            <pre><code>int add(int a, int b) {
+    return a + b;
+}
+
+int main() {
+    int result = add(5, 3);
+    return result;
+}</code></pre>
+
+            <h3>Step 2: Compile to Assembly (No Optimization)</h3>
+            <pre><code>gcc -S -O0 -fno-asynchronous-unwind-tables add.c
+# -S: Stop after assembly generation
+# -O0: No optimization (easier to read)
+# -fno-asynchronous-unwind-tables: Remove debug info</code></pre>
+            <p>This creates <code>add.s</code>.</p>
+
+            <h3>Step 3: Examine the Assembly</h3>
+            <p><strong>x86-64 output</strong> (simplified):</p>
+            <pre><code>add:
+    pushq   %rbp              # Save old base pointer
+    movq    %rsp, %rbp        # Set up new stack frame (rbp = rsp)
+    movl    %edi, -4(%rbp)    # Store arg 1 (a) on stack at rbp-4
+    movl    %esi, -8(%rbp)    # Store arg 2 (b) on stack at rbp-8
+    movl    -4(%rbp), %eax    # Load a into eax
+    addl    -8(%rbp), %eax    # Add b to eax (result in eax)
+    popq    %rbp              # Restore old base pointer
+    ret                        # Return (result in eax)
+
+main:
+    pushq   %rbp              # Save base pointer
+    movq    %rsp, %rbp        # New stack frame
+    subq    $16, %rsp         # Allocate 16 bytes for local vars
+    movl    $3, %esi          # Second arg: 3
+    movl    $5, %edi          # First arg: 5
+    call    add               # Call add function
+    movl    %eax, -4(%rbp)    # Store result in 'result' variable
+    movl    -4(%rbp), %eax    # Load result into eax (return value)
+    leave                      # Clean up stack frame
+    ret                        # Return from main</code></pre>
+
+            <h3>Step 4: Understanding Optimized Assembly and Kernel-Level Efficiency</h3>
+
+            <p>Now let's see what happens when we enable compiler optimization. This is where the magic happens!</p>
+
+            <pre><code>gcc -S -O2 add.c -o add_optimized.s</code></pre>
+
+            <p><strong>Optimized assembly:</strong></p>
+            <pre><code>add:
+    leal    (%rdi,%rsi), %eax   # eax = rdi + rsi (single instruction!)
+    ret
+
+main:
+    movl    $8, %eax            # Compiler computed 5+3=8 at compile time!
+    ret</code></pre>
+
+            <div class="success-box">
+                <strong>Key optimizations applied:</strong>
+                <ol>
+                    <li><strong>Constant folding</strong> — Compiler computed <code>5 + 3 = 8</code> at compile time</li>
+                    <li><strong>Inlining</strong> — Function call eliminated entirely in main</li>
+                    <li><strong>Register usage</strong> — Arguments stay in registers (rdi, rsi), no stack operations</li>
+                    <li><strong><code>leal</code> trick</strong> — Load Effective Address used for addition (single instruction)</li>
+                    <li><strong>Stack frame elimination</strong> — No push/pop operations needed</li>
+                </ol>
+            </div>
+
+            <h4>Efficiency Comparison: Instruction Count</h4>
+
+            <div class="visual-example">
+                <pre><code><strong>Unoptimized (-O0): add() function</strong>
+1.  pushq   %rbp              # Save base pointer
+2.  movq    %rsp, %rbp        # Set up stack frame
+3.  movl    %edi, -4(%rbp)    # Store arg 1 to stack
+4.  movl    %esi, -8(%rbp)    # Store arg 2 to stack
+5.  movl    -4(%rbp), %eax    # Load arg 1 from stack
+6.  addl    -8(%rbp), %eax    # Add arg 2 from stack
+7.  popq    %rbp              # Restore base pointer
+8.  ret                       # Return
+
+<strong>Total: 8 instructions</strong>
+
+<strong>Optimized (-O2): add() function</strong>
+1.  leal    (%rdi,%rsi), %eax # Add and return
+2.  ret                       # Return
+
+<strong>Total: 2 instructions</strong>
+
+<strong>Speedup: 4x fewer instructions!</strong></code></pre>
+            </div>
+
+            <h4>Cycle-Level Analysis</h4>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Version</th>
+                        <th>Instructions</th>
+                        <th>Est. Cycles</th>
+                        <th>Time @ 3GHz</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>-O0 (Unoptimized)</strong></td>
+                        <td>8 instructions</td>
+                        <td>~20 cycles</td>
+                        <td>6.7 nanoseconds</td>
+                    </tr>
+                    <tr>
+                        <td><strong>-O2 (Optimized)</strong></td>
+                        <td>2 instructions</td>
+                        <td>~4 cycles</td>
+                        <td>1.3 nanoseconds</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><strong>Improvement: 5x faster, 75% fewer cycles</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Why This Matters at the Kernel Level</h4>
+
+            <div class="key-concept">
+                <strong>Kernel-Level Efficiency: Every Cycle Counts</strong>
+
+                <p>In operating system kernels and system software, optimization is critical because:</p>
+
+                <ol>
+                    <li><strong>Syscalls execute millions of times per second</strong>
+                        <ul>
+                            <li>Example: <code>read()</code> system call might execute 100,000 times/sec</li>
+                            <li>Saving 16 cycles per call = 1.6 million cycles saved/sec</li>
+                            <li>That's 0.5ms of CPU time freed up!</li>
+                        </ul>
+                    </li>
+
+                    <li><strong>Context switches are expensive</strong>
+                        <ul>
+                            <li>Unoptimized: More instructions = more cache pollution</li>
+                            <li>Optimized: Smaller code = better instruction cache utilization</li>
+                            <li>Each context switch: ~1000-5000 cycles overhead</li>
+                        </ul>
+                    </li>
+
+                    <li><strong>Interrupt handlers must be fast</strong>
+                        <ul>
+                            <li>Hardware interrupts freeze other CPU work</li>
+                            <li>Network packet arrives → interrupt handler runs</li>
+                            <li>Every saved cycle = less system latency</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+
+            <h4>Optimization Levels Compared</h4>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Flag</th>
+                        <th>Techniques</th>
+                        <th>Code Size</th>
+                        <th>Speed</th>
+                        <th>Use Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>-O0</strong></td>
+                        <td>None</td>
+                        <td>Large</td>
+                        <td>Slow</td>
+                        <td>Debugging (matches source closely)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>-O1</strong></td>
+                        <td>Basic (dead code removal, register allocation)</td>
+                        <td>Medium</td>
+                        <td>Moderate</td>
+                        <td>Development builds</td>
+                    </tr>
+                    <tr>
+                        <td><strong>-O2</strong></td>
+                        <td>Most optimizations (inlining, loop unrolling)</td>
+                        <td>Medium-Small</td>
+                        <td>Fast</td>
+                        <td>Production (recommended)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>-O3</strong></td>
+                        <td>Aggressive (vectorization, heavy inlining)</td>
+                        <td>Can be larger</td>
+                        <td>Fastest</td>
+                        <td>Performance-critical code</td>
+                    </tr>
+                    <tr>
+                        <td><strong>-Os</strong></td>
+                        <td>Size-focused</td>
+                        <td>Smallest</td>
+                        <td>Good</td>
+                        <td>Embedded systems, cache-sensitive</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <strong>Kernel Reality Check:</strong>
+                <p>The Linux kernel is compiled with <code>-O2</code> by default. Here's why optimization is non-negotiable:</p>
+                <ul>
+                    <li><strong>5.4 million lines of code</strong> in Linux kernel (2024)</li>
+                    <li>Unoptimized would be <strong>2-5x slower</strong></li>
+                    <li>Would waste <strong>50-80% more CPU cycles</strong></li>
+                    <li>Your laptop battery would last <strong>half as long</strong></li>
+                    <li>Network throughput would <strong>drop by 60%</strong></li>
+                </ul>
+                <p><strong>Modern OSes simply couldn't work efficiently without compiler optimization!</strong></p>
+            </div>
+
+            <div class="info-box">
+                <strong>Key Takeaway:</strong>
+                <p>Compiler optimization isn't just about "making code faster" — it's fundamental to how modern operating systems and performance-critical software work. The difference between <code>-O0</code> and <code>-O2</code> can be the difference between a responsive system and an unusable one.</p>
+            </div>
+
+            <h3>Step 5: Dive Deeper (Advanced Topics)</h3>
+
+            <p>Ready to go further? We have an <strong>advanced companion guide</strong> that covers:</p>
+
+            <div class="info-box">
+                <strong><a href="topic-1.1-advanced.html" style="color: #3498db; font-size: 1.2em;">Advanced Topics: Memory Management & Assembly Deep Dive</a></strong>
+
+                <p>This advanced guide covers:</p>
+                <ul>
+                    <li><strong>Stack in depth</strong>: Stack frames, function calls, stack overflow</li>
+                    <li><strong>Heap management</strong>: How malloc works, memory leaks, fragmentation</li>
+                    <li><strong>GCC commands explained</strong>: What <code>-S</code>, <code>-O0</code>, <code>-O2</code> actually do</li>
+                    <li><strong>Assembly instruction reference</strong>: Complete guide to x86-64 instructions</li>
+                    <li><strong>Register names decoded</strong>: What <code>rdi</code>, <code>rsi</code>, <code>rax</code>, <code>rbp</code> mean</li>
+                    <li><strong>Practical examples</strong>: Arrays, loops, structs in assembly</li>
+                </ul>
+
+                <p><em>Perfect for understanding how stack and heap actually work, plus a full assembly reference!</em></p>
+            </div>
+        </div>
+
+        <h2 id="summary">Summary: Complete Picture</h2>
+
+        <div class="key-concept">
+            <h3>Journey from Code to Execution</h3>
+            <ol>
+                <li><strong>Machine Code:</strong>
+                    <ul>
+                        <li>Binary instructions that CPU executes directly</li>
+                        <li>Assembly is human-readable version (1-to-1 correspondence)</li>
+                    </ul>
+                </li>
+
+                <li><strong>Compilation Pipeline:</strong>
+                    <ul>
+                        <li>Source → Preprocessor → Compiler → Assembler → Linker → Executable</li>
+                        <li>Optimization levels dramatically affect performance</li>
+                    </ul>
+                </li>
+
+                <li><strong>System Calls:</strong>
+                    <ul>
+                        <li>Interface between programs and OS kernel</li>
+                        <li>Expensive (mode switch overhead)</li>
+                        <li>Necessary for accessing hardware</li>
+                    </ul>
+                </li>
+
+                <li><strong>Boot Process:</strong>
+                    <ul>
+                        <li>POST → BIOS/UEFI → Bootloader → Kernel → Init → User Space</li>
+                    </ul>
+                </li>
+
+                <li><strong>Memory Layout:</strong>
+                    <ul>
+                        <li>Text (code), Data (initialized globals), BSS (uninitialized), Heap (dynamic), Stack (local vars)</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <div class="success-box">
+            <p><strong>Congratulations! You've completed the Computer Systems tutorial series.</strong></p>
+
+            <p>You now understand:</p>
+            <ul>
+                <li>How computers are structured (Von Neumann architecture)</li>
+                <li>How CPUs execute instructions (Fetch-Decode-Execute)</li>
+                <li>What registers are and why they're fast</li>
+                <li>How software becomes machine code</li>
+                <li>How programs talk to the OS (system calls)</li>
+                <li>How computers boot up</li>
+                <li>How memory is organized in running programs</li>
+            </ul>
+
+            <p><strong>Next Steps:</strong></p>
+            <ul>
+                <li><a href="topic-1.1-advanced.html" style="color: #28a745; font-weight: bold;">Advanced Guide: Memory & Assembly Deep Dive</a></li>
+                <li><a href="topic-1.2.html" style="color: #28a745; font-weight: bold;">Topic 1.2: Computer Architecture Deep Dive</a> — Learn about pipelining, branch prediction, and CPU optimizations</li>
+                <li><a href="topic-1.4.html">Topic 1.4: Memory Management & Virtual Memory</a></li>
+            </ul>
+        </div>
+
+        <hr style="margin: 40px 0; border: none; border-top: 2px solid #ddd;">
+
+        <div style="background-color: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; margin: 20px 0; border-radius: 5px;">
+            <strong>Related Topics:</strong><br>
+            → <a href="topic-1.1-advanced.html">Advanced: Memory Management & Assembly Deep Dive</a><br>
+            → <a href="topic-1.2.html">Topic 1.2: CPU Optimization</a><br>
+            → <a href="topic-1.4.html">Topic 1.4: Memory Management & Virtual Memory</a><br>
+            → <a href="topic-1.6.html">Topic 1.6: Assembly Language & Low-Level Programming</a>
+        </div>
+
+        <div class="navigation">
+            <a href="topic-1.1.1.html" class="nav-button">← Previous: CPU Architecture</a>
+            <a href="#" class="nav-button disabled">Next →</a>
+        </div>
+
+        <p style="text-align: center; color: #777; font-size: 0.9em; margin-top: 30px;">
+            <strong>Computer Systems Tutorial Series</strong><br>
+            Part 3 of 3: From Source Code to Execution
+        </p>
+    </div>
+</body>
+</html>

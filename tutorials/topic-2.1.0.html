@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Fundamentals Overview - Topic 2.1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .breadcrumb {
+            background-color: #f8f9fa;
+            padding: 12px 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+            font-size: 0.95em;
+        }
+
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb span {
+            color: #6c757d;
+            margin: 0 8px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            transition: transform 0.2s ease;
+        }
+
+        .info-box:hover {
+            transform: translateX(5px);
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            transition: transform 0.2s ease;
+        }
+
+        .warning-box:hover {
+            transform: translateX(5px);
+        }
+
+        .success-box {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            transition: transform 0.2s ease;
+        }
+
+        .success-box:hover {
+            transform: translateX(5px);
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.4;
+            border: 1px solid #e0e7f0;
+        }
+
+        pre:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .diagram {
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .key-concept {
+            background-color: #e8f4f8;
+            border: 2px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .toc {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #3498db;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .toc h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-left: none;
+            padding-left: 0;
+            color: #2c3e50;
+            font-size: 1.5em;
+        }
+
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .toc-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .toc-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-left-color: #2980b9;
+        }
+
+        .toc-item a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toc-item a:hover {
+            color: #3498db;
+        }
+
+        .toc-number {
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9em;
+            flex-shrink: 0;
+        }
+
+        .toc-title {
+            flex: 1;
+        }
+
+        strong {
+            color: #2c3e50;
+        }
+
+        .analogy {
+            font-style: italic;
+            color: #555;
+            margin: 10px 0;
+            padding: 15px;
+            padding-left: 20px;
+            border-left: 3px solid #95a5a6;
+            background-color: #f9f9f9;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: #2980b9;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        a {
+            transition: all 0.2s ease;
+        }
+
+        @media (max-width: 768px) {
+            .toc-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            body {
+                padding: 10px;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            .nav-links {
+                flex-direction: column;
+            }
+        }
+
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+            pre {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="../blog.html">Learning Hub</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="./hubs/networking.html">Networking</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Network Fundamentals Overview - Topic 2.1</span>
+    </div>
+
+    <div class="container">
+        <h1>Topic 2.1: Network Fundamentals Overview</h1>
+        <p style="color: #666; font-style: italic; margin-bottom: 20px;">From Packets to Applications — Understanding the Network Stack and Its Impact on Your Services</p>
+
+        <div class="key-concept">
+            <h3>What You'll Learn</h3>
+            <ul>
+                <li><strong>Network Basics</strong> - OSI vs TCP/IP models, packets, frames, encapsulation</li>
+                <li><strong>IP Addressing</strong> - IPv4, IPv6, subnetting, CIDR notation</li>
+                <li><strong>Transport Layer</strong> - TCP vs UDP in depth, three-way handshake, flow control</li>
+                <li><strong>Application Protocols</strong> - HTTP/HTTPS, DNS, WebSockets, REST</li>
+                <li><strong>Socket Programming</strong> - Build real client-server applications in Python and C</li>
+                <li><strong>Performance</strong> - Latency, throughput, packet loss, real measurements</li>
+            </ul>
+        </div>
+
+        <div class="warning-box">
+            <strong>Prerequisites:</strong>
+            <ul style="margin-bottom: 0;">
+                <li><a href="topic-1.3.html" style="color: #856404; font-weight: bold;">Topic 1.3: Operating Systems</a> - Understanding of processes, system calls, I/O</li>
+                <li>Basic programming knowledge (Python or C)</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <strong>Why This Matters</strong><br><br>
+            Every time you load a web page, send an email, or stream a video, your computer is communicating over a network. Understanding how networks work is essential for:
+            <ul style="margin-top: 10px;">
+                <li><strong>Building web services</strong> - APIs, microservices, distributed systems</li>
+                <li><strong>Debugging network issues</strong> - Why is my app slow? Why did the connection fail?</li>
+                <li><strong>Performance optimization</strong> - Reducing latency, improving throughput</li>
+                <li><strong>Security</strong> - Understanding attacks, implementing secure communication</li>
+            </ul>
+            <br>
+            <strong>Real Impact:</strong> Engineers at Google reduced page load time by 200ms by optimizing TCP connection reuse. Result? <strong>20% increase in user engagement</strong>. This tutorial teaches you those same principles!
+        </div>
+
+        <div class="toc">
+            <h2>Network Fundamentals: Complete Learning Path</h2>
+
+            <div class="toc-grid">
+                <div class="toc-item">
+                    <a href="topic-2.1.0.html">
+                        <span class="toc-number">0</span>
+                        <span class="toc-title">Overview (You Are Here)</span>
+                    </a>
+                </div>
+                <div class="toc-item">
+                    <a href="topic-2.1.1.html">
+                        <span class="toc-number">1</span>
+                        <span class="toc-title">TCP/IP & Socket Programming</span>
+                    </a>
+                </div>
+                <div class="toc-item">
+                    <a href="topic-2.1.2.html">
+                        <span class="toc-number">2</span>
+                        <span class="toc-title">HTTP, TLS & Application Protocols</span>
+                    </a>
+                </div>
+                <div class="toc-item">
+                    <a href="topic-2.1.3.html">
+                        <span class="toc-number">3</span>
+                        <span class="toc-title">Performance & Debugging</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <h2 id="introduction">Introduction: Why Networking Matters for Backend Engineers</h2>
+
+        <p>You've been programming for years. You understand design patterns, distributed systems, and microservices. But recently, you've encountered mysterious issues:</p>
+        <ul>
+            <li>A performance problem that only happens with certain request patterns</li>
+            <li>Intermittent connection failures that seem impossible to reproduce</li>
+            <li>Security vulnerabilities in your well-written code</li>
+        </ul>
+
+        <p>The root cause? You're missing the foundational understanding of how networks actually work beneath the abstraction layers you've grown comfortable with.</p>
+
+        <div class="analogy">
+            <strong>The Postal System Analogy</strong><br><br>
+            Computer networks work like the postal service:
+            <ul>
+                <li><strong>Letters</strong> = Data packets</li>
+                <li><strong>Addresses</strong> = IP addresses</li>
+                <li><strong>Post offices</strong> = Routers</li>
+                <li><strong>Delivery routes</strong> = Network paths</li>
+                <li><strong>Postal workers</strong> = Network protocols</li>
+            </ul>
+            Just like mail goes through sorting centers, your data goes through routers to reach its destination!
+        </div>
+
+        <h2 id="network-models">Network Models: OSI vs TCP/IP</h2>
+
+        <p>Two models describe how networks are organized in layers:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>OSI Layer</th>
+                    <th>TCP/IP Layer</th>
+                    <th>Function</th>
+                    <th>Examples</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>7. Application</td>
+                    <td rowspan="3">Application</td>
+                    <td>User applications</td>
+                    <td>HTTP, FTP, SMTP, DNS</td>
+                </tr>
+                <tr>
+                    <td>6. Presentation</td>
+                    <td>Data format, encryption</td>
+                    <td>SSL/TLS, JPEG, ASCII</td>
+                </tr>
+                <tr>
+                    <td>5. Session</td>
+                    <td>Session management</td>
+                    <td>NetBIOS, PPTP</td>
+                </tr>
+                <tr>
+                    <td>4. Transport</td>
+                    <td>Transport</td>
+                    <td>End-to-end communication</td>
+                    <td>TCP, UDP</td>
+                </tr>
+                <tr>
+                    <td>3. Network</td>
+                    <td>Internet</td>
+                    <td>Routing, addressing</td>
+                    <td>IP, ICMP, ARP</td>
+                </tr>
+                <tr>
+                    <td>2. Data Link</td>
+                    <td rowspan="2">Network Access</td>
+                    <td>Node-to-node transfer</td>
+                    <td>Ethernet, Wi-Fi, MAC</td>
+                </tr>
+                <tr>
+                    <td>1. Physical</td>
+                    <td>Physical medium</td>
+                    <td>Cables, Radio waves</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="info-box">
+            <strong>Key Insight:</strong> The TCP/IP model is what's actually implemented on the Internet. The OSI model is more of a teaching tool. We'll focus on TCP/IP!
+        </div>
+
+        <h3>Encapsulation: Data Wrapping</h3>
+
+        <p>As data travels down the network stack, each layer adds its own header (like addressing an envelope multiple times):</p>
+
+        <div class="diagram">
+Encapsulation Process:
+
+Application Layer:
+┌─────────────────────────────────────────┐
+│          HTTP Request                   │
+│  "GET /index.html HTTP/1.1"             │
+└─────────────────────────────────────────┘
+                 ↓ (add TCP header)
+Transport Layer:
+┌──────────────┬──────────────────────────┐
+│ TCP Header   │    HTTP Request          │
+│ Port: 80     │    Data                  │
+└──────────────┴──────────────────────────┘
+                 ↓ (add IP header)
+Network Layer:
+┌─────────┬──────────────┬───────────────┐
+│IP Header│ TCP Header   │  HTTP Data    │
+│Src: A   │ Port: 80     │               │
+│Dst: B   │              │               │
+└─────────┴──────────────┴───────────────┘
+                 ↓ (add Ethernet header)
+Data Link Layer:
+┌──────────┬─────────┬──────────┬─────┬────┐
+│Eth Header│IP Header│TCP Header│Data │FCS │
+│MAC: X→Y  │         │          │     │    │
+└──────────┴─────────┴──────────┴─────┴────┘
+                 ↓
+Physical Layer: 010110010... (bits on wire)
+
+At receiver: Reverse process (decapsulation)
+        </div>
+
+        <h3>Packets, Frames, and Segments</h3>
+
+        <div class="key-concept">
+            <ul>
+                <li><strong>Frame</strong> - Data Link layer unit (Ethernet frame)</li>
+                <li><strong>Packet</strong> - Network layer unit (IP packet)</li>
+                <li><strong>Segment</strong> - Transport layer unit (TCP segment or UDP datagram)</li>
+                <li><strong>Message</strong> - Application layer data</li>
+            </ul>
+        </div>
+
+        <h2 id="what-next">What's Covered in Each Section</h2>
+
+        <div class="success-box">
+            <h3>Section 1: TCP/IP Protocols & Socket Programming</h3>
+            <p>Deep dive into the transport layer and how to build networked applications:</p>
+            <ul>
+                <li>IP addressing (IPv4, IPv6, subnetting)</li>
+                <li>TCP vs UDP comparison and use cases</li>
+                <li>TCP three-way handshake and connection lifecycle</li>
+                <li>Socket programming in Python and C</li>
+                <li>Building client-server applications</li>
+                <li>Non-blocking I/O and multiplexing</li>
+            </ul>
+            <a href="topic-2.1.1.html" class="nav-link" style="margin-top: 15px; display: inline-block;">Start Learning →</a>
+        </div>
+
+        <div class="success-box">
+            <h3>Section 2: HTTP, TLS & Application Protocols</h3>
+            <p>Learn how applications communicate securely over networks:</p>
+            <ul>
+                <li>HTTP/1.1 vs HTTP/2 vs HTTP/3</li>
+                <li>Request-response model and status codes</li>
+                <li>Cookies, sessions, and authentication</li>
+                <li>TLS/SSL encryption and certificate validation</li>
+                <li>DNS resolution process</li>
+                <li>WebSockets for real-time communication</li>
+            </ul>
+            <a href="topic-2.1.2.html" class="nav-link" style="margin-top: 15px; display: inline-block;">Continue to Section 2 →</a>
+        </div>
+
+        <div class="success-box">
+            <h3>Section 3: Network Performance & Debugging</h3>
+            <p>Master network optimization and troubleshooting:</p>
+            <ul>
+                <li>Network latency breakdown and optimization</li>
+                <li>Bandwidth vs throughput understanding</li>
+                <li>Debugging tools (netstat, tcpdump, Wireshark)</li>
+                <li>Connection issue diagnosis</li>
+                <li>Performance optimization patterns</li>
+                <li>Real-world application examples</li>
+            </ul>
+            <a href="topic-2.1.3.html" class="nav-link" style="margin-top: 15px; display: inline-block;">Continue to Section 3 →</a>
+        </div>
+
+        <h2 id="related-topics">Related Topics</h2>
+
+        <div class="info-box">
+            <strong>Before Starting Network Fundamentals:</strong><br>
+            <ul style="margin-top: 10px;">
+                <li><a href="topic-0.1.html">Topic 0.1: Binary Fundamentals</a> - Understanding data representation</li>
+                <li><a href="topic-1.1.html">Topic 1.1: Computer Systems</a> - How computers execute programs</li>
+                <li><a href="topic-1.3.html">Topic 1.3: Operating Systems</a> - Process management and I/O</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <strong>After Network Fundamentals:</strong><br>
+            <ul style="margin-top: 10px;">
+                <li><a href="topic-2.2.html">Topic 2.2: Distributed Systems</a> - Building systems across networks</li>
+                <li><a href="topic-2.3.html">Topic 2.3: Security Fundamentals</a> - Securing networked applications</li>
+            </ul>
+        </div>
+
+        <div class="nav-links">
+            <a href="topic-1.3.html" class="nav-link">← Previous: Operating Systems</a>
+            <a href="../blog.html" class="nav-link">Back to Blog</a>
+            <a href="topic-2.1.1.html" class="nav-link">Next: TCP/IP & Sockets →</a>
+        </div>
+
+        <hr style="margin: 40px 0; border: none; border-top: 2px solid #ddd;">
+
+        <div style="background-color: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; margin: 20px 0; border-radius: 5px;">
+            <strong>Ready to dive deep into networking?</strong><br>
+            → <a href="topic-2.1.1.html">Start with TCP/IP & Socket Programming</a><br>
+            → <a href="topic-2.1.2.html">Jump to HTTP & TLS</a><br>
+            → <a href="topic-2.1.3.html">Go to Performance & Debugging</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMD & Modern Optimization Techniques</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .danger-box {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .fun-box {
+            background-color: #ffe6f0;
+            border-left: 4px solid #e91e63;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.4;
+            border: 1px solid #e0e7f0;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .diagram {
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .key-concept {
+            background-color: #e8f4f8;
+            border: 2px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .exercise {
+            background-color: #f0f8ff;
+            border: 2px solid #4169e1;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+
+        .exercise h3 {
+            color: #4169e1;
+            margin-top: 0;
+        }
+
+        .toc {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        .toc h2 {
+            margin-top: 0;
+            border-left: none;
+            padding-left: 0;
+        }
+
+        .toc ul {
+            list-style-type: none;
+            margin-left: 0;
+        }
+
+        .toc li {
+            margin-bottom: 5px;
+        }
+
+        .toc a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        strong {
+            color: #2c3e50;
+        }
+
+        .analogy {
+            font-style: italic;
+            color: #555;
+            margin: 10px 0;
+            padding: 15px;
+            padding-left: 20px;
+            border-left: 3px solid #95a5a6;
+            background-color: #f9f9f9;
+        }
+
+        .visual-example {
+            background-color: #f0f8ff;
+            border: 2px solid #87ceeb;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+        }
+
+        .nav-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: #2980b9;
+        }
+
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+            pre {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="../blog.html">Learning Hub</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="./hubs/systems.html">Systems</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">SIMD & Modern Optimization Techniques</span>
+    </div>
+
+    <div class="container">
+        <h1>SIMD & Modern Optimization Techniques</h1>
+        <p style="color: #666; font-style: italic; margin-bottom: 20px;">When and How to Optimize: Modern CPU Techniques for Maximum Performance</p>
+
+        <div style="background-color: #f0f8ff; border-left: 4px solid #3498db; padding: 15px; margin: 20px 0;">
+            <strong>Breadcrumb Navigation:</strong><br>
+            <a href="topic-1.2.html" style="color: #3498db;">CPU Architecture Deep Dive</a> → SIMD & Modern Optimization
+        </div>
+
+        <div class="warning-box">
+            <strong>Prerequisites:</strong>
+            <ul style="margin-bottom: 0;">
+                <li><a href="topic-1.2.1.html" style="color: #856404; font-weight: bold;">Topic 1.2.1: Pipelining & Superscalar</a> - Understanding of instruction execution</li>
+                <li><a href="topic-1.2.2.html" style="color: #856404; font-weight: bold;">Topic 1.2.2: Caching & Memory</a> - Understanding of memory hierarchy</li>
+            </ul>
+        </div>
+
+        <div class="key-concept">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Understand SIMD (Single Instruction Multiple Data) architecture</li>
+                <li>Learn AVX/SSE instruction sets for vectorization</li>
+                <li>Master auto-vectorization and compiler optimization</li>
+                <li>Understand multicore architecture and hyperthreading</li>
+                <li>Learn when to optimize and when not to</li>
+                <li>Apply optimization techniques to real-world problems</li>
+            </ul>
+        </div>
+
+        <h2 id="simd">SIMD: Single Instruction, Multiple Data</h2>
+
+        <p>SIMD lets you process <strong>multiple data elements with one instruction</strong>.</p>
+
+        <div class="analogy">
+            <strong>The Delivery Truck Analogy</strong><br><br>
+            <strong>Scalar (traditional):</strong>
+            - Deliver 1 package per trip
+            - 8 packages = 8 trips
+            <br><br>
+            <strong>SIMD (vectorized):</strong>
+            - Deliver 8 packages per trip (one big truck)
+            - 8 packages = 1 trip
+            - 8× faster!
+        </div>
+
+        <h3>SIMD Example</h3>
+
+        <div class="visual-example">
+            <pre><code><strong>Task: Add two arrays</strong>
+C[i] = A[i] + B[i] for i = 0 to 7
+
+<strong>Scalar Code (8 instructions):</strong>
+C[0] = A[0] + B[0]
+C[1] = A[1] + B[1]
+C[2] = A[2] + B[2]
+C[3] = A[3] + B[3]
+C[4] = A[4] + B[4]
+C[5] = A[5] + B[5]
+C[6] = A[6] + B[6]
+C[7] = A[7] + B[7]
+
+<strong>SIMD Code (1 instruction!):</strong>
+Load 8 elements from A into SIMD register (256-bit)
+Load 8 elements from B into SIMD register
+Add them in parallel (one instruction)
+Store 8 results to C
+
+<strong>x86 AVX2 assembly:</strong>
+vmovdqu ymm0, [A]      ; Load 8 ints from A
+vmovdqu ymm1, [B]      ; Load 8 ints from B
+vpaddd  ymm2, ymm0, ymm1  ; Add all 8 pairs in parallel
+vmovdqu [C], ymm2      ; Store 8 results
+
+<strong>Speedup: 8× (in theory)</strong>
+Real-world: 4-6× due to overhead</code></pre>
+        </div>
+
+        <h3>SIMD Instruction Sets</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Instruction Set</th>
+                    <th>Register Size</th>
+                    <th>Elements</th>
+                    <th>Year</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>MMX</strong></td>
+                    <td>64-bit</td>
+                    <td>8× 8-bit or 2× 32-bit</td>
+                    <td>1996</td>
+                </tr>
+                <tr>
+                    <td><strong>SSE</strong></td>
+                    <td>128-bit</td>
+                    <td>4× 32-bit floats</td>
+                    <td>1999</td>
+                </tr>
+                <tr>
+                    <td><strong>AVX</strong></td>
+                    <td>256-bit</td>
+                    <td>8× 32-bit or 4× 64-bit</td>
+                    <td>2011</td>
+                </tr>
+                <tr>
+                    <td><strong>AVX-512</strong></td>
+                    <td>512-bit</td>
+                    <td>16× 32-bit or 8× 64-bit</td>
+                    <td>2016</td>
+                </tr>
+                <tr>
+                    <td><strong>ARM NEON</strong></td>
+                    <td>128-bit</td>
+                    <td>4× 32-bit or 2× 64-bit</td>
+                    <td>2005</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Auto-Vectorization</h3>
+
+        <p>Modern compilers can automatically convert scalar code to SIMD!</p>
+
+        <div class="visual-example">
+            <pre><code><strong>C code:</strong>
+void add_arrays(float *a, float *b, float *c, int n) {
+    for (int i = 0; i < n; i++) {
+        c[i] = a[i] + b[i];
+    }
+}
+
+<strong>Compile with optimization:</strong>
+gcc -O3 -mavx2 add_arrays.c
+
+<strong>Compiler generates AVX2 code:</strong>
+Loop processes 8 floats per iteration instead of 1!
+
+<strong>Requirements for auto-vectorization:</strong>
+1. No loop-carried dependencies
+2. Countable loop iterations
+3. No function calls in loop
+4. Aligned memory access (helps)
+
+<strong>Performance:</strong>
+Manual SIMD: 8× speedup
+Auto-vectorized: 6× speedup (pretty good!)</code></pre>
+        </div>
+
+        <h3>SIMD Programming Example</h3>
+
+        <div class="visual-example">
+            <h4>Vector Addition with Intel Intrinsics</h4>
+            <pre><code><strong>C code with AVX2 intrinsics:</strong>
+#include &lt;immintrin.h&gt;
+
+void add_arrays_simd(float *a, float *b, float *c, int n) {
+    int i;
+    // Process 8 floats at a time
+    for (i = 0; i <= n - 8; i += 8) {
+        __m256 va = _mm256_loadu_ps(&a[i]);  // Load 8 floats from a
+        __m256 vb = _mm256_loadu_ps(&b[i]);  // Load 8 floats from b
+        __m256 vc = _mm256_add_ps(va, vb);   // Add 8 pairs in parallel
+        _mm256_storeu_ps(&c[i], vc);         // Store 8 results to c
+    }
+    // Handle remaining elements (scalar)
+    for (; i < n; i++) {
+        c[i] = a[i] + b[i];
+    }
+}
+
+<strong>Performance comparison (1M elements):</strong>
+Scalar:        10.2 ms
+Auto-vectorized: 1.8 ms (5.7× faster)
+Manual SIMD:   1.5 ms (6.8× faster)</code></pre>
+        </div>
+
+        <h2 id="multicore">Multicore and Multithreading</h2>
+
+        <h3>The Power Wall</h3>
+
+        <div class="warning-box">
+            <p><strong>The Problem (circa 2005):</strong></p>
+            <pre><code>Clock speed can't increase much more:
+- 1995: 200 MHz
+- 2000: 1 GHz
+- 2005: 3 GHz
+- 2024: 3-5 GHz (not much higher!)
+
+<strong>Why the plateau?</strong>
+Power = Capacitance × Voltage² × Frequency
+
+Doubling frequency → doubles power (heat!)
+At 5+ GHz → CPU melts
+
+<strong>Solution: Add more cores instead of faster cores!</strong></code></pre>
+        </div>
+
+        <h3>Multicore Architecture</h3>
+
+        <div class="diagram">┌─────────────────────────────────────────────────┐
+│                 CPU Package                      │
+│                                                  │
+│  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌──────┤
+│  │ Core 0  │  │ Core 1  │  │ Core 2  │  │ Core3│
+│  │ L1: 32KB│  │ L1: 32KB│  │ L1: 32KB│  │ L1:32│
+│  │ L2: 256K│  │ L2: 256K│  │ L2: 256K│  │ L2:25│
+│  └────┬────┘  └────┬────┘  └────┬────┘  └───┬──┘
+│       └───────────┬┴───────────┬┴───────────┘
+│                   │            │
+│            ┌──────▼────────────▼──────┐
+│            │   Shared L3 Cache 8MB    │
+│            └──────────┬────────────────┘
+│                       │
+│            ┌──────────▼────────────────┐
+│            │   Memory Controller       │
+│            └──────────┬────────────────┘
+└───────────────────────┼──────────────────┘
+                        │
+                 ┌──────▼──────┐
+                 │  Main RAM   │
+                 └─────────────┘</div>
+
+        <h3>Hyperthreading / SMT (Simultaneous Multithreading)</h3>
+
+        <div class="visual-example">
+            <p><strong>Idea:</strong> One physical core appears as two logical cores</p>
+            <pre><code><strong>Without SMT:</strong>
+Core has execution units idle when thread stalls
+
+Thread 1 executing: [XXXXXX____XXXX____XXX___]
+                            ↑      ↑     ↑ Idle cycles
+
+<strong>With SMT (2-way):</strong>
+Two threads share same core's execution units
+
+Thread 1: [XXX___XXX___XXX___]
+Thread 2: [___XXX___XXX___XXX]
+Combined: [XXXXXXXXXXXXXXXXXX]
+          ↑ No idle cycles!
+
+<strong>Hardware requirements:</strong>
+- Duplicate PC, registers for each thread
+- Shared execution units (ALU, FPU, etc.)
+- Shared caches
+
+<strong>Performance gain:</strong>
+20-30% throughput increase per core
+Not 2×, but better than 1×!</code></pre>
+        </div>
+
+        <h3>Modern CPU Configuration Examples</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>CPU</th>
+                    <th>Cores</th>
+                    <th>Threads (SMT)</th>
+                    <th>L3 Cache</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Intel Core i7-12700K</td>
+                    <td>12 (8P + 4E)</td>
+                    <td>20</td>
+                    <td>25 MB</td>
+                </tr>
+                <tr>
+                    <td>AMD Ryzen 9 5950X</td>
+                    <td>16</td>
+                    <td>32</td>
+                    <td>64 MB</td>
+                </tr>
+                <tr>
+                    <td>Apple M1</td>
+                    <td>8 (4P + 4E)</td>
+                    <td>8 (no SMT)</td>
+                    <td>12 MB</td>
+                </tr>
+                <tr>
+                    <td>AMD Threadripper 3990X</td>
+                    <td>64</td>
+                    <td>128</td>
+                    <td>256 MB</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>Note:</strong> P = Performance cores, E = Efficiency cores (newer hybrid architecture)</p>
+
+        <h2>When to Optimize and When Not To</h2>
+
+        <div class="key-concept">
+            <h3>The Optimization Paradox</h3>
+            <p><strong>"Premature optimization is the root of all evil"</strong> - Donald Knuth</p>
+
+            <div class="warning-box">
+                <h4>When NOT to Optimize:</h4>
+                <ul>
+                    <li><strong>Before profiling:</strong> Measure first, optimize second</li>
+                    <li><strong>Non-bottleneck code:</strong> Optimizing 1% of runtime saves 1%</li>
+                    <li><strong>Development phase:</strong> Get it working first, fast second</li>
+                    <li><strong>Readable code:</strong> Don't sacrifice maintainability for 5% speedup</li>
+                    <li><strong>Modern compilers:</strong> Often better at optimization than you</li>
+                </ul>
+            </div>
+
+            <div class="success-box">
+                <h4>When TO Optimize:</h4>
+                <ul>
+                    <li><strong>Profiler identifies bottleneck:</strong> 20% of code takes 80% of time</li>
+                    <li><strong>Real performance problem:</strong> Users complain or requirements unmet</li>
+                    <li><strong>Known algorithmic improvement:</strong> O(n²) → O(n log n)</li>
+                    <li><strong>Cache-obvious inefficiency:</strong> Random access, pointer chasing</li>
+                    <li><strong>Production-critical path:</strong> Hot loops in server code</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>The Optimization Hierarchy</h3>
+
+        <div class="visual-example">
+            <pre><code><strong>Priority order (biggest impact first):</strong>
+
+1. <strong>Algorithm choice</strong> (100-1000× speedup)
+   - O(n²) → O(n log n)
+   - Example: Bubble sort → Quicksort
+
+2. <strong>Data structures</strong> (10-100× speedup)
+   - Linked list → Array (cache-friendly)
+   - Hash table for O(1) lookup vs O(n) search
+
+3. <strong>Compiler optimization</strong> (2-5× speedup)
+   - -O0 → -O3
+   - Enable auto-vectorization (-mavx2)
+
+4. <strong>Cache optimization</strong> (2-10× speedup)
+   - Sequential access vs random
+   - Blocking/tiling
+
+5. <strong>SIMD vectorization</strong> (2-8× speedup)
+   - Auto-vectorization or intrinsics
+   - Process 4-16 elements at once
+
+6. <strong>Multithreading</strong> (1.5-N× speedup)
+   - Parallelizable algorithms
+   - Overhead and synchronization costs
+
+7. <strong>Micro-optimizations</strong> (1-20% speedup)
+   - Loop unrolling
+   - Branch elimination
+   - Register allocation</code></pre>
+        </div>
+
+        <h3>Real-World Optimization Example</h3>
+
+        <div class="exercise">
+            <h3>Case Study: Image Blur Filter</h3>
+
+            <h4>Version 1: Naive Implementation</h4>
+            <pre><code>// Naive: Straightforward but slow
+void blur(int *image, int width, int height) {
+    for (int y = 1; y < height-1; y++) {
+        for (int x = 1; x < width-1; x++) {
+            int sum = 0;
+            for (int dy = -1; dy <= 1; dy++) {
+                for (int dx = -1; dx <= 1; dx++) {
+                    sum += image[(y+dy)*width + (x+dx)];
+                }
+            }
+            image[y*width + x] = sum / 9;
+        }
+    }
+}
+
+<strong>Performance: 850 ms (baseline)</strong></code></pre>
+
+            <h4>Version 2: Cache Optimization</h4>
+            <pre><code>// Better: Sequential access, cache-friendly
+void blur_v2(int *image, int *output, int width, int height) {
+    // Separate read/write buffers (no aliasing)
+    // Sequential row-major access
+    for (int y = 1; y < height-1; y++) {
+        for (int x = 1; x < width-1; x++) {
+            int sum =
+                image[(y-1)*width + x-1] + image[(y-1)*width + x] + image[(y-1)*width + x+1] +
+                image[y*width + x-1]     + image[y*width + x]     + image[y*width + x+1] +
+                image[(y+1)*width + x-1] + image[(y+1)*width + x] + image[(y+1)*width + x+1];
+            output[y*width + x] = sum / 9;
+        }
+    }
+}
+
+<strong>Performance: 425 ms (2× faster!)</strong></code></pre>
+
+            <h4>Version 3: SIMD Vectorization</h4>
+            <pre><code>// Best: SIMD + cache optimization
+void blur_v3(int *image, int *output, int width, int height) {
+    for (int y = 1; y < height-1; y++) {
+        for (int x = 1; x < width-8; x += 8) {
+            // Load 8 pixels at once using AVX2
+            __m256i top = _mm256_add_epi32(
+                _mm256_loadu_si256((__m256i*)&image[(y-1)*width + x-1]),
+                _mm256_add_epi32(
+                    _mm256_loadu_si256((__m256i*)&image[(y-1)*width + x]),
+                    _mm256_loadu_si256((__m256i*)&image[(y-1)*width + x+1])
+                )
+            );
+            // ... (similar for middle and bottom rows)
+            __m256i sum = _mm256_add_epi32(_mm256_add_epi32(top, middle), bottom);
+            __m256i result = _mm256_div_epi32(sum, _mm256_set1_epi32(9));
+            _mm256_storeu_si256((__m256i*)&output[y*width + x], result);
+        }
+    }
+}
+
+<strong>Performance: 95 ms (9× faster than baseline!)</strong></code></pre>
+
+            <h4>Version 4: Multithreading</h4>
+            <pre><code>// Ultimate: SIMD + cache + parallelism
+void blur_v4(int *image, int *output, int width, int height) {
+    #pragma omp parallel for
+    for (int y = 1; y < height-1; y++) {
+        // Same SIMD code as v3, but parallelized across rows
+        for (int x = 1; x < width-8; x += 8) {
+            // ... SIMD operations
+        }
+    }
+}
+
+<strong>Performance: 18 ms (47× faster than baseline!)</strong>
+On 8-core CPU with SIMD</code></pre>
+
+            <h4>Optimization Summary</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Version</th>
+                        <th>Technique</th>
+                        <th>Time</th>
+                        <th>Speedup</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>v1</td>
+                        <td>Naive</td>
+                        <td>850 ms</td>
+                        <td>1.0×</td>
+                    </tr>
+                    <tr>
+                        <td>v2</td>
+                        <td>Cache optimization</td>
+                        <td>425 ms</td>
+                        <td>2.0×</td>
+                    </tr>
+                    <tr>
+                        <td>v3</td>
+                        <td>+ SIMD</td>
+                        <td>95 ms</td>
+                        <td>9.0×</td>
+                    </tr>
+                    <tr>
+                        <td>v4</td>
+                        <td>+ Multithreading</td>
+                        <td>18 ms</td>
+                        <td>47.2×</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2>Speculative Execution and Security</h2>
+
+        <div class="danger-box">
+            <h3>Security Implications of CPU Optimizations</h3>
+            <p><strong>Critical Knowledge:</strong> Modern CPU optimizations create security vulnerabilities</p>
+
+            <h4>Spectre and Meltdown</h4>
+            <ul>
+                <li><strong>Problem:</strong> Speculative execution can leak secret data through side channels</li>
+                <li><strong>Mechanism:</strong> CPU speculatively executes code that shouldn't run, leaving traces in cache</li>
+                <li><strong>Impact:</strong> Attacker can read arbitrary memory (kernel, other processes)</li>
+            </ul>
+
+            <h4>Example Attack</h4>
+            <pre><code>// Victim code (kernel)
+if (index < array_size) {
+    value = array[index];  // Bounds check
+}
+
+// Attack: CPU speculatively executes even if index >= array_size
+// Speculative execution leaves cache traces
+// Attacker measures timing to infer secret value
+
+<strong>Real-world impact:</strong>
+- Read kernel memory from user space
+- Cross-VM attacks in cloud environments
+- Browser JavaScript attacks</code></pre>
+
+            <h4>Mitigations</h4>
+            <ul>
+                <li><strong>Hardware:</strong> New CPUs with enhanced security features</li>
+                <li><strong>Software:</strong> Kernel patches, retpolines, page table isolation</li>
+                <li><strong>Compiler:</strong> Insert speculation barriers</li>
+                <li><strong>Performance cost:</strong> 5-30% slowdown in some workloads</li>
+            </ul>
+        </div>
+
+        <h2>Practical Optimization Guidelines</h2>
+
+        <div class="success-box">
+            <h3>The Pragmatic Optimizer's Checklist</h3>
+
+            <h4>Step 1: Measure (Always!)</h4>
+            <pre><code>// Use profiling tools
+- gprof (GNU profiler)
+- perf (Linux performance)
+- VTune (Intel)
+- Instruments (macOS)
+
+<strong>Identify:</strong>
+- Which functions take most time?
+- What's the CPU doing? (compute, memory, I/O)
+- Cache miss rates
+- Branch misprediction rates</code></pre>
+
+            <h4>Step 2: Choose Optimization Target</h4>
+            <pre><code><strong>Focus on:</strong>
+1. Functions taking >5% of total time
+2. Innermost loops (hot paths)
+3. Obvious inefficiencies (O(n²) algorithms)
+
+<strong>Ignore:</strong>
+1. Initialization code (runs once)
+2. Error handling (rarely executed)
+3. Code taking <1% of time</code></pre>
+
+            <h4>Step 3: Apply Optimizations</h4>
+            <ul>
+                <li><strong>Algorithm first:</strong> Better algorithm > micro-optimization</li>
+                <li><strong>Data structure second:</strong> Cache-friendly layouts</li>
+                <li><strong>Compiler third:</strong> Enable -O3, -march=native</li>
+                <li><strong>Manual optimization last:</strong> SIMD, loop unrolling</li>
+            </ul>
+
+            <h4>Step 4: Measure Again</h4>
+            <ul>
+                <li>Verify speedup with profiler</li>
+                <li>Check correctness (optimizations can introduce bugs)</li>
+                <li>Consider maintainability cost</li>
+            </ul>
+
+            <h4>Step 5: Document</h4>
+            <pre><code>// Comment why optimization is necessary
+// Example:
+// This loop is cache-blocked because profiling showed
+// 95% cache miss rate with naive implementation.
+// Blocking improved performance from 850ms to 425ms.
+for (int ii = 0; ii < N; ii += BLOCK) {
+    // ...
+}</code></pre>
+        </div>
+
+        <h2>Summary: Modern CPU Optimization Landscape</h2>
+
+        <div class="key-concept">
+            <h3>Performance Optimization Summary</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Optimization</th>
+                        <th>Speedup</th>
+                        <th>When It Helps Most</th>
+                        <th>Difficulty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Algorithm</strong></td>
+                        <td>100-1000×</td>
+                        <td>Always try first</td>
+                        <td>Medium</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Data structure</strong></td>
+                        <td>10-100×</td>
+                        <td>Cache-conscious design</td>
+                        <td>Low-Medium</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Compiler optimization</strong></td>
+                        <td>2-5×</td>
+                        <td>All code (free!)</td>
+                        <td>Very Low</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cache optimization</strong></td>
+                        <td>2-10×</td>
+                        <td>Memory-bound code</td>
+                        <td>Medium</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SIMD</strong></td>
+                        <td>2-8×</td>
+                        <td>Data-parallel operations</td>
+                        <td>Medium-High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Multithreading</strong></td>
+                        <td>1.5-N×</td>
+                        <td>Parallelizable algorithms</td>
+                        <td>High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Branch prediction</strong></td>
+                        <td>1.2-2×</td>
+                        <td>Code with many branches</td>
+                        <td>Low-Medium</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="success-box">
+            <h3>You Now Understand:</h3>
+            <ul>
+                <li>SIMD vectorization achieves 4-8× speedup for data-parallel operations</li>
+                <li>Auto-vectorization works well, manual intrinsics give extra control</li>
+                <li>Multicore CPUs provide N× speedup for parallelizable algorithms</li>
+                <li>Hyperthreading adds 20-30% throughput per core</li>
+                <li>When to optimize: profile first, target bottlenecks</li>
+                <li>When not to optimize: premature optimization hurts maintainability</li>
+                <li>Security implications of speculative execution (Spectre/Meltdown)</li>
+                <li>Optimization hierarchy: algorithm > data structure > compiler > micro-optimization</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h3>What's Next?</h3>
+            <p><strong>Topic 1.3: Operating Systems Fundamentals</strong></p>
+            <p>Where you'll learn:</p>
+            <ul>
+                <li>Process and thread management</li>
+                <li>Virtual memory and paging</li>
+                <li>Scheduling algorithms</li>
+                <li>File systems and I/O management</li>
+            </ul>
+        </div>
+
+        <div class="nav-links">
+            <a href="topic-1.2.2.html" class="nav-link">← Previous: Caching & Memory</a>
+            <a href="topic-1.2.html" class="nav-link">Back to Overview</a>
+        </div>
+
+        <hr style="margin: 40px 0; border: none; border-top: 2px solid #ddd;">
+
+        <div style="background-color: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; margin: 20px 0; border-radius: 5px;">
+            <strong>Deepen your understanding:</strong><br>
+            → <a href="topic-1.2.1.html">Topic 1.2.1: Pipelining & Superscalar</a> - Review instruction execution fundamentals<br>
+            → <a href="topic-1.2.2.html">Topic 1.2.2: Caching & Memory</a> - Review memory optimization techniques
+        </div>
+
+        <p style="text-align: center; color: #777; font-size: 0.9em;">
+            <strong>Computer Systems Mastery: Complete Learning Roadmap</strong><br>
+            Phase 1: Foundation — The Machine<br>
+            Topic 1.2.3: SIMD & Modern Optimization Techniques
+        </p>
+    </div>
+</body>
+</html>

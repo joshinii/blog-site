@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Performance & Optimization</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 1200px; margin: 0 auto; padding: 20px; background-color: #f5f5f5; }
+        .container { background-color: white; padding: 40px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; border-bottom: 4px solid #3498db; padding-bottom: 15px; margin-bottom: 30px; font-size: 2.5em; }
+        h2 { color: #2980b9; margin-top: 40px; margin-bottom: 20px; font-size: 1.8em; border-left: 5px solid #3498db; padding-left: 15px; }
+        h3 { color: #34495e; margin-top: 30px; margin-bottom: 15px; font-size: 1.4em; }
+        p { margin-bottom: 15px; text-align: justify; }
+        ul, ol { margin-left: 30px; margin-bottom: 15px; }
+        li { margin-bottom: 8px; }
+        .info-box { background-color: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 20px 0; }
+        .warning-box { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; }
+        code { background-color: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; font-size: 0.9em; }
+        pre { background-color: #f8f9fa; color: #2c3e50; padding: 20px; border-radius: 5px; overflow-x: auto; margin: 20px 0; font-family: 'Courier New', monospace; line-height: 1.4; border: 1px solid #e0e7f0; }
+        pre code { background-color: transparent; color: inherit; padding: 0; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th { background-color: #3498db; color: white; padding: 12px; text-align: left; }
+        td { padding: 12px; border-bottom: 1px solid #ddd; }
+        .key-concept { background-color: #e8f4f8; border: 2px solid #3498db; padding: 20px; margin: 20px 0; border-radius: 5px; }
+        .prerequisite { background-color: #fff3e0; border-left: 4px solid #ff9800; padding: 15px; margin: 20px 0; }
+        .next-topic { background-color: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; margin: 20px 0; }
+        .toc { background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 20px; margin: 20px 0; border-radius: 5px; }
+        a { color: #3498db; }
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="../blog.html">Learning Hub</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="./hubs/networking.html">Networking</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Network Performance & Optimization</span>
+    </div>
+
+    <div class="container">
+        <h1>Network Performance & Optimization</h1>
+
+        <div class="prerequisite">
+            <strong>Prerequisites:</strong> Topic 2.1 (Network Fundamentals), Topic 0.2 (Clock Cycles & Timing)
+        </div>
+
+        <div class="toc">
+            <h3>Topics Covered</h3>
+            <ol>
+                <li>Network Latency Sources</li>
+                <li>Bandwidth Limitations</li>
+                <li>Protocol Selection (TCP vs UDP)</li>
+                <li>Connection Management</li>
+                <li>TCP Congestion Control</li>
+                <li>Real-World Network Debugging</li>
+                <li>Edge Cases (Loss, Jitter, Out-of-Order)</li>
+                <li>Performance Optimization Patterns</li>
+                <li>Professional Impact</li>
+            </ol>
+        </div>
+
+        <h2 id="introduction">Introduction: Networks as Performance Systems</h2>
+
+        <p>Building on Topic 2.1 (Network Fundamentals), this topic explores how to optimize network performance. Network latency is often the largest bottleneck in distributed systems—larger than CPU or disk I/O for many applications.</p>
+
+        <p><strong>Key insight from Topic 0.2 (Clock Cycles):</strong> Network latency is measured in milliseconds, whereas CPU operations are measured in nanoseconds. A single cross-country network roundtrip (10 ms) takes as long as 10 million CPU cycles!</p>
+
+        <p>This topic teaches you to:</p>
+        <ul>
+            <li>Understand latency sources and identify bottlenecks</li>
+            <li>Choose appropriate protocols for your workload</li>
+            <li>Design connection management strategies</li>
+            <li>Debug network performance issues</li>
+            <li>Optimize applications for networked environments</li>
+        </ul>
+
+        <h2 id="latency-sources">1. Network Latency Sources</h2>
+
+        <p>Network latency has four distinct components:</p>
+
+        <div class="key-concept">
+            <h4>Complete Latency Breakdown</h4>
+            <pre><code>Total Latency = Propagation + Transmission + Queueing + Processing
+
+PROPAGATION DELAY:
+  Time for signal to travel from A to B
+  = Distance / Speed of Light
+
+  Speed of light in fiber: ~2/3 × 3×10^8 m/s = 2×10^8 m/s
+
+  Examples:
+    NYC to LA: ~4000 km
+    Latency: 4000 km / (2×10^8 m/s) = 20 milliseconds
+
+    Local network: 100 meters
+    Latency: 100 m / (2×10^8 m/s) = 0.5 microseconds
+
+TRANSMISSION DELAY:
+  Time to push packet onto wire
+  = Packet Size / Link Speed
+
+  Examples:
+    1500 byte packet on 1 Gbps link:
+    = 1500 × 8 bits / 1×10^9 bps = 12 microseconds
+
+    Same packet on 100 Mbps link:
+    = 1500 × 8 bits / 1×10^8 bps = 120 microseconds
+
+QUEUEING DELAY:
+  Time waiting in router queues if congested
+  = Highly variable, depends on load
+
+  Uncongested: ~0 ms
+  Congested: can be 10-100+ ms
+
+PROCESSING DELAY:
+  Time for routers/switches to process packet
+  Typically < 1 millisecond per hop
+
+TOTAL EXAMPLE (NYC to LA):
+  Uncongested: 20 ms (propagation) + 0.01 ms (transmission) + 0.1 ms (routers) ≈ 20 ms
+  Congested: 20 ms + 0.01 ms + 50 ms (queueing) ≈ 70 ms</code></pre>
+        </div>
+
+        <h2 id="bandwidth">2. Bandwidth Limitations</h2>
+
+        <p>Bandwidth and latency are independent properties:</p>
+
+        <ul>
+            <li><strong>Latency:</strong> How fast first bit arrives (milliseconds)</li>
+            <li><strong>Bandwidth:</strong> How many bits per second (megabits/sec)</li>
+        </ul>
+
+        <p>A link can have low latency but low bandwidth (slow high-altitude satellite), or high latency but high bandwidth (undersea fiber).</p>
+
+        <h3>Bandwidth Saturation</h3>
+
+        <pre><code>Scenario: 1 Gbps link, 1000 clients each sending 10 Mbps
+
+Total demand: 1000 × 10 Mbps = 10,000 Mbps
+Available capacity: 1,000 Mbps
+
+Saturation: 10,000 / 1,000 = 10× oversubscribed
+
+Result:
+  Each client effectively gets: 1,000 / 1,000 = 1 Mbps
+  Packet loss increases as router queues overflow
+  Latency skyrockets (hundreds of milliseconds)</code></pre>
+
+        <h3>Identifying Bottlenecks</h3>
+
+        <pre><code>// Check bandwidth utilization:
+$ iftop                    // Real-time bandwidth usage per flow
+$ nethogs                  // Per-process bandwidth
+$ bwm-ng                   // Bandwidth monitor
+
+// Identify packet loss:
+$ ping -c 100 target.com | grep "packet loss"
+
+// Measure link characteristics:
+$ iperf3 -s              // Start server
+$ iperf3 -c server_ip    // Client: measures throughput
+
+// TCP congestion detection:
+$ ss -info               // Show TCP info including RTT, congestion window</code></pre>
+
+        <h2 id="protocol-selection">3. Protocol Selection (TCP vs UDP)</h2>
+
+        <table>
+            <tr>
+                <th>Property</th>
+                <th>TCP</th>
+                <th>UDP</th>
+            </tr>
+            <tr>
+                <td>Reliable</td>
+                <td>Yes (retransmits lost packets)</td>
+                <td>No (drops packets)</td>
+            </tr>
+            <tr>
+                <td>Ordered</td>
+                <td>Yes (packets arrive in order)</td>
+                <td>No (may arrive out-of-order)</td>
+            </tr>
+            <tr>
+                <td>Connection setup</td>
+                <td>Required (3-way handshake, ~1 RTT)</td>
+                <td>Connectionless (immediate send)</td>
+            </tr>
+            <tr>
+                <td>Overhead</td>
+                <td>Higher (sequence numbers, ACKs, retransmit logic)</td>
+                <td>Lower (minimal header)</td>
+            </tr>
+            <tr>
+                <td>Use cases</td>
+                <td>Web, email, file transfer, databases</td>
+                <td>Video streaming, gaming, VoIP, DNS</td>
+            </tr>
+            <tr>
+                <td>Latency sensitivity</td>
+                <td>Can cause buffering (waits for missing packets)</td>
+                <td>Single packet loss ≈ single frame loss</td>
+            </tr>
+        </table>
+
+        <h3>When to Choose UDP</h3>
+
+        <p>Choose UDP when:</p>
+        <ul>
+            <li><strong>Real-time is critical:</strong> Video/voice where fresh data matters more than completeness</li>
+            <li><strong>Low latency required:</strong> No connection setup overhead</li>
+            <li><strong>Packet loss acceptable:</strong> Application can handle missing data</li>
+            <li><strong>Multicast needed:</strong> One-to-many transmission (TCP doesn't support)</li>
+        </ul>
+
+        <p>Example: Video call drops one frame (UDP) vs waits for retransmit causing 100 ms buffering (TCP). UDP is better here.</p>
+
+        <h2 id="connection-management">4. Connection Management</h2>
+
+        <h3>TCP Connection Overhead</h3>
+
+        <pre><code>Establishing a TCP connection:
+
+Client                          Server
+  |                               |
+  |--- SYN ---------->            |  (RTT/2)
+  |                     SYN ACK <-|  (RTT/2)
+  |--- ACK ---------->            |  (RTT/2)
+  |                               |
+  └---- ready to send/receive ----┘
+
+Total cost: 1.5 × RTT (for typical implementation)
+
+Example: NYC to LA (RTT = 40 ms)
+  Connection setup = 1.5 × 40 ms = 60 ms overhead
+
+For a small 100-byte request/response:
+  60 ms overhead + minimal transmission time
+
+This overhead is wasted for small transfers!</code></pre>
+
+        <h3>Connection Pooling</h3>
+
+        <p>Reuse connections to amortize setup cost:</p>
+
+        <pre><code>// Without pooling (bad):
+for (request in requests) {
+    conn = tcp.connect(server)     // 60 ms overhead
+    conn.send(request)             // 40 ms RTT + processing
+    conn.close()                   // Tear down
+}
+Total for 100 requests: 100 × (60 + 40) = 10,000 ms = 10 seconds
+
+// With pooling (good):
+pool = create_connection_pool(server, 10 connections)
+for (request in requests) {
+    conn = pool.get()              // Get existing connection (0 ms)
+    conn.send(request)             // 40 ms RTT + processing
+    pool.put(conn)                 // Return to pool
+}
+Total for 100 requests: 100 × 40 = 4,000 ms = 4 seconds
+
+Improvement: 2.5× faster!</code></pre>
+
+        <h3>Keep-Alive</h3>
+
+        <p>Keep idle connections alive to prevent timeout:</p>
+
+        <pre><code>// HTTP Keep-Alive header:
+HTTP/1.1 200 OK
+Connection: keep-alive
+Keep-Alive: timeout=5, max=100
+
+Meaning: Server will keep connection open for 5 seconds
+or until 100 requests, whichever comes first</code></pre>
+
+        <h2 id="tcp-congestion">5. TCP Congestion Control</h2>
+
+        <p>TCP dynamically adapts to network conditions using a congestion window:</p>
+
+        <pre><code>// Simplified TCP congestion control:
+
+Initial: cwnd = 1 MSS (Maximum Segment Size)
+
+Sending:
+  bytes_in_flight = number of unacknowledged bytes
+  if bytes_in_flight < cwnd:
+      send_packet()
+  else:
+      wait_for_ack()
+
+On successful ACK:
+  cwnd++        // Increase window, try sending more
+
+On timeout (packet loss):
+  cwnd /= 2     // Cut window in half, back off
+
+Behavior:
+  - Ramp up quickly when there's room
+  - Back off aggressively on loss
+  - Adapts to available bandwidth automatically</code></pre>
+
+        <h3>Exponential Backoff for Retries</h3>
+
+        <pre><code>// Connection fails, retry with exponential backoff:
+
+attempt = 1
+while attempt <= max_attempts:
+    try:
+        connect()
+        break
+    except:
+        wait_time = base_delay × (2 ^ (attempt - 1))
+        // Add jitter to avoid thundering herd
+        wait_time += random(0, wait_time * 0.1)
+        sleep(wait_time)
+        attempt += 1
+
+Example (base_delay = 100 ms):
+  Attempt 1: fail, wait 100 ms
+  Attempt 2: fail, wait 200 ms
+  Attempt 3: fail, wait 400 ms
+  Attempt 4: fail, wait 800 ms
+  Attempt 5: fail, wait 1600 ms (1.6 seconds)
+
+If 1000 clients retry simultaneously:
+  - Without jitter: thundering herd (all retry at same time)
+  - With jitter: spread out over time window</code></pre>
+
+        <h2 id="network-debugging">6. Real-World Network Debugging</h2>
+
+        <h3>Essential Tools</h3>
+
+        <pre><code>// Check connectivity and latency:
+$ ping -c 4 8.8.8.8
+PING 8.8.8.8 (8.8.8.8)
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=119 time=20.1 ms
+...
+rtt min/avg/max/stddev = 19.8/20.2/20.6/0.3 ms
+
+// Show route taken:
+$ traceroute google.com
+traceroute to google.com (142.250.80.46)
+  1  192.168.1.1 (192.168.1.1)  2.3 ms
+  2  10.0.0.1 (10.0.0.1)  5.1 ms
+  ...
+  12  142.250.80.46  18.9 ms
+
+// Display network statistics:
+$ ss -s          // Overall socket statistics
+$ ss -tulpn      // TCP/UDP listening ports
+$ netstat -an    // All connections
+
+// Packet analysis:
+$ tcpdump -i eth0 -n 'tcp port 80'
+$ tshark -i eth0 -f 'tcp.port == 443' -c 10
+
+// Monitor realtime:
+$ iftop          // bandwidth per connection
+$ nethogs -p     // bandwidth per process
+$ nload          // aggregate bandwidth</code></pre>
+
+        <h2 id="edge-cases">7. Edge Cases: Loss, Jitter, Out-of-Order</h2>
+
+        <h3>Packet Loss Scenarios</h3>
+
+        <ul>
+            <li><strong>Random loss:</strong> Some packets dropped randomly (~0.1-1%)</li>
+            <li><strong>Burst loss:</strong> Multiple consecutive packets lost (worse for throughput)</li>
+            <li><strong>Correlated loss:</strong> Loss depends on flow/time (congestion patterns)</li>
+        </ul>
+
+        <p>TCP handles loss via retransmission, but introduces latency. UDP applications must implement application-level loss handling.</p>
+
+        <h3>Jitter (Latency Variation)</h3>
+
+        <pre><code>Scenario: Expected RTT = 20 ms
+
+Without jitter:
+  Request at t=0 → Reply at t=20 ✓ Predictable
+
+With jitter:
+  Request at t=0 → Reply at t=15 ✓ Fast
+  Request at t=1 → Reply at t=35 (due to queueing)
+  Request at t=2 → Reply at t=22
+
+Implications:
+  - Tail latencies matter (95th, 99th percentiles)
+  - Timeouts must be generous (> 99th percentile latency)
+  - Too-short timeouts trigger false retransmissions</code></pre>
+
+        <h3>Out-of-Order Delivery</h3>
+
+        <p>TCP guarantees in-order delivery. UDP doesn't. Applications must handle:</p>
+
+        <pre><code>// UDP packets may arrive out-of-order:
+Send: [packet 1] [packet 2] [packet 3]
+Receive: [packet 2] [packet 3] [packet 1]
+
+Application must:
+  - Add sequence numbers
+  - Buffer out-of-order packets
+  - Deliver to application when gap is filled
+  - Timeout old packets</code></pre>
+
+        <h2 id="optimization-patterns">8. Performance Optimization Patterns</h2>
+
+        <h3>Request Batching</h3>
+
+        <pre><code>// Instead of one request per RTT:
+for item in items:
+    result = request(item)    // 20 ms per item
+
+// Batch multiple items:
+results = request_batch(items)  // Single RTT for all</code></pre>
+
+        <h3>Pipelining</h3>
+
+        <pre><code>// HTTP/1.1 pipelining (deprecated in HTTP/2):
+// Send multiple requests without waiting for responses
+
+GET /1
+GET /2
+GET /3
+...
+GET /100
+
+// Server responds to all 100
+// More efficient than one-at-a-time</code></pre>
+
+        <h3>Multiplexing (HTTP/2, QUIC)</h3>
+
+        <pre><code>// HTTP/2 multiplexes over single connection:
+// Multiple independent streams on same TCP connection
+
+Stream 1: GET /api/users       (in progress)
+Stream 2:     GET /api/posts   (in progress)
+Stream 3:         GET /api/comments (in progress)
+
+Server responds to all streams
+No head-of-line blocking (HTTP/1.1 issue)</code></pre>
+
+        <h2 id="professional-impact">9. Professional Impact: Distributed Systems Design</h2>
+
+        <ul>
+            <li><strong>Caching:</strong> Reduce round trips by caching at edge (CDN, local cache)</li>
+            <li><strong>Compression:</strong> Reduce transmission time (gzip, brotli)</li>
+            <li><strong>Async/await:</strong> Don't block waiting for network (use async, futures, promises)</li>
+            <li><strong>Circuit breakers:</strong> Fail fast if remote service is down (don't retry forever)</li>
+            <li><strong>Timeouts:</strong> Set appropriate timeouts (not too short, not too long)</li>
+            <li><strong>Load balancing:</strong> Distribute across multiple instances to avoid saturation</li>
+            <li><strong>Monitoring:</strong> Track latency percentiles (p50, p95, p99), not just averages</li>
+        </ul>
+
+        <h2 id="summary">Summary & Key Takeaways</h2>
+
+        <ul>
+            <li><strong>Latency has four sources:</strong> propagation, transmission, queueing, processing</li>
+            <li><strong>Network latency is the bottleneck</strong> in most distributed systems (milliseconds vs nanoseconds)</li>
+            <li><strong>Choose protocols appropriately:</strong> TCP for reliability, UDP for real-time</li>
+            <li><strong>Connection pooling</strong> amortizes setup overhead</li>
+            <li><strong>TCP congestion control</strong> adapts to network conditions automatically</li>
+            <li><strong>Debugging tools</strong> (ping, traceroute, tcpdump) help identify bottlenecks</li>
+            <li><strong>Edge cases</strong> (loss, jitter, reordering) must be handled</li>
+            <li><strong>Optimization patterns</strong> (batching, pipelining, multiplexing) reduce round trips</li>
+            <li><strong>Distributed systems design</strong> must account for network latency and unreliability</li>
+        </ul>
+
+        <div class="next-topic">
+            <strong>Next topic:</strong> <a href="topic-2.3.html">Topic 2.3: Distributed Systems</a> — Now that you understand network performance characteristics, let's explore how to design reliable distributed systems that handle failures, consistency, and scalability.
+        </div>
+
+    </div>
+</body>
+</html>

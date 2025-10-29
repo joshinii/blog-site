@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caching & Memory Hierarchy Optimization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .danger-box {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .fun-box {
+            background-color: #ffe6f0;
+            border-left: 4px solid #e91e63;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.4;
+            border: 1px solid #e0e7f0;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .diagram {
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .key-concept {
+            background-color: #e8f4f8;
+            border: 2px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .exercise {
+            background-color: #f0f8ff;
+            border: 2px solid #4169e1;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+
+        .exercise h3 {
+            color: #4169e1;
+            margin-top: 0;
+        }
+
+        .toc {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        .toc h2 {
+            margin-top: 0;
+            border-left: none;
+            padding-left: 0;
+        }
+
+        .toc ul {
+            list-style-type: none;
+            margin-left: 0;
+        }
+
+        .toc li {
+            margin-bottom: 5px;
+        }
+
+        .toc a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        strong {
+            color: #2c3e50;
+        }
+
+        .analogy {
+            font-style: italic;
+            color: #555;
+            margin: 10px 0;
+            padding: 15px;
+            padding-left: 20px;
+            border-left: 3px solid #95a5a6;
+            background-color: #f9f9f9;
+        }
+
+        .visual-example {
+            background-color: #f0f8ff;
+            border: 2px solid #87ceeb;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+        }
+
+        .nav-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: #2980b9;
+        }
+
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+            pre {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="../blog.html">Learning Hub</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="./hubs/systems.html">Systems</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Caching & Memory Hierarchy Optimization</span>
+    </div>
+
+    <div class="container">
+        <h1>Caching & Memory Hierarchy Optimization</h1>
+        <p style="color: #666; font-style: italic; margin-bottom: 20px;">How Memory Hierarchy Optimization Achieves 100× Performance Gains</p>
+
+        <div style="background-color: #f0f8ff; border-left: 4px solid #3498db; padding: 15px; margin: 20px 0;">
+            <strong>Breadcrumb Navigation:</strong><br>
+            <a href="topic-1.2.html" style="color: #3498db;">CPU Architecture Deep Dive</a> → Caching & Memory Hierarchy
+        </div>
+
+        <div class="warning-box">
+            <strong>Prerequisites:</strong>
+            <ul style="margin-bottom: 0;">
+                <li><a href="topic-0.2.html" style="color: #856404; font-weight: bold;">Topic 0.2: Clock Cycles & Timing</a> - Understanding of CPU clock and timing</li>
+                <li><a href="topic-1.2.1.html" style="color: #856404; font-weight: bold;">Topic 1.2.1: Pipelining & Superscalar</a> - Understanding of instruction execution</li>
+            </ul>
+        </div>
+
+        <div class="key-concept">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Understand cache organization (blocks, lines, associativity)</li>
+                <li>Master cache mapping strategies (direct-mapped, set-associative, fully associative)</li>
+                <li>Learn cache replacement policies (LRU, pseudo-LRU)</li>
+                <li>Understand write policies (write-through vs write-back)</li>
+                <li>Master cache-conscious programming for 100× speedups</li>
+                <li>Optimize spatial and temporal locality for maximum performance</li>
+            </ul>
+        </div>
+
+        <h2 id="cache-architecture">Cache Architecture Deep Dive</h2>
+
+        <p>You learned about caches in earlier topics. Now let's understand <em>how</em> they work internally.</p>
+
+        <h3>Cache Organization: Blocks and Lines</h3>
+
+        <div class="visual-example">
+            <pre><code><strong>Memory is divided into blocks:</strong>
+
+Main Memory (4 GB):
+Address: 0x0000, 0x0001, 0x0002, 0x0003, ...
+
+Cache stores <strong>blocks</strong> (typically 64 bytes):
+Block 0:  0x0000 - 0x003F (64 bytes)
+Block 1:  0x0040 - 0x007F
+Block 2:  0x0080 - 0x00BF
+...
+
+<strong>Why blocks?</strong>
+- Spatial locality: If you access 0x1000, you'll likely access 0x1001 next
+- Bring entire block with one memory access
+- Cache block 0x1000-0x103F with one fetch</code></pre>
+        </div>
+
+        <h3>Cache Mapping: Where Does Data Go?</h3>
+
+        <h4>1. Direct-Mapped Cache (Simplest)</h4>
+
+        <div class="visual-example">
+            <pre><code><strong>Each memory block maps to exactly ONE cache line</strong>
+
+Formula: Cache Line = (Memory Address / Block Size) % Number of Cache Lines
+
+<strong>Example:</strong>
+Cache: 4 lines, Block size: 64 bytes
+
+Memory Block 0  → Cache Line 0
+Memory Block 1  → Cache Line 1
+Memory Block 2  → Cache Line 2
+Memory Block 3  → Cache Line 3
+Memory Block 4  → Cache Line 0 (wraps around)
+Memory Block 5  → Cache Line 1
+...
+
+<strong>Problem: Conflict Misses</strong>
+
+Access pattern: 0, 4, 0, 4, 0, 4...
+Both map to Line 0!
+Result: Constant evictions (cache thrashing)</code></pre>
+        </div>
+
+        <h4>2. Fully Associative Cache (Most Flexible)</h4>
+
+        <div class="visual-example">
+            <pre><code><strong>Any memory block can go in ANY cache line</strong>
+
+Memory Block 0  → Any line (0, 1, 2, or 3)
+Memory Block 4  → Any line (0, 1, 2, or 3)
+
+<strong>Advantage:</strong> No conflict misses
+<strong>Disadvantage:</strong> Must search ALL cache lines (slow, expensive hardware)
+
+<strong>Solution for lookup:</strong> Parallel comparison hardware
+All lines compared simultaneously
+Works for small caches only (too expensive for large)</code></pre>
+        </div>
+
+        <h4>3. Set-Associative Cache (Best Compromise)</h4>
+
+        <div class="visual-example">
+            <pre><code><strong>Combine both approaches: N-way set-associative</strong>
+
+<strong>4-way set-associative, 8 lines total:</strong>
+
+Set 0: [Line 0] [Line 1] [Line 2] [Line 3]
+Set 1: [Line 4] [Line 5] [Line 6] [Line 7]
+
+Memory Block → Set (direct-mapped)
+Within Set   → Any of 4 lines (fully associative)
+
+<strong>Formula:</strong>
+Set Number = (Memory Address / Block Size) % Number of Sets
+
+Block 0  → Set 0 → Can use Lines 0, 1, 2, or 3
+Block 1  → Set 1 → Can use Lines 4, 5, 6, or 7
+Block 2  → Set 0 → Can use Lines 0, 1, 2, or 3
+Block 3  → Set 1 → Can use Lines 4, 5, 6, or 7
+
+<strong>Advantage:</strong> Much fewer conflicts than direct-mapped
+<strong>Real CPUs:</strong>
+- L1: 8-way set-associative
+- L2: 8-16-way
+- L3: 16-20-way</code></pre>
+        </div>
+
+        <h3>Cache Address Breakdown</h3>
+
+        <div class="visual-example">
+            <h4>Example: 32-bit address, 8-way set-associative, 64-byte blocks, 64 KB cache</h4>
+            <pre><code><strong>Address breakdown:</strong>
+
+32-bit address: [Tag: 19 bits][Index: 7 bits][Offset: 6 bits]
+                 ↑              ↑               ↑
+                 |              |               └─ Byte within block (2^6 = 64)
+                 |              └───────────────── Which set? (2^7 = 128 sets)
+                 └──────────────────────────────── Which block? (Tag for comparison)
+
+<strong>Calculation:</strong>
+- Cache size: 64 KB
+- Block size: 64 bytes
+- Total blocks: 64 KB / 64 = 1024 blocks
+- 8-way: 1024 / 8 = 128 sets
+- Index bits: log₂(128) = 7 bits
+- Offset bits: log₂(64) = 6 bits
+- Tag bits: 32 - 7 - 6 = 19 bits
+
+<strong>Cache lookup:</strong>
+1. Extract Index → Find the set (128 possibilities)
+2. Check 8 lines in that set
+3. Compare Tag with stored tags
+4. If match → HIT! Extract byte using Offset
+5. If no match → MISS! Fetch from memory</code></pre>
+        </div>
+
+        <h3>Cache Replacement Policies</h3>
+
+        <p>When a cache set is full, which line should we evict?</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Policy</th>
+                    <th>Strategy</th>
+                    <th>Pros</th>
+                    <th>Cons</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>LRU (Least Recently Used)</strong></td>
+                    <td>Evict line not used for longest time</td>
+                    <td>Good performance, exploits temporal locality</td>
+                    <td>Complex hardware (must track access times)</td>
+                </tr>
+                <tr>
+                    <td><strong>Random</strong></td>
+                    <td>Evict random line</td>
+                    <td>Simple, fast hardware</td>
+                    <td>Unpredictable, sometimes poor</td>
+                </tr>
+                <tr>
+                    <td><strong>FIFO (First-In First-Out)</strong></td>
+                    <td>Evict oldest line</td>
+                    <td>Simple to implement</td>
+                    <td>Ignores usage patterns</td>
+                </tr>
+                <tr>
+                    <td><strong>Pseudo-LRU</strong></td>
+                    <td>Approximate LRU with less hardware</td>
+                    <td>Good compromise</td>
+                    <td>Most common in real CPUs</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Write Policies</h3>
+
+        <p>What happens when you write to a cache line?</p>
+
+        <h4>Write-Through</h4>
+        <div class="info-box">
+            <pre><code><strong>Policy:</strong> Write to both cache AND memory immediately
+
+CPU writes to cache line
+↓
+Cache updated
+↓
+Memory also updated (simultaneously or buffered)
+
+<strong>Advantage:</strong> Memory always consistent
+<strong>Disadvantage:</strong> Slow (every write goes to memory)
+<strong>Used in:</strong> Simple systems, some L1 caches</code></pre>
+        </div>
+
+        <h4>Write-Back (Modern Standard)</h4>
+        <div class="success-box">
+            <pre><code><strong>Policy:</strong> Write to cache only, update memory later
+
+CPU writes to cache line
+↓
+Mark line as "dirty" (modified)
+↓
+(Later, when line is evicted)
+↓
+Write dirty line to memory
+
+<strong>Advantage:</strong> Fast (most writes stay in cache)
+<strong>Disadvantage:</strong> Complex (must track dirty lines)
+<strong>Performance:</strong> 10-100x fewer memory writes!
+
+<strong>Example:</strong>
+Loop modifying array[i] 100 times
+Write-through: 100 memory writes
+Write-back: 1 memory write (at eviction)</code></pre>
+        </div>
+
+        <h2 id="memory-hierarchy">Memory Hierarchy and Performance</h2>
+
+        <p>Let's put it all together: the complete memory hierarchy and its impact on real performance.</p>
+
+        <h3>The Complete Picture</h3>
+
+        <div class="diagram">┌────────────────────────────────────────┐
+│     CPU Registers (16-32 registers)  │
+│     Access: 1 cycle (0.3 ns @ 3GHz)  │
+└──────────────────┬─────────────────────┘
+                   ↓
+┌────────────────────────────────────────┐
+│     L1 Cache (32-64 KB per core)     │
+│     8-way set-associative             │
+│     Access: 4 cycles (~1 ns)          │
+│     Hit rate: 95-99%                  │
+└──────────────────┬─────────────────────┘
+                   ↓
+┌────────────────────────────────────────┐
+│     L2 Cache (256 KB - 1 MB per core)│
+│     8-16-way set-associative          │
+│     Access: 12 cycles (~4 ns)         │
+│     Hit rate: 90-95% (of L1 misses)   │
+└──────────────────┬─────────────────────┘
+                   ↓
+┌────────────────────────────────────────┐
+│     L3 Cache (4-32 MB shared)        │
+│     16-20-way set-associative         │
+│     Access: 40 cycles (~13 ns)        │
+│     Hit rate: 80-90% (of L2 misses)   │
+└──────────────────┬─────────────────────┘
+                   ↓
+┌────────────────────────────────────────┐
+│     Main Memory (RAM: 4-64 GB)       │
+│     DDR4/DDR5                         │
+│     Access: 200-300 cycles (~100 ns)  │
+└──────────────────┬─────────────────────┘
+                   ↓
+┌────────────────────────────────────────┐
+│     SSD (256 GB - 2 TB)              │
+│     NVMe/SATA                         │
+│     Access: 100 µs (300,000 cycles)   │
+└──────────────────┬─────────────────────┘
+                   ↓
+┌────────────────────────────────────────┐
+│     HDD (1-10 TB)                    │
+│     Mechanical disk                   │
+│     Access: 10 ms (30,000,000 cycles) │
+└────────────────────────────────────────┘</div>
+
+        <h3>Real-World Performance Impact</h3>
+
+        <div class="visual-example">
+            <h4>Example: Array Sum</h4>
+            <pre><code><strong>Code:</strong>
+int sum = 0;
+for (int i = 0; i < 1000000; i++) {
+    sum += array[i];
+}
+
+<strong>Case 1: Array fits in L1 cache (64 KB)</strong>
+Array size: 16 KB (4000 ints)
+Access time: 4 cycles per element
+Total time: 4000 × 4 = 16,000 cycles
+At 3 GHz: 5.3 microseconds
+
+<strong>Case 2: Array fits in L3 cache (8 MB)</strong>
+Array size: 4 MB (1M ints)
+Access time: 40 cycles per element (L3)
+Total time: 1M × 40 = 40M cycles
+At 3 GHz: 13 milliseconds
+
+<strong>Case 3: Array in RAM (cache misses)</strong>
+Array size: 400 MB (100M ints)
+Access time: 200 cycles per element (RAM)
+Total time: 100M × 200 = 20B cycles
+At 3 GHz: 6.7 seconds
+
+<strong>Performance difference:</strong>
+L1 → L3: 2500× slower
+L1 → RAM: 1,250,000× slower!
+
+<strong>This is why cache matters!</strong></code></pre>
+        </div>
+
+        <h3>Average Memory Access Time (AMAT)</h3>
+
+        <div class="key-concept">
+            <h4>Formula:</h4>
+            <pre><code>AMAT = Hit Time + (Miss Rate × Miss Penalty)
+
+<strong>Example:</strong>
+L1 Cache:
+- Hit time: 4 cycles
+- Miss rate: 5% (95% hit rate)
+- Miss penalty: 12 cycles (L2 access)
+
+AMAT = 4 + (0.05 × 12) = 4.6 cycles
+
+<strong>With perfect cache (100% hit rate):</strong>
+AMAT = 4 cycles
+
+<strong>With no cache (100% miss rate):</strong>
+AMAT = 4 + (1.0 × 200) = 204 cycles
+
+<strong>Actual system AMAT:</strong>
+4.6 cycles (44× faster than no cache!)</code></pre>
+        </div>
+
+        <h3>Cache-Conscious Programming</h3>
+
+        <div class="success-box">
+            <h4>Techniques to improve cache performance:</h4>
+
+            <p><strong>1. Sequential Access (Good Spatial Locality)</strong></p>
+            <pre><code>// Good: Sequential access
+for (i = 0; i < n; i++) {
+    sum += array[i];  // Next element in same cache line
+}
+
+// Bad: Random access
+for (i = 0; i < n; i++) {
+    sum += array[random_index()];  // Cache miss every time
+}</code></pre>
+
+            <p><strong>2. Temporal Locality (Reuse Data)</strong></p>
+            <pre><code>// Good: Reuse x in cache
+x = array[i];
+result1 = x * 2;
+result2 = x + 5;
+result3 = x / 3;
+
+// Bad: Reload x multiple times
+result1 = array[i] * 2;
+result2 = array[i] + 5;  // Might be evicted from cache
+result3 = array[i] / 3;</code></pre>
+
+            <p><strong>3. Blocking/Tiling (Divide and Conquer)</strong></p>
+            <pre><code>// Matrix multiplication: Bad (cache misses)
+for (i = 0; i < n; i++)
+    for (j = 0; j < n; j++)
+        for (k = 0; k < n; k++)
+            C[i][j] += A[i][k] * B[k][j];
+
+// Matrix multiplication: Good (blocked)
+for (ii = 0; ii < n; ii += BLOCK)
+    for (jj = 0; jj < n; jj += BLOCK)
+        for (kk = 0; kk < n; kk += BLOCK)
+            for (i = ii; i < min(ii+BLOCK, n); i++)
+                for (j = jj; j < min(jj+BLOCK, n); j++)
+                    for (k = kk; k < min(kk+BLOCK, n); k++)
+                        C[i][j] += A[i][k] * B[k][j];
+
+// Works on BLOCK×BLOCK submatrices that fit in cache
+// Can be 10-20× faster!</code></pre>
+
+            <p><strong>4. Structure Padding (Avoid False Sharing)</strong></p>
+            <pre><code>// Bad: Two threads, same cache line
+struct {
+    int counter1;  // Thread 1 writes here
+    int counter2;  // Thread 2 writes here (same 64-byte line!)
+} data;
+// Result: Cache line bounces between cores (slow!)
+
+// Good: Pad to separate cache lines
+struct {
+    int counter1;
+    char padding[60];  // Force to different cache line
+    int counter2;
+} data;
+// Result: No false sharing (fast!)</code></pre>
+        </div>
+
+        <h2>Cache Optimization: Matrix Multiplication Case Study</h2>
+
+        <div class="key-concept">
+            <h3>The 100× Performance Problem</h3>
+            <p><strong>Why does matrix multiplication become so slow with poor cache usage?</strong></p>
+
+            <pre><code><strong>BAD: Poor cache utilization (COLUMN-MAJOR ACCESS TO B)</strong>
+for (int i = 0; i < SIZE; i++)
+    for (int j = 0; j < SIZE; j++)
+        for (int k = 0; k < SIZE; k++)
+            C[i][j] += A[i][k] * B[k][j];
+            //                 ↑ Accessing B[k][j]
+            //                   k increases → column-major!
+
+<strong>Memory Layout of B (row-major in RAM):</strong>
+B stored as: [B[0][0] B[0][1] B[0][2] ... B[0][n] | B[1][0] B[1][1] ...]
+             Row 0 (sequential)         Row 1 (sequential)
+
+Access pattern: B[0][j], B[1][j], B[2][j], ..., B[n][j]
+This jumps ACROSS rows (column-wise), not within rows!
+
+Cache line example (64 bytes = 16 integers):
+Access B[0][j]:   Cache loads Row 0 (B[0][0]...B[0][15])
+Access B[1][j]:   Cache misses! Different row entirely
+Access B[2][j]:   Another cache miss!
+...
+Result: ~95% cache MISS rate (terrible!)
+
+<strong>GOOD: Cache-friendly implementation (BLOCK ACCESS, ROW-MAJOR)</strong>
+for (int ii = 0; ii < SIZE; ii += BLOCK)      // Block rows
+    for (int kk = 0; kk < SIZE; kk += BLOCK)  // Block columns of A
+        for (int jj = 0; jj < SIZE; jj += BLOCK)  // Block columns of B
+            for (int i = ii; i < ii+BLOCK; i++)
+                for (int k = kk; k < kk+BLOCK; k++)
+                    for (int j = jj; j < jj+BLOCK; j++)
+                        C[i][j] += A[i][k] * B[k][j];
+
+<strong>Memory access pattern now:</strong>
+Process B[k][j] through B[k][j+BLOCK-1] sequentially
+This accesses consecutive bytes in the same row!
+
+Cache line efficiency:
+Access B[k][j]:        Cache loads B[k][j]...B[k][j+15]
+Access B[k][j+1]:      Already in cache! Cache HIT
+Access B[k][j+2]:      Already in cache! Cache HIT
+...
+After BLOCK iterations: Move to next row
+
+Result: ~95% cache HIT rate (excellent!)
+
+<strong>Speed difference: 20 cache misses per element vs 1 cache hit = 20-100× faster!</strong></code></pre>
+        </div>
+
+        <div class="warning-box">
+            <h4>Why Column-Major Access Misses Cache:</h4>
+            <p>Modern CPUs store matrices in <strong>row-major order</strong> (each row is sequential in memory). Accessing column-wise means jumping between distant memory locations, each jump potentially missing the cache.</p>
+
+            <p><strong>Spatial Locality Difference:</strong></p>
+            <ul>
+                <li><strong>Row-major access:</strong> Excellent spatial locality (nearby memory accessed together)</li>
+                <li><strong>Column-major access:</strong> Terrible spatial locality (each access jumps far ahead)</li>
+            </ul>
+
+            <p>The CPU's cache prefetcher can predict sequential access but not column-wise jumps, so it can't preload the next cache line.</p>
+        </div>
+
+        <h3>Cache Line Size Implications</h3>
+
+        <div class="visual-example">
+            <pre><code><strong>Typical cache line: 64 bytes</strong>
+
+For int arrays (4 bytes per int):
+- 1 cache line = 16 integers
+- Sequential access: Load once, use 16 times
+- Random access: Load 16 times, use 16 times
+
+<strong>Example: Array traversal</strong>
+
+// Sequential (cache-friendly)
+for (i = 0; i < 1000; i++) {
+    sum += array[i];
+}
+Cache misses: 1000 / 16 = 63 misses
+Cache hits: 937
+
+// Strided access (stride = 16)
+for (i = 0; i < 1000; i += 16) {
+    sum += array[i];
+}
+Cache misses: 63 misses (same!)
+But accessing only 63 elements total
+
+// Random access (worst case)
+for (i = 0; i < 1000; i++) {
+    sum += array[random()];
+}
+Cache misses: ~1000 misses (every access!)
+Cache hits: ~0
+
+<strong>Performance difference:</strong>
+Sequential: 4 cycles × 63 + 200 cycles × 63 = 12,852 cycles
+Random: 200 cycles × 1000 = 200,000 cycles
+Speedup: 15.6× faster!</code></pre>
+        </div>
+
+        <h3>Cache Coherence in Multicore Systems</h3>
+
+        <div class="info-box">
+            <h4>The Cache Coherence Problem</h4>
+            <pre><code><strong>Scenario: Two cores, shared memory</strong>
+
+Core 0: Reads X (X=5)    → X cached in Core 0's L1
+Core 1: Reads X (X=5)    → X cached in Core 1's L1
+Core 0: Writes X=10      → Core 0's cache has X=10
+Core 1: Reads X          → What value? 5 or 10?
+
+<strong>Problem:</strong> Stale data in Core 1's cache!
+
+<strong>Solution: Cache Coherence Protocols</strong>
+
+Most common: MESI Protocol
+- M (Modified): Only this cache has it, dirty
+- E (Exclusive): Only this cache has it, clean
+- S (Shared): Multiple caches have it, clean
+- I (Invalid): Cache line not valid
+
+<strong>How it works:</strong>
+1. Core 0 writes X → X becomes Modified in Core 0
+2. Cache controller broadcasts: "X is modified"
+3. Core 1's cache marks its X as Invalid
+4. Next time Core 1 reads X → Cache miss, fetch from Core 0
+
+<strong>Performance cost:</strong> Cache coherence traffic
+- Can slow down multi-threaded programs
+- Especially bad with false sharing</code></pre>
+        </div>
+
+        <h2>Professional Impact: Cache Optimization in Practice</h2>
+
+        <div class="key-concept">
+            <h3>Real-World Examples</h3>
+
+            <h4>1. Database Query Optimization</h4>
+            <pre><code>// Bad: Pointer chasing (cache misses)
+struct Node {
+    int data;
+    Node* next;  // Random memory location
+};
+
+// Traverse linked list
+Node* current = head;
+while (current != NULL) {
+    process(current->data);  // Cache miss every time
+    current = current->next; // Next node anywhere in memory
+}
+
+// Good: Array-based (cache-friendly)
+int data[1000];
+for (int i = 0; i < 1000; i++) {
+    process(data[i]);  // Sequential access, excellent cache hit rate
+}
+
+<strong>Performance: 10-20× faster for sequential scan</strong></code></pre>
+
+            <h4>2. Image Processing Optimization</h4>
+            <pre><code>// Bad: Process by columns (vertical)
+for (int x = 0; x < width; x++)
+    for (int y = 0; y < height; y++)
+        image[y][x] = process(image[y][x]);
+        // Each row is far apart in memory!
+
+// Good: Process by rows (horizontal)
+for (int y = 0; y < height; y++)
+    for (int x = 0; x < width; x++)
+        image[y][x] = process(image[y][x]);
+        // Sequential access within each row
+
+<strong>Performance: 5-10× faster on large images</strong></code></pre>
+
+            <h4>3. Loop Tiling for Scientific Computing</h4>
+            <pre><code>// Matrix-vector multiplication: y = A * x
+// Bad: Large matrix doesn't fit in cache
+for (i = 0; i < N; i++)
+    for (j = 0; j < N; j++)
+        y[i] += A[i][j] * x[j];
+
+// Good: Blocked access (tile size fits in L1)
+for (ii = 0; ii < N; ii += TILE)
+    for (i = ii; i < min(ii+TILE, N); i++)
+        for (j = 0; j < N; j++)
+            y[i] += A[i][j] * x[j];
+
+<strong>Result: 3-5× faster on large matrices</strong></code></pre>
+        </div>
+
+        <div class="success-box">
+            <h3>Key Takeaways</h3>
+            <ul>
+                <li>Cache hierarchy (L1/L2/L3) provides 10-100× speedup over main memory</li>
+                <li>Set-associative caches balance flexibility and performance</li>
+                <li>Write-back policy reduces memory writes by 10-100×</li>
+                <li>Sequential access (spatial locality) is critical for cache hits</li>
+                <li>Blocking/tiling keeps working set in cache</li>
+                <li>Cache-conscious programming can achieve 100× real-world speedups</li>
+                <li>Understanding cache line size (64 bytes) is essential for optimization</li>
+            </ul>
+        </div>
+
+        <div class="nav-links">
+            <a href="topic-1.2.1.html" class="nav-link">← Previous: Pipelining & Superscalar</a>
+            <a href="topic-1.2.3.html" class="nav-link">Next: SIMD & Modern Techniques →</a>
+        </div>
+
+        <hr style="margin: 40px 0; border: none; border-top: 2px solid #ddd;">
+
+        <div style="background-color: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; margin: 20px 0; border-radius: 5px;">
+            <strong>Deepen your understanding:</strong><br>
+            → <a href="topic-1.2.1.html">Topic 1.2.1: Pipelining & Superscalar</a> - Learn how instruction execution enables cache optimization<br>
+            → <a href="topic-1.2.3.html">Topic 1.2.3: SIMD & Modern Techniques</a> - Explore vectorization and modern optimizations
+        </div>
+
+        <p style="text-align: center; color: #777; font-size: 0.9em;">
+            <strong>Computer Systems Mastery: Complete Learning Roadmap</strong><br>
+            Phase 1: Foundation — The Machine<br>
+            Topic 1.2.2: Caching & Memory Hierarchy Optimization
+        </p>
+    </div>
+</body>
+</html>

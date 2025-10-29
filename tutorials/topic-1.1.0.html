@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computer Systems Fundamentals: Overview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .key-concept {
+            background-color: #e8f4f8;
+            border: 2px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .diagram {
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .analogy {
+            font-style: italic;
+            color: #555;
+            margin: 10px 0;
+            padding-left: 20px;
+            border-left: 3px solid #95a5a6;
+        }
+
+        .breadcrumb {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+        }
+
+        .nav-button {
+            padding: 12px 24px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #2980b9;
+        }
+
+        .nav-button.disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        strong {
+            color: #2c3e50;
+        }
+
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="../blog.html">Learning Hub</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="./hubs/systems.html">Systems</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Computer Systems Fundamentals: Overview</span>
+    </div>
+
+    <div class="container">
+        <h1>Computer Systems Fundamentals: Overview</h1>
+        <p style="color: #666; font-style: italic; margin-bottom: 20px;">Part 1 of 3 — Foundation: Understanding the Bridge Between Software and Hardware</p>
+
+        <div class="warning-box">
+            <strong>Prerequisite:</strong> If you're new to binary, bytes, and data types, start with <a href="topic-0.1.html" style="color: #856404; font-weight: bold;">Topic 0.1: Binary Fundamentals, Data Types & Clock Cycles</a> first! It covers the foundational concepts you'll need.
+        </div>
+
+        <div class="info-box">
+            <strong>Tutorial Series Navigation:</strong>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>Part 1 (Current):</strong> Computer Systems Fundamentals - Overview</li>
+                <li><strong>Part 2:</strong> <a href="topic-1.1.1.html">CPU Architecture & Instruction Execution</a></li>
+                <li><strong>Part 3:</strong> <a href="topic-1.1.2.html">From Source Code to Execution: The Complete Pipeline</a></li>
+            </ul>
+        </div>
+
+        <h2 id="what-is">What Is a Computer System and Why Does It Matter?</h2>
+
+        <p>A <strong>computer system</strong> is the complete integration of <strong>hardware</strong> (physical components) and <strong>software</strong> (programs and operating system) that work together to execute instructions and process data.</p>
+
+        <div class="analogy">
+            <strong>Analogy:</strong> Think of a computer like a <strong>factory</strong>:
+            <ul>
+                <li><strong>Hardware</strong> = The physical building, machinery, conveyor belts, storage rooms</li>
+                <li><strong>Software</strong> = The instructions, blueprints, and procedures that tell workers what to do</li>
+                <li><strong>Operating System</strong> = The factory manager that coordinates everything</li>
+                <li><strong>Applications</strong> = The specific products being manufactured</li>
+            </ul>
+        </div>
+
+        <h3>Why This Matters</h3>
+
+        <p>Before you can optimize code, debug performance issues, or design distributed systems, you need to understand:</p>
+
+        <ol>
+            <li><strong>How programs actually run</strong> — What happens when you click "Run"?</li>
+            <li><strong>Why some code is fast and some is slow</strong> — Hardware constraints matter</li>
+            <li><strong>How software talks to hardware</strong> — The interface between abstraction and reality</li>
+            <li><strong>What the OS actually does</strong> — It's not magic; it's carefully orchestrated resource management</li>
+        </ol>
+
+        <div class="info-box">
+            <strong>Key Insight:</strong> Understanding computer systems bridges the gap between <strong>abstract code</strong> and <strong>physical hardware</strong>. This knowledge is essential for performance optimization, debugging low-level issues, system architecture design, and understanding why certain patterns are best practices.
+        </div>
+
+        <h2 id="von-neumann">The Von Neumann Architecture</h2>
+
+        <h3>What Is It?</h3>
+
+        <p>The <strong>Von Neumann architecture</strong> (named after John von Neumann, 1945) is the fundamental design that nearly all modern computers follow.</p>
+
+        <div class="diagram">┌─────────────────────────────────────────────────┐
+│                                                 │
+│  ┌──────────────────────────────────────┐      │
+│  │     Central Processing Unit (CPU)     │      │
+│  │  ┌────────────┐    ┌───────────────┐ │      │
+│  │  │   Control  │    │   Arithmetic  │ │      │
+│  │  │    Unit    │    │  Logic Unit   │ │      │
+│  │  │    (CU)    │    │     (ALU)     │ │      │
+│  │  └────────────┘    └───────────────┘ │      │
+│  │           ↑                ↑          │      │
+│  │           └────────────────┘          │      │
+│  │              Registers                │      │
+│  └──────────────────────────────────────┘      │
+│                     ↕                           │
+│  ┌──────────────────────────────────────┐      │
+│  │              Memory                   │      │
+│  │  ┌──────────┬──────────┬──────────┐  │      │
+│  │  │Instructions│   Data   │  Stack  │  │      │
+│  │  └──────────┴──────────┴──────────┘  │      │
+│  └──────────────────────────────────────┘      │
+│                     ↕                           │
+│  ┌──────────────────────────────────────┐      │
+│  │          Input/Output (I/O)          │      │
+│  │  Keyboard, Mouse, Disk, Network...   │      │
+│  └──────────────────────────────────────┘      │
+│                                                 │
+└─────────────────────────────────────────────────┘</div>
+
+        <h3>Key Components</h3>
+
+        <h4>1. Central Processing Unit (CPU)</h4>
+        <p>The "brain" that executes instructions.</p>
+
+        <div class="key-concept">
+            <strong>Components:</strong>
+            <ul>
+                <li><strong>Control Unit (CU)</strong>: Orchestrates instruction execution (fetches, decodes, coordinates)</li>
+                <li><strong>Arithmetic Logic Unit (ALU)</strong>: Performs calculations and logical operations (ADD, AND, OR, etc.)</li>
+                <li><strong>Registers</strong>: Ultra-fast storage inside the CPU</li>
+            </ul>
+        </div>
+
+        <h4>2. Memory (RAM)</h4>
+        <p>Stores both <strong>instructions</strong> (your program) and <strong>data</strong> (variables, arrays, etc.).</p>
+
+        <div class="info-box">
+            <strong>Key insight:</strong> In Von Neumann architecture, instructions and data share the same memory space. This is called the <strong>stored-program concept</strong> — the program itself is just data that can be modified.
+        </div>
+
+        <h4>3. Input/Output (I/O)</h4>
+        <p>Allows the computer to communicate with the outside world:</p>
+        <ul>
+            <li><strong>Input</strong>: Keyboard, mouse, network card, disk reads</li>
+            <li><strong>Output</strong>: Screen, speakers, network card, disk writes</li>
+        </ul>
+
+        <h4>4. System Bus</h4>
+        <p>The communication pathway connecting CPU, memory, and I/O:</p>
+        <ul>
+            <li><strong>Data bus</strong>: Carries actual data</li>
+            <li><strong>Address bus</strong>: Specifies memory locations</li>
+            <li><strong>Control bus</strong>: Carries control signals (read/write commands, clock signals)</li>
+        </ul>
+
+        <h2 id="professional-impact">Professional Impact: Why This Matters in Your Code</h2>
+
+        <div class="key-concept">
+            <h3>Real-World Applications of Computer System Knowledge</h3>
+
+            <h4>1. Debugging Performance Issues</h4>
+            <p>When your Spring Boot microservice processes 1M records in 10 minutes but should do it in 30 seconds:</p>
+            <ul>
+                <li><strong>The issue is never what it looks like.</strong> It's usually a memory access pattern problem, not your algorithm.</li>
+                <li><strong>You need to think like the CPU:</strong> Are you accessing memory sequentially or randomly? Are you branch-predicting correctly?</li>
+                <li><strong>Example:</strong> A linked list iteration is 100x slower than array iteration because the CPU's cache prefetching can't help with random memory access.</li>
+            </ul>
+
+            <h4>2. System Design Decisions</h4>
+            <p>When designing your architecture, understanding computer systems informs key decisions:</p>
+            <ul>
+                <li><strong>In-memory vs database:</strong> Understanding register-to-network latency hierarchy helps you choose where to store data.</li>
+                <li><strong>Message queue design:</strong> Should you batch messages or process individually? Understanding context switching cost answers this.</li>
+                <li><strong>Caching strategy:</strong> Should you cache in CPU, in-process, or distributed? Understanding the memory hierarchy guides this.</li>
+                <li><strong>Thread pool sizing:</strong> How many threads create "too many context switches"? Understanding CPU scheduling answers this.</li>
+            </ul>
+
+            <h4>3. Security Implementation</h4>
+            <p>Many security vulnerabilities exist because developers don't understand the computer system:</p>
+            <ul>
+                <li><strong>Stack overflow exploits:</strong> How does the program counter interact with the stack to enable code injection?</li>
+                <li><strong>Timing attacks:</strong> Why can attackers extract secrets by measuring how long operations take?</li>
+                <li><strong>Cache timing attacks:</strong> How does cache behavior leak information about data?</li>
+                <li><strong>Memory safety:</strong> Why do languages like Rust focus on memory safety at compile time?</li>
+            </ul>
+
+            <h4>4. Optimization Opportunities</h4>
+            <p>Understanding the fetch-decode-execute cycle reveals optimization opportunities:</p>
+            <ul>
+                <li><strong>Branch prediction:</strong> Certain code patterns cause more branch prediction misses. Recognizing them improves performance.</li>
+                <li><strong>Instruction ordering:</strong> Sometimes reordering lines of code (same logic) makes it 50% faster due to instruction scheduling.</li>
+                <li><strong>Compiler flags:</strong> Understanding what <code>-O2</code> vs <code>-O3</code> optimizations do helps you tune performance.</li>
+                <li><strong>SIMD operations:</strong> Modern CPUs can process multiple values in one instruction. Understanding this enables 4-8x speedups.</li>
+            </ul>
+
+            <h4>5. Distributed Systems Design</h4>
+            <p>Understanding single-machine computer systems helps you understand distributed systems:</p>
+            <ul>
+                <li><strong>The latency hierarchy extends to networks:</strong> CPU register (1ns) → SSD (100μs) → Network (10ms) → Intercontinental (100ms+)</li>
+                <li><strong>Context switching in distributed systems:</strong> Each RPC call is like a massive context switch. Design accordingly.</li>
+                <li><strong>Batching:</strong> Just like batching memory access is efficient, batching network calls is critical.</li>
+                <li><strong>Consensus algorithms:</strong> Understanding CPU synchronization primitives helps you understand distributed consensus.</li>
+            </ul>
+        </div>
+
+        <h2 id="summary">Summary: Key Takeaways</h2>
+
+        <div class="key-concept">
+            <ol>
+                <li><strong>Von Neumann Architecture:</strong>
+                    <ul>
+                        <li>CPU (CU + ALU + Registers)</li>
+                        <li>Memory (Instructions + Data share same space)</li>
+                        <li>I/O (Input/Output devices)</li>
+                        <li>System Bus (Data, Address, Control)</li>
+                    </ul>
+                </li>
+
+                <li><strong>Stored-Program Concept:</strong>
+                    <ul>
+                        <li>Programs and data share the same memory</li>
+                        <li>Programs are just data that can be modified</li>
+                        <li>This enables self-modifying code and modern computing</li>
+                    </ul>
+                </li>
+
+                <li><strong>Professional Relevance:</strong>
+                    <ul>
+                        <li>Understanding systems helps debug performance issues</li>
+                        <li>Informs architecture and design decisions</li>
+                        <li>Essential for security implementation</li>
+                        <li>Reveals optimization opportunities</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <div class="success-box">
+            <p><strong>What's Next?</strong></p>
+            <p>In Part 2, we'll dive deep into CPU internals to understand:</p>
+            <ul>
+                <li>How registers work and why they're incredibly fast</li>
+                <li>The fetch-decode-execute cycle in detail</li>
+                <li>How the ALU and Control Unit coordinate</li>
+                <li>What instruction set architectures (ISAs) are</li>
+            </ul>
+        </div>
+
+        <hr style="margin: 40px 0; border: none; border-top: 2px solid #ddd;">
+
+        <div style="background-color: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; margin: 20px 0; border-radius: 5px;">
+            <strong>Related Topics:</strong><br>
+            → <a href="topic-1.1-advanced.html">Advanced: Memory Management & Assembly Deep Dive</a><br>
+            → <a href="topic-1.2.html">Topic 1.2: CPU Optimization</a><br>
+            → <a href="topic-0.1.html">Topic 0.1: Binary Fundamentals</a>
+        </div>
+
+        <div class="navigation">
+            <a href="#" class="nav-button disabled">← Previous</a>
+            <a href="topic-1.1.1.html" class="nav-button">Next: CPU Architecture →</a>
+        </div>
+
+        <p style="text-align: center; color: #777; font-size: 0.9em; margin-top: 30px;">
+            <strong>Computer Systems Tutorial Series</strong><br>
+            Part 1 of 3: Computer Systems Fundamentals
+        </p>
+    </div>
+</body>
+</html>

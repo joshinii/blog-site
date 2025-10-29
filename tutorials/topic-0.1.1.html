@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory, Pointers & Data Layout</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        h5 {
+            color: #666;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-size: 1.0em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .danger-box {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.4;
+            border: 1px solid #e0e7f0;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .diagram {
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .key-concept {
+            background-color: #e8f4f8;
+            border: 2px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .analogy {
+            font-style: italic;
+            color: #555;
+            margin: 10px 0;
+            padding: 15px;
+            padding-left: 20px;
+            border-left: 3px solid #95a5a6;
+            background-color: #f9f9f9;
+        }
+
+        .visual-example {
+            background-color: #f0f8ff;
+            border: 2px solid #87ceeb;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+        }
+
+        .nav-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: #2980b9;
+        }
+
+        .breadcrumb {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+            font-size: 0.95em;
+        }
+
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+            pre {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="../blog.html">Learning Hub</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="./hubs/fundamentals.html">Fundamentals</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Memory, Pointers & Data Layout</span>
+    </div>
+
+    <div class="container">
+        <h1>Memory, Pointers & Data Layout</h1>
+        <p style="color: #666; font-style: italic; margin-bottom: 20px;">Understanding Memory Addresses, Pointers, and How Data is Physically Arranged</p>
+
+        <div class="key-concept">
+            <h3>What You'll Learn</h3>
+            <ul>
+                <li><strong>Memory Addressing</strong> - How the OS and hardware assign addresses</li>
+                <li><strong>Pointers</strong> - What they are and how they work at the hardware level</li>
+                <li><strong>Endianness</strong> - Big-endian vs little-endian byte ordering</li>
+                <li><strong>Struct Alignment</strong> - Why structs aren't always the size you expect</li>
+                <li><strong>Memory Protection</strong> - How hardware prevents unauthorized access</li>
+            </ul>
+        </div>
+
+        <div class="warning-box">
+            <strong>Prerequisites:</strong>
+            <ul style="margin-bottom: 0;">
+                <li><a href="topic-0.1.0.html" style="color: #856404; font-weight: bold;">Topic 0.1.0: Binary & Data Representation</a> - Understanding bits, bytes, and data types</li>
+                <li>Basic understanding of programming concepts</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <strong>Why This Matters</strong><br><br>
+            Understanding memory layout is crucial for:
+            <ul style="margin-top: 10px;">
+                <li><strong>Performance optimization</strong> - Cache-friendly data structures</li>
+                <li><strong>Debugging</strong> - Understanding pointer errors and segmentation faults</li>
+                <li><strong>Security</strong> - How buffer overflows exploit memory layout</li>
+                <li><strong>Systems programming</strong> - Writing efficient low-level code</li>
+            </ul>
+        </div>
+
+        <h2 id="memory-addressing">1. Memory Addressing</h2>
+
+        <h3>How Memory Addresses Are Assigned</h3>
+
+        <p>Memory addresses don't appear magically. They're determined through a layered process involving the <strong>compiler</strong>, <strong>operating system</strong>, and <strong>hardware</strong>:</p>
+
+        <div class="key-concept">
+            <h4>Role of the Compiler</h4>
+            <p>When you write <code>int age = 42;</code>, the compiler:</p>
+            <ul>
+                <li>Allocates space for the variable in a specific memory region (stack, data segment, or heap)</li>
+                <li>Assigns a <strong>symbolic name</strong> (like <code>age</code>) to that location</li>
+                <li>Generates machine code that references this location using memory addresses</li>
+                <li><strong>Does NOT assign the final physical address</strong> - that comes later from the OS</li>
+            </ul>
+
+            <h4>Role of the Operating System</h4>
+            <p>At runtime, the OS manages actual memory allocation:</p>
+            <ul>
+                <li>Uses <strong>virtual memory</strong> to give each process its own address space (0x00000000 to 0xFFFFFFFF on a 32-bit system)</li>
+                <li>Maintains page tables that map virtual addresses → physical RAM addresses</li>
+                <li>Allocates stack space, heap space, and loads your program's code and data segments</li>
+                <li>Assigns the actual virtual addresses your code sees at runtime</li>
+            </ul>
+
+            <h4>Role of the Hardware (Memory Management Unit - MMU)</h4>
+            <p>The MMU translates addresses during execution:</p>
+            <ul>
+                <li>When the CPU requests data at virtual address 0x1000, the MMU looks up the page table</li>
+                <li>Translates 0x1000 (virtual) → actual physical RAM address (e.g., 0x87654321)</li>
+                <li>This translation happens <strong>transparently for every memory access</strong></li>
+                <li>Enables multiple processes to use the same virtual addresses without conflict</li>
+            </ul>
+        </div>
+
+        <div class="analogy">
+            <strong>The Street Address Analogy</strong><br><br>
+            Think of computer memory like houses on a street:
+            <ul>
+                <li><strong>Compiler</strong> = City planner who decides "this house goes in neighborhood X"</li>
+                <li><strong>Operating System</strong> = City government that assigns actual street addresses during construction</li>
+                <li><strong>Hardware (MMU)</strong> = GPS system that translates "visit the house called 'age'" → actual street address</li>
+                <li><strong>Pointer</strong> = A piece of paper with the address written on it</li>
+            </ul>
+            Instead of moving the house (copying data), you can just pass around the address (pointer) - much faster!
+        </div>
+
+        <h3>Memory Segmentation</h3>
+
+        <p>The computer knows what something is based on <strong>WHERE it's stored in memory</strong>. The CPU uses <strong>segment registers</strong> to track which memory regions belong to code, data, stack, and heap.</p>
+
+        <div class="visual-example">
+            <h4>How the CPU Knows Which Segment You're Accessing</h4>
+            <p>Modern CPUs use <strong>segment registers</strong> to define segment boundaries:</p>
+            <ul>
+                <li><strong>Code Segment (CS)</strong> register: Points to where instructions live</li>
+                <li><strong>Data Segment (DS)</strong> register: Points to where global/static data lives</li>
+                <li><strong>Stack Segment (SS)</strong> register: Points to where the stack grows</li>
+                <li><strong>Extra Segment (ES)</strong> register: Additional data segment</li>
+            </ul>
+        </div>
+
+        <div class="visual-example">
+            <pre><code>Memory is divided into segments:
+
+Address Range    Segment        Content Type      CPU Treats As
+─────────────────────────────────────────────────────────────
+0x0000-0x0FFF    Text/Code      Instructions      Execute these
+0x1000-0x1FFF    Data           Numbers/text      Read/write these
+0x2000-0x2FFF    Stack          Function data     Read/write these
+0x3000-0x3FFF    Heap           Dynamic data      Read/write these
+
+Segment Registers Store:
+Code Segment (CS):  Base = 0x0000, Limit = 0x1000
+Data Segment (DS):  Base = 0x1000, Limit = 0x1000
+Stack Segment (SS): Base = 0x2000, Limit = 0x1000
+Heap:               Base = 0x3000, Limit = 0x1000
+
+Example scenario:
+Memory[0x0100] = 01000001 01000001 01000001 01000001
+Memory[0x1100] = 01000001 01000001 01000001 01000001
+
+SAME bit pattern, but:
+- At 0x0100: Within CS range → CPU treats as INSTRUCTION
+- At 0x1100: Within DS range → CPU treats as DATA
+
+If you try to access 0x0100 for DATA, or 0x1100 for INSTRUCTIONS,
+the CPU raises a segmentation fault!</code></pre>
+        </div>
+
+        <h2 id="pointers">2. Pointers and Addresses</h2>
+
+        <h3>What is a Pointer?</h3>
+
+        <p>A <strong>pointer</strong> is a data type that stores a memory address - it "points to" where data is located.</p>
+
+        <div class="visual-example">
+            <h4>Example: Pointer in Memory</h4>
+            <pre><code>Memory Address    Content           Description
+┌──────────────┬──────────────┬────────────────────────┐
+│ 0x1000       │ 42           │ int age = 42           │
+│ 0x1004       │ 0x1000       │ int *ptr = &age        │
+│              │              │ (ptr stores address    │
+│              │              │  where age is located) │
+└──────────────┴──────────────┴────────────────────────┘
+
+The pointer doesn't contain 42, it contains the address 0x1000
+
+What happens when you access *ptr:
+1. CPU finds 0x1004 (where ptr is stored)
+2. Reads the value at 0x1004 → 0x1000
+3. Interprets 0x1000 as a memory address (another lookup)
+4. Accesses the actual data at 0x1000 → 42</code></pre>
+        </div>
+
+        <h2 id="endianness">3. Endianness: Byte Ordering</h2>
+
+        <h3>What is Endianness?</h3>
+
+        <p><strong>Endianness</strong> determines the order in which bytes are stored in memory for multi-byte values.</p>
+
+        <div class="key-concept">
+            <h4>Two Main Types:</h4>
+            <ul>
+                <li><strong>Big-Endian</strong>: Most significant byte first (like reading left to right)</li>
+                <li><strong>Little-Endian</strong>: Least significant byte first (reversed order)</li>
+            </ul>
+        </div>
+
+        <div class="visual-example">
+            <h4>Example: Storing 0x12345678</h4>
+            <pre><code>Value: 0x12345678 (a 4-byte integer)
+
+Big-Endian (used by network protocols, some CPUs):
+Address:  0x1000   0x1001   0x1002   0x1003
+Byte:     0x12     0x34     0x56     0x78
+          ↑ Most significant byte first
+
+Little-Endian (used by x86, x64, ARM):
+Address:  0x1000   0x1001   0x1002   0x1003
+Byte:     0x78     0x56     0x34     0x12
+          ↑ Least significant byte first
+
+Why it matters:
+- Network data is big-endian (network byte order)
+- x86 CPUs are little-endian
+- Need to convert when sending/receiving over network!</code></pre>
+        </div>
+
+        <div class="warning-box">
+            <strong>Real-World Impact</strong><br>
+            When reading binary files or network data, endianness matters:
+            <pre><code>// Reading a 32-bit integer from network
+uint32_t network_value = 0x12345678;  // Big-endian
+uint32_t host_value = ntohl(network_value);  // Convert to host byte order
+
+// On little-endian system (x86):
+// network_value bytes: 0x12 0x34 0x56 0x78
+// host_value bytes:    0x78 0x56 0x34 0x12</code></pre>
+        </div>
+
+        <h2 id="struct-alignment">4. Data Layout and Struct Alignment</h2>
+
+        <h3>Why Structs Aren't Always the Size You Expect</h3>
+
+        <p>The compiler adds <strong>padding</strong> between struct members to align them to memory boundaries for faster access.</p>
+
+        <div class="visual-example">
+            <h4>Example: Struct Padding</h4>
+            <pre><code>struct Example {
+    char a;     // 1 byte
+    int b;      // 4 bytes
+    char c;     // 1 byte
+};
+
+Expected size: 1 + 4 + 1 = 6 bytes
+Actual size: 12 bytes (with padding!)
+
+Memory layout:
+┌────┬───┬───┬───┬────┬────┬────┬────┬────┬───┬───┬───┐
+│ a  │PAD│PAD│PAD│  b (4 bytes)      │ c  │PAD│PAD│PAD│
+└────┴───┴───┴───┴────┴────┴────┴────┴────┴───┴───┴───┘
+ 0x00                0x04            0x08            0x0C
+
+Why padding?
+- 'b' (int) must be aligned to 4-byte boundary (0x04)
+- Entire struct must be aligned to largest member size (4 bytes)
+- This makes memory access faster (CPU can fetch in single operation)</code></pre>
+        </div>
+
+        <div class="visual-example">
+            <h4>Optimized Struct Layout</h4>
+            <pre><code>// Bad order (lots of padding):
+struct Bad {
+    char a;     // 1 byte
+    int b;      // 4 bytes (needs 3 bytes padding before)
+    char c;     // 1 byte (needs 3 bytes padding after)
+};  // Total: 12 bytes
+
+// Good order (minimal padding):
+struct Good {
+    int b;      // 4 bytes (aligned)
+    char a;     // 1 byte
+    char c;     // 1 byte
+};  // Total: 8 bytes (2 bytes padding at end)
+
+Rule: Order struct members from largest to smallest to minimize padding!</code></pre>
+        </div>
+
+        <h2 id="hardware-protection">5. Hardware Memory Protection</h2>
+
+        <h3>Execute-Disable Bit (NX/XD)</h3>
+
+        <p>Modern CPUs have hardware features that prevent unauthorized memory access:</p>
+
+        <div class="warning-box">
+            <strong>Security Feature: Memory Segment Permissions</strong>
+
+            <h4>Which Segments Are Writable?</h4>
+            <ul>
+                <li><strong>Code segment:</strong> Read-ONLY, Executable (prevents code modification)</li>
+                <li><strong>Data segment:</strong> Read-Write, Non-executable</li>
+                <li><strong>Stack segment:</strong> Read-Write, Non-executable</li>
+                <li><strong>Heap segment:</strong> Read-Write, Non-executable</li>
+            </ul>
+
+            <h4>What Happens If You Try to Write to Code?</h4>
+            <pre><code>Try to write: age = 50; // (normal, allowed)
+Memory segment: DATA segment
+CPU checks: Is this segment writable? YES ✓
+Result: Write succeeds
+
+Try to modify code: programCode = maliciousCode; // (attacker's plan)
+Memory segment: CODE segment
+CPU checks: Is this segment writable? NO ✗
+CPU raises: SEGMENTATION FAULT
+Result: Program crashes, attacker blocked!</code></pre>
+
+            <h4>What Happens If You Try to Execute Data?</h4>
+            <pre><code>Normal execution: PC = 0x0100 (code segment)
+CPU checks: Is this segment executable? YES ✓
+Result: Instruction executed
+
+Attacker tries: PC = 0x1100 (data segment)
+CPU checks: Is this segment executable? NO ✗
+CPU raises: SEGMENTATION FAULT
+Result: Code injection prevented!</code></pre>
+        </div>
+
+        <h2 id="practical-examples">6. Practical Examples</h2>
+
+        <div class="visual-example">
+            <h4>Example 1: Pointer Arithmetic</h4>
+            <pre><code>#include <stdio.h>
+
+int main() {
+    int arr[] = {10, 20, 30, 40};
+    int *ptr = arr;  // Points to first element
+
+    printf("ptr points to: %p\n", (void*)ptr);
+    printf("Value: %d\n", *ptr);  // 10
+
+    ptr++;  // Move to next int (adds 4 bytes, not 1!)
+    printf("ptr now points to: %p\n", (void*)ptr);
+    printf("Value: %d\n", *ptr);  // 20
+
+    // Array layout in memory:
+    // Address    Value
+    // 0x1000     10    <- arr[0], ptr initially
+    // 0x1004     20    <- arr[1], ptr after ptr++
+    // 0x1008     30    <- arr[2]
+    // 0x100C     40    <- arr[3]
+}
+
+Key insight: ptr++ adds sizeof(int) bytes, not 1 byte!
+This is why pointer arithmetic works correctly for arrays.</code></pre>
+        </div>
+
+        <div class="visual-example">
+            <h4>Example 2: Struct Alignment in Practice</h4>
+            <pre><code>#include <stdio.h>
+
+struct Unoptimized {
+    char a;      // 1 byte
+    int b;       // 4 bytes
+    char c;      // 1 byte
+    double d;    // 8 bytes
+};
+
+struct Optimized {
+    double d;    // 8 bytes
+    int b;       // 4 bytes
+    char a;      // 1 byte
+    char c;      // 1 byte
+};
+
+int main() {
+    printf("Unoptimized size: %zu bytes\n", sizeof(struct Unoptimized));
+    printf("Optimized size: %zu bytes\n", sizeof(struct Optimized));
+
+    // Output:
+    // Unoptimized size: 24 bytes (lots of padding!)
+    // Optimized size: 16 bytes (minimal padding)
+
+    // Memory saved: 8 bytes per struct
+    // With 1 million structs: 8 MB saved!
+}</code></pre>
+        </div>
+
+        <h3>Common Memory Issues</h3>
+
+        <div class="danger-box">
+            <h4>Issue 1: Buffer Overflow</h4>
+            <pre><code>char buffer[10];
+strcpy(buffer, "This is way too long!");  // Overwrites adjacent memory!
+
+// What happens:
+// buffer occupies 0x1000-0x1009 (10 bytes)
+// strcpy writes beyond 0x1009
+// Overwrites whatever comes next in memory
+// Could overwrite return address → attacker executes malicious code!</code></pre>
+
+            <h4>Issue 2: Dangling Pointer</h4>
+            <pre><code>int *ptr = malloc(sizeof(int));
+*ptr = 42;
+free(ptr);  // Memory deallocated
+*ptr = 50;  // DANGER! Writing to freed memory
+
+// ptr still contains the address, but memory is freed
+// This is undefined behavior - could crash or corrupt data</code></pre>
+
+            <h4>Issue 3: Stack Smashing</h4>
+            <pre><code>void vulnerable() {
+    char buffer[8];
+    gets(buffer);  // No bounds checking!
+}
+
+// Attacker sends 100 bytes → overwrites return address
+// Function returns to attacker's code instead of caller
+// This is how many exploits work!</code></pre>
+        </div>
+
+        <div class="success-box">
+            <h3>Key Takeaways</h3>
+            <ul>
+                <li>Memory addresses are assigned by compiler, OS, and hardware working together</li>
+                <li>Pointers store addresses, not values - dereferencing follows the address to get the data</li>
+                <li>Endianness matters when reading binary data or network communication</li>
+                <li>Struct padding is added for alignment - order members by size to minimize waste</li>
+                <li>Hardware memory protection prevents executing data or modifying code</li>
+                <li>Understanding memory layout helps prevent security vulnerabilities</li>
+            </ul>
+        </div>
+
+        <div class="nav-links">
+            <a href="topic-0.1.0.html" class="nav-link">← Previous: Binary & Data Representation</a>
+            <a href="../blog.html" class="nav-link">Back to Blog</a>
+            <a href="topic-0.1.0.html" class="nav-link">Back to Overview</a>
+        </div>
+
+        <hr style="margin: 40px 0; border: none; border-top: 2px solid #ddd;">
+
+        <div style="background-color: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; margin: 20px 0; border-radius: 5px;">
+            <strong>Related Topics:</strong><br>
+            → <a href="topic-0.1.0.html">Topic 0.1.0: Binary & Data Representation</a><br>
+            → <a href="topic-0.3.html">Topic 0.3: Memory Addressing & Pointers</a><br>
+            → <a href="topic-1.4.html">Topic 1.4: Memory Hierarchy</a><br>
+            → <a href="topic-1.6.html">Topic 1.6: Cache Optimization</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storage & I/O Systems</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.4;
+            border: 1px solid #e0e7f0;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .diagram {
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .key-concept {
+            background-color: #e8f4f8;
+            border: 2px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .prerequisite {
+            background-color: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .next-topic {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .toc {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="../blog.html">Learning Hub</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="./hubs/memory-storage.html">Memory Storage</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Storage & I/O Systems</span>
+    </div>
+
+    <div class="container">
+        <h1>Storage & I/O Systems</h1>
+
+        <div class="prerequisite">
+            <strong>Prerequisites:</strong> Topic 0.2 (Clock Cycles & Timing), Topic 1.1 (CPU & Instruction Execution), Topic 1.3 (Operating Systems)
+        </div>
+
+        <div class="toc">
+            <h3>Topics Covered</h3>
+            <ol>
+                <li>Disk Architecture & Mechanics</li>
+                <li>I/O Characteristics & Performance</li>
+                <li>Interrupts and DMA</li>
+                <li>File Systems & Inodes</li>
+                <li>I/O Scheduling</li>
+                <li>Solid State Drives (SSDs)</li>
+                <li>Storage Hierarchy & Caching</li>
+                <li>Professional Impact</li>
+            </ol>
+        </div>
+
+        <h2 id="introduction">Introduction: Storage as the System Bottleneck</h2>
+
+        <p>CPU and RAM are fast but expensive; disk storage is slow but cheap. Understanding how the operating system manages this I/O subsystem is critical for designing scalable, reliable, and performant systems.</p>
+
+        <p>From Topic 0.2 (Clock Cycles), you learned that disk access is the slowest operation: ~10 milliseconds compared to nanoseconds for RAM. This single fact shapes systems architecture decisions:</p>
+
+        <ul>
+            <li><strong>Caching</strong> becomes essential (keep hot data in fast storage)</li>
+            <li><strong>Sequential access</strong> is optimized over random access (1000× faster)</li>
+            <li><strong>I/O scheduling</strong> must minimize disk head movement</li>
+            <li><strong>Database design</strong> revolves around minimizing disk seeks</li>
+            <li><strong>System reliability</strong> depends on understanding disk failure modes</li>
+        </ul>
+
+        <p>This topic consolidates disk I/O, filesystems, and I/O scheduling that was scattered across operating systems topics. By the end, you'll understand the complete storage subsystem from mechanical disks through the OS to application code.</p>
+
+        <h2 id="disk-architecture">1. Disk Architecture & Mechanics</h2>
+
+        <h3>Mechanical Hard Disk Drive (HDD) Structure</h3>
+
+        <p>A hard disk drive consists of several mechanical components:</p>
+
+        <ul>
+            <li><strong>Platters:</strong> Spinning magnetic disks (typically 3600-7200 RPM for consumer, 10,000-15,000 RPM for enterprise)</li>
+            <li><strong>Read/Write Heads:</strong> Electromagnetic sensors on an actuator arm</li>
+            <li><strong>Tracks:</strong> Concentric circular paths on each platter where data is written</li>
+            <li><strong>Sectors:</strong> Fixed-size chunks of data (typically 4 KB)</li>
+            <li><strong>Cylinders:</strong> The same track number across multiple platters (for multi-platter drives)</li>
+            <li><strong>Actuator Arm:</strong> Mechanical arm that moves the heads across tracks</li>
+        </ul>
+
+        <h3>Understanding Access Time</h3>
+
+        <p>The total time to read or write a sector consists of three components:</p>
+
+        <div class="key-concept">
+            <h4>Access Time Breakdown</h4>
+            <pre><code>Total Access Time = Seek Time + Rotational Latency + Transfer Time
+
+SEEK TIME:
+  Time for the actuator arm to move from current track to target track
+  Typical value: 2-15 milliseconds (average ~10 ms)
+  This is the LARGEST component for random access
+
+ROTATIONAL LATENCY:
+  Time waiting for the target sector to rotate under the read head
+  Depends on rotation speed:
+    3600 RPM → ~16.7 ms per full rotation → avg 8.3 ms
+    7200 RPM → ~8.3 ms per full rotation → avg 4.2 ms
+  Average latency = half a rotation
+
+TRANSFER TIME:
+  Time to actually read/write the sector from/to the platter
+  Negligible compared to seek + rotation
+  For 7200 RPM and 4 KB sectors: ~0.05 ms
+
+TOTAL RANDOM ACCESS TIME:
+  10 ms (seek) + 4 ms (rotation) + 0.05 ms (transfer) = ~14 ms per operation
+
+SEQUENTIAL ACCESS TIME:
+  After first sector, heads are already in position
+  Mostly just rotational latency and transfer time
+  ~0.05 ms per sector when reading sequentially</code></pre>
+        </div>
+
+        <p><strong>Critical insight:</strong> A single random disk access takes 14 milliseconds. Sequential accesses take ~50 microseconds. That's a 280× difference! This is why database indexes and sequential I/O optimization are so important.</p>
+
+        <h2 id="io-characteristics">2. I/O Characteristics & Performance</h2>
+
+        <h3>IOPS vs Throughput</h3>
+
+        <p>Two different metrics matter for disk performance depending on your workload:</p>
+
+        <table>
+            <tr>
+                <th>Metric</th>
+                <th>Definition</th>
+                <th>HDD (7200 RPM)</th>
+                <th>SSD</th>
+            </tr>
+            <tr>
+                <td><strong>IOPS</strong></td>
+                <td>I/O Operations Per Second (random access)</td>
+                <td>~100-200</td>
+                <td>~100,000+</td>
+            </tr>
+            <tr>
+                <td><strong>Throughput</strong></td>
+                <td>Bytes per second (sequential access)</td>
+                <td>~150-200 MB/s</td>
+                <td>~500+ MB/s</td>
+            </tr>
+            <tr>
+                <td><strong>Random Latency</strong></td>
+                <td>Time for single random operation</td>
+                <td>~10-20 ms</td>
+                <td>~1-10 µs</td>
+            </tr>
+            <tr>
+                <td><strong>Sequential Latency</strong></td>
+                <td>Time per operation (amortized)</td>
+                <td>~0.5 ms</td>
+                <td>~0.1 ms</td>
+            </tr>
+        </table>
+
+        <h3>Why Disk I/O is the Bottleneck</h3>
+
+        <p>Complete latency hierarchy from Topic 0.2:</p>
+
+        <pre><code>L1 Cache:     4 nanoseconds
+L2 Cache:     12 nanoseconds
+RAM:          200 nanoseconds
+SSD:          1 microsecond (1,000 ns)
+HDD:          10 milliseconds (10,000,000 ns)
+
+A single HDD access is 5,000,000× slower than RAM!
+An SSD access is 5,000× slower than RAM</code></pre>
+
+        <p>This explains:</p>
+        <ul>
+            <li>Why in-memory caching is critical</li>
+            <li>Why SSDs are replacing HDDs in databases</li>
+            <li>Why database indexing is essential (avoid random disk access)</li>
+            <li>Why data structures are designed to minimize disk I/O</li>
+            <li>Why batch processing is preferred over individual requests</li>
+        </ul>
+
+        <h2 id="interrupts-dma">3. Interrupts and Direct Memory Access (DMA)</h2>
+
+        <h3>Naive Approach: CPU Polling</h3>
+
+        <p>Without DMA, the CPU would need to wait for I/O operations:</p>
+
+        <div class="warning-box">
+            <h4>Inefficient Polling Approach</h4>
+            <pre><code>// Bad: CPU wastes time waiting
+disk.send_read_command(sector_number);
+
+// CPU busy-waits for ~14 milliseconds
+while (!disk.ready()) {
+    // CPU does nothing useful
+    // Cannot handle other requests
+    // Cannot run other processes
+}
+
+data = disk.read_buffer();</code></pre>
+        </div>
+
+        <p>During this 14 ms wait, the CPU is completely idle. In a system handling thousands of requests, this is wasteful.</p>
+
+        <h3>Interrupt-Driven I/O</h3>
+
+        <p>Solution: Let the disk interrupt the CPU when the operation completes:</p>
+
+        <pre><code>// Better: CPU can do other work
+disk.send_read_command(sector_number);
+
+// CPU schedules other processes/requests
+// ... handle other I/O ...
+// ... run other threads ...
+
+// When disk completes:
+interrupt_handler() {
+    data = disk.read_buffer();
+    notify_waiting_process(data);
+}</code></pre>
+
+        <p><strong>Benefit:</strong> During the 14 ms disk I/O, the CPU can service hundreds of other requests. Much more efficient!</p>
+
+        <h3>Direct Memory Access (DMA)</h3>
+
+        <p>Even better: let the disk write directly to memory without CPU intervention:</p>
+
+        <pre><code>// Best: CPU completely free
+dma_controller.setup(
+    source = disk_sector,
+    destination = memory_address,
+    size = 4096 bytes
+);
+
+disk.send_read_command(sector_number);
+
+// CPU completely free to do other work
+// Disk writes directly to RAM via DMA
+// When done, disk sends interrupt
+
+dma_interrupt_handler() {
+    notify_waiting_process(data);
+}</code></pre>
+
+        <p><strong>Benefits:</strong></p>
+        <ul>
+            <li><strong>CPU never blocked:</strong> Can handle other requests completely</li>
+            <li><strong>Maximum throughput:</strong> Data transfers at full disk speed</li>
+            <li><strong>Reduced latency:</strong> Other processes don't wait for I/O</li>
+            <li><strong>Better system responsiveness:</strong> Interactive apps stay responsive</li>
+        </ul>
+
+        <h2 id="file-systems">4. File Systems & Inodes</h2>
+
+        <p>The filesystem abstracts disk sectors into a hierarchical namespace of files and directories. The key data structure is the inode.</p>
+
+        <h3>Inode Structure</h3>
+
+        <p>Each file is represented by an inode (index node):</p>
+
+        <pre><code>struct inode {
+    uint64_t size;              // File size in bytes
+    uint32_t mode;              // Permissions (rwxrwxrwx)
+    uint32_t uid, gid;          // Owner and group IDs
+    uint32_t atime, mtime, ctime; // Access, modify, change times
+    uint32_t block_pointers[12]; // Direct block pointers (12 blocks)
+    uint32_t indirect_pointer;   // Single indirect block (points to more blocks)
+    uint32_t double_indirect;    // Double indirect block
+    uint32_t triple_indirect;    // Triple indirect block (for very large files)
+}</code></pre>
+
+        <p><strong>Block pointers:</strong> Point to disk sectors containing the file's data. For large files, indirect pointers point to other blocks containing more block pointers, creating a tree structure.</p>
+
+        <h3>Directory Structure</h3>
+
+        <p>Directories are special files containing mappings from filenames to inode numbers:</p>
+
+        <pre><code>Directory: /home/user/documents/
+├── "file1.txt"  → inode 12345
+├── "file2.pdf"  → inode 12346
+├── "report.doc" → inode 12347
+└── "archive"    → inode 12348 (subdirectory)
+
+File lookup: /home/user/documents/file1.txt
+1. Start at root directory (well-known inode location)
+2. Look up "home" in root directory → get inode N1
+3. Look up "user" in directory N1 → get inode N2
+4. Look up "documents" in directory N2 → get inode N3
+5. Look up "file1.txt" in directory N3 → get inode 12345
+6. Read inode 12345 and follow block pointers to file data</code></pre>
+
+        <h3>Allocation Strategies</h3>
+
+        <ul>
+            <li><strong>Contiguous allocation:</strong> Allocate consecutive disk blocks (fast for sequential access, causes fragmentation)</li>
+            <li><strong>Extent-based:</strong> Allocate in extents (groups of consecutive blocks), modern and efficient</li>
+            <li><strong>B-tree based:</strong> Use B-trees for efficient indexing of very large files</li>
+            <li><strong>Log-structured:</strong> Sequentially log all writes for crash recovery (used in modern journaling filesystems)</li>
+        </ul>
+
+        <p>Modern filesystems (ext4, Btrfs, APFS, NTFS) use extents or B-trees to minimize seek time and prevent fragmentation.</p>
+
+        <h2 id="io-scheduling">5. I/O Scheduling Algorithms</h2>
+
+        <p>The operating system must schedule disk operations efficiently, similar to CPU scheduling (Topic 1.3). Different algorithms optimize for throughput, fairness, or latency.</p>
+
+        <h3>FIFO (First-In-First-Out)</h3>
+
+        <p>Service requests in the order they arrive—simple but often inefficient:</p>
+
+        <pre><code>Queue of requests:
+  Seek to track 0, then 50, then 5, then 100, then 20
+
+Starting position: track 0
+
+Execution order: 0 → 50 → 5 → 100 → 20
+Total seek distance: 50 + 45 + 95 + 80 = 270 tracks
+
+Why inefficient? Head moves far when jumping from 50→5→100</code></pre>
+
+        <h3>LOOK Algorithm (Elevator Algorithm)</h3>
+
+        <p>Service requests in the direction the arm is moving (like an elevator):</p>
+
+        <pre><code>Same queue: 0, 50, 5, 100, 20
+Starting position: 0, moving right
+
+Sweep RIGHT first (ascending tracks):
+  0 → 5 → 20 → 50 → 100
+  Seek distance: 5 + 15 + 30 + 50 = 100 tracks
+
+Then sweep LEFT (descending tracks):
+  (if more requests exist below 0)
+
+Total distance: 100 (vs 270 with FIFO)
+This is ~2.7× better than FIFO!</code></pre>
+
+        <p><strong>Why LOOK is better:</strong></p>
+        <ul>
+            <li>Minimizes total seek distance</li>
+            <li>Prevents head starvation (all requests eventually serviced)</li>
+            <li>Scales with request patterns</li>
+            <li>Modern disks use variants of LOOK internally</li>
+        </ul>
+
+        <h2 id="ssds">6. Solid State Drives (SSDs) vs Mechanical Drives</h2>
+
+        <p>SSDs have fundamentally different performance characteristics:</p>
+
+        <table>
+            <tr>
+                <th>Aspect</th>
+                <th>Mechanical HDD</th>
+                <th>SSD</th>
+            </tr>
+            <tr>
+                <td>Random IOPS</td>
+                <td>100-200</td>
+                <td>100,000+ (500-1000× better)</td>
+            </tr>
+            <tr>
+                <td>Sequential throughput</td>
+                <td>150-200 MB/s</td>
+                <td>500-3000 MB/s (3-15× better)</td>
+            </tr>
+            <tr>
+                <td>Random latency</td>
+                <td>10-20 ms</td>
+                <td>1-10 microseconds (1000-10000× better)</td>
+            </tr>
+            <tr>
+                <td>Seek optimization</td>
+                <td>Required (expensive)</td>
+                <td>Not needed (access all locations equally fast)</td>
+            </tr>
+            <tr>
+                <td>Wear leveling</td>
+                <td>N/A</td>
+                <td>Required (to manage limited write cycles)</td>
+            </tr>
+            <tr>
+                <td>Internal GC</td>
+                <td>N/A</td>
+                <td>Required (reclaim invalid pages)</td>
+            </tr>
+        </table>
+
+        <h3>NAND Flash Technology</h3>
+
+        <p>SSDs use NAND flash memory cells that store electrons on a floating gate:</p>
+
+        <ul>
+            <li><strong>MLC (Multi-Level Cell):</strong> Stores 2 bits per cell, ~10,000 write cycles</li>
+            <li><strong>TLC (Triple-Level Cell):</strong> Stores 3 bits per cell, ~1,000 write cycles</li>
+            <li><strong>QLC (Quad-Level Cell):</strong> Stores 4 bits per cell, ~100-300 write cycles</li>
+        </ul>
+
+        <p><strong>Important:</strong> NAND cells can only endure limited write cycles. This is managed by wear leveling and garbage collection.</p>
+
+        <h3>Wear Leveling</h3>
+
+        <p>SSDs must spread writes evenly across all cells to maximize lifespan:</p>
+
+        <pre><code>Without wear leveling:
+  First writes go to cells 0-100
+  Those cells exhaust 1000 write cycles
+  Drive fails even though cells 100-1000 are unused
+
+With wear leveling:
+  OS writes 1000 blocks, SSD firmware remaps to cells:
+    0, 101, 202, 303, 404, ... (spread across all cells)
+  All cells wear evenly
+  Drive lasts 1000× longer</code></pre>
+
+        <h3>Garbage Collection</h3>
+
+        <p>When you delete a file or update a block, the SSD firmware must reclaim those pages:</p>
+
+        <ol>
+            <li>Mark old pages as invalid (free space)</li>
+            <li>Copy valid pages to a new erase block</li>
+            <li>Erase the old block (expensive operation, ~1-10 ms)</li>
+            <li>Add erased block to free pool</li>
+        </ol>
+
+        <p><strong>Implication:</strong> SSD garbage collection can cause latency spikes. This is a known issue for real-time systems.</p>
+
+        <h2 id="storage-hierarchy">7. Storage Hierarchy & Caching</h2>
+
+        <p>The complete latency hierarchy including disk storage:</p>
+
+        <pre><code>Register:       0.5 ns     (CPU internal)
+L1 Cache:       4 ns       (32-64 KB per core)
+L2 Cache:       12 ns      (256 KB per core)
+L3 Cache:       40 ns      (8-20 MB shared)
+RAM:            200 ns     (billions of bytes)
+SSD:            1 µs       (terabytes)
+HDD:            10 ms      (terabytes)
+
+Speed ratios:
+  RAM is 5,000× faster than SSD
+  SSD is 10,000× faster than HDD
+  RAM is 50,000,000× faster than HDD</code></pre>
+
+        <h3>Caching Strategy</h3>
+
+        <p>Keep hot data in fast storage, cold data in slow storage:</p>
+
+        <ul>
+            <li><strong>CPU caches (L1-L3):</strong> Managed by hardware, transparent to OS</li>
+            <li><strong>Page cache:</strong> OS caches frequently accessed file pages in RAM</li>
+            <li><strong>Database buffer pools:</strong> Applications manage their own caches</li>
+            <li><strong>SSD as cache:</strong> Large SSDs cache HDD data for sequential workloads</li>
+        </ul>
+
+        <p><strong>Working set principle:</strong> If your working set fits in cache, performance is excellent. If it exceeds cache capacity, every access hits slow storage. Database sizing is critical!</p>
+
+        <h2 id="professional-impact">8. Professional Impact: Designing I/O-Efficient Systems</h2>
+
+        <h3>Database Design</h3>
+
+        <ul>
+            <li><strong>Indexing:</strong> B-tree indexes for efficient disk access (few seeks per lookup)</li>
+            <li><strong>Write-ahead logging (WAL):</strong> Sequential writes are faster than random, enables crash recovery</li>
+            <li><strong>Buffer pooling:</strong> Minimize disk I/O by caching frequently accessed pages</li>
+            <li><strong>Query optimization:</strong> Choose access patterns to minimize disk seeks</li>
+        </ul>
+
+        <h3>Web Services & Microservices</h3>
+
+        <ul>
+            <li><strong>Caching layers (Redis, Memcached):</strong> Reduce database I/O pressure</li>
+            <li><strong>SSD requirement:</strong> Replace HDDs with SSDs for database servers</li>
+            <li><strong>Batch writes:</strong> Accumulate changes, write in bulk</li>
+            <li><strong>Read replicas:</strong> Distribute read load across multiple instances</li>
+        </ul>
+
+        <h3>Real-Time Systems</h3>
+
+        <ul>
+            <li><strong>Pre-allocate files:</strong> Avoid dynamic extent allocation during operation</li>
+            <li><strong>Pin memory in RAM:</strong> Prevent page faults (which cause 10+ ms delays)</li>
+            <li><strong>Avoid I/O in critical paths:</strong> Move I/O to background threads</li>
+            <li><strong>Monitor latency:</strong> Watch for GC pauses and disk stalls</li>
+        </ul>
+
+        <h2 id="summary">Summary & Key Takeaways</h2>
+
+        <ul>
+            <li><strong>Disk I/O is the bottleneck</strong> in most systems—millions of times slower than RAM</li>
+            <li><strong>Random access is extremely expensive</strong> due to seek time and rotational latency combined (~14 ms per operation)</li>
+            <li><strong>Sequential access is highly optimized</strong> and much faster (280× faster than random)</li>
+            <li><strong>DMA and interrupts</strong> allow the CPU to work while disk I/O happens in parallel</li>
+            <li><strong>I/O scheduling algorithms (LOOK)</strong> minimize disk head movement and improve throughput</li>
+            <li><strong>Filesystems organize disk</strong> using inodes and block pointers in a tree structure</li>
+            <li><strong>SSDs eliminate seek/rotation latency</strong> but introduce wear leveling and GC constraints</li>
+            <li><strong>Caching is critical</strong> for masking I/O latency—keeps hot data in fast storage</li>
+            <li><strong>Understanding storage characteristics</strong> is essential for system design, performance optimization, and reliability</li>
+        </ul>
+
+        <div class="next-topic">
+            <strong>Next topic:</strong> <a href="topic-1.6.html">Topic 1.6: Assembly Language & Low-Level Programming</a> — Now that you understand how the OS manages I/O and memory, let's see how CPU hardware executes instructions at the lowest level.
+        </div>
+
+    </div>
+</body>
+</html>

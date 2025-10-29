@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operating Systems Overview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .danger-box {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .fun-box {
+            background-color: #ffe6f0;
+            border-left: 4px solid #e91e63;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.4;
+            border: 1px solid #e0e7f0;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .diagram {
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .key-concept {
+            background-color: #e8f4f8;
+            border: 2px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .exercise {
+            background-color: #f0f8ff;
+            border: 2px solid #4169e1;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+
+        .exercise h3 {
+            color: #4169e1;
+            margin-top: 0;
+        }
+
+        .toc {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #3498db;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .toc h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-left: none;
+            padding-left: 0;
+            color: #2c3e50;
+            font-size: 1.5em;
+        }
+
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .toc-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .toc-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-left-color: #2980b9;
+        }
+
+        .toc-item a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toc-item a:hover {
+            color: #3498db;
+        }
+
+        .toc-number {
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9em;
+            flex-shrink: 0;
+        }
+
+        .toc-title {
+            flex: 1;
+        }
+
+        .toc ul {
+            list-style-type: none;
+            margin-left: 0;
+        }
+
+        .toc li {
+            margin-bottom: 5px;
+        }
+
+        strong {
+            color: #2c3e50;
+        }
+
+        .analogy {
+            font-style: italic;
+            color: #555;
+            margin: 10px 0;
+            padding: 15px;
+            padding-left: 20px;
+            border-left: 3px solid #95a5a6;
+            background-color: #f9f9f9;
+        }
+
+        .visual-example {
+            background-color: #f0f8ff;
+            border: 2px solid #87ceeb;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+        }
+
+        .nav-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: #2980b9;
+        }
+
+        .breadcrumb {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .toc-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            body {
+                padding: 10px;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+        }
+
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb-nav a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+            pre {
+                page-break-inside: avoid;
+            }
+        }
+
+        /* Smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Add visual feedback for code blocks */
+        pre:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Improve link visibility */
+        a {
+            transition: all 0.2s ease;
+        }
+
+        /* Add subtle animation to boxes */
+        .info-box, .warning-box, .success-box, .danger-box, .fun-box {
+            transition: transform 0.2s ease;
+        }
+
+        .info-box:hover, .warning-box:hover, .success-box:hover, .danger-box:hover, .fun-box:hover {
+            transform: translateX(5px);
+        }
+
+        /* Better exercise styling */
+        .exercise:hover {
+            box-shadow: 0 4px 12px rgba(65, 105, 225, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="../blog.html">Learning Hub</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="./hubs/systems.html">Systems</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Operating Systems Overview</span>
+    </div>
+
+    <div class="container">
+        <h1>Operating Systems Overview</h1>
+        <p style="color: #666; font-style: italic; margin-bottom: 20px;">Understanding the Foundation: How Operating Systems Work and Why They Matter</p>
+
+        <div class="key-concept">
+            <h3>What You'll Learn in This Section</h3>
+            <ul>
+                <li><strong>What Operating Systems Do</strong> - Abstraction, multiplexing, protection, and performance</li>
+                <li><strong>Kernel vs User Space</strong> - Privilege levels and memory protection</li>
+                <li><strong>System Calls</strong> - The bridge between applications and the OS</li>
+                <li><strong>OS Architectures</strong> - Monolithic vs microkernel designs</li>
+            </ul>
+        </div>
+
+        <div class="warning-box">
+            <strong>Prerequisites:</strong>
+            <ul style="margin-bottom: 0;">
+                <li><a href="topic-0.1.html" style="color: #856404; font-weight: bold;">Topic 0.1: Binary Fundamentals</a> - Memory addressing, data representation</li>
+                <li><a href="topic-1.1.html" style="color: #856404; font-weight: bold;">Topic 1.1: Computer Systems</a> - CPU architecture basics</li>
+                <li><a href="topic-1.2.html" style="color: #856404; font-weight: bold;">Topic 1.2: Architecture Deep Dive</a> - Caches, pipelining</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <strong>Why This Matters</strong><br><br>
+            Every program you write—from a simple Python script to a complex distributed system—runs on an operating system. The OS is the invisible conductor orchestrating thousands of programs simultaneously, each thinking it has the computer all to itself.<br><br>
+
+            <strong>Here's what's happening right now as you read this:</strong>
+            <ul style="margin-top: 10px;">
+                <li>Your browser is running in a <strong>process</strong>, protected from other programs by virtual memory</li>
+                <li>The OS <strong>scheduler</strong> gave your browser CPU time for a few milliseconds, then switched to your music player, then back—so fast you don't even notice</li>
+                <li>Your keystrokes travel through <strong>system calls</strong> from user space to kernel space</li>
+                <li>Files you're downloading? The OS is <strong>caching</strong> them in RAM and scheduling <strong>disk I/O</strong> in the background</li>
+            </ul>
+            <br>
+            <strong>Real Impact:</strong> A senior engineer at Netflix optimized their edge servers by understanding OS scheduling. Result? <strong>30% improvement in request latency</strong> by reducing context switches. This tutorial teaches you those same principles!
+        </div>
+
+        <div class="toc">
+            <h2>In This Series</h2>
+            <div class="toc-grid">
+                <div class="toc-item">
+                    <a href="topic-1.3.0.html">
+                        <span class="toc-number">0</span>
+                        <span class="toc-title">Overview (You are here)</span>
+                    </a>
+                </div>
+                <div class="toc-item">
+                    <a href="topic-1.3.1.html">
+                        <span class="toc-number">1</span>
+                        <span class="toc-title">Processes & Scheduling</span>
+                    </a>
+                </div>
+                <div class="toc-item">
+                    <a href="topic-1.3.2.html">
+                        <span class="toc-number">2</span>
+                        <span class="toc-title">Virtual Memory</span>
+                    </a>
+                </div>
+                <div class="toc-item">
+                    <a href="topic-1.3.3.html">
+                        <span class="toc-number">3</span>
+                        <span class="toc-title">I/O & File Systems</span>
+                    </a>
+                </div>
+                <div class="toc-item">
+                    <a href="topic-1.3.4.html">
+                        <span class="toc-number">4</span>
+                        <span class="toc-title">Synchronization & Concurrency</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <h2>1. Operating System Overview</h2>
+
+        <h3>What IS an Operating System?</h3>
+
+        <div class="analogy">
+            <strong>The Factory Manager Analogy</strong><br><br>
+            Think of the OS as a factory manager. You have:
+            <ul>
+                <li><strong>Workers</strong> (CPU cores) who do the actual work</li>
+                <li><strong>Product lines</strong> (processes) competing for worker time</li>
+                <li><strong>Warehouse</strong> (memory) with limited space</li>
+                <li><strong>Storage facility</strong> (disk) for overflow</li>
+                <li><strong>The manager</strong> (OS) deciding who works when, preventing chaos</li>
+            </ul>
+        </div>
+
+        <p>Without the OS, programs would:</p>
+        <ul>
+            <li>Fight over CPU time (no fair scheduling)</li>
+            <li>Overwrite each other's memory (no protection)</li>
+            <li>Corrupt files (no coordinated access)</li>
+            <li>Crash the entire system (no isolation)</li>
+        </ul>
+
+        <p><strong>The OS provides:</strong></p>
+        <div class="key-concept">
+            <ul>
+                <li><strong>Abstraction</strong> - Programs see a simple interface, not hardware complexity</li>
+                <li><strong>Multiplexing</strong> - Share limited resources among many programs</li>
+                <li><strong>Protection</strong> - Isolate programs from each other and from the OS</li>
+                <li><strong>Performance</strong> - Optimize resource usage for efficiency</li>
+            </ul>
+        </div>
+
+        <h3>Kernel vs User Space</h3>
+
+        <p>The OS divides execution into two privilege levels:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>User Space</th>
+                    <th>Kernel Space</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Privilege Level</strong></td>
+                    <td>Restricted (Ring 3)</td>
+                    <td>Full access (Ring 0)</td>
+                </tr>
+                <tr>
+                    <td><strong>Memory Access</strong></td>
+                    <td>Virtual memory only</td>
+                    <td>All physical memory</td>
+                </tr>
+                <tr>
+                    <td><strong>Hardware Access</strong></td>
+                    <td>None (must use system calls)</td>
+                    <td>Direct hardware access</td>
+                </tr>
+                <tr>
+                    <td><strong>What Runs Here</strong></td>
+                    <td>Applications (browser, games, etc.)</td>
+                    <td>OS kernel, drivers</td>
+                </tr>
+                <tr>
+                    <td><strong>Crash Impact</strong></td>
+                    <td>Only that process dies</td>
+                    <td>Entire system crashes (kernel panic!)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="diagram">
+┌─────────────────────────────────────────────────┐
+│           USER SPACE (Ring 3)                   │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐      │
+│  │ Browser  │  │  Editor  │  │  Game    │      │
+│  └────┬─────┘  └────┬─────┘  └────┬─────┘      │
+│       │             │             │             │
+│       └─────────────┼─────────────┘             │
+│                     │                           │
+│              System Call Interface              │
+├═════════════════════╪═══════════════════════════┤
+│              KERNEL SPACE (Ring 0)              │
+│                     │                           │
+│  ┌─────────────────────────────────────────┐   │
+│  │   Process Manager  │  Memory Manager    │   │
+│  │   File System      │  Device Drivers    │   │
+│  │   Network Stack    │  Scheduler         │   │
+│  └──────────────────┬──────────────────────┘   │
+│                     │                           │
+│              Hardware Abstraction               │
+├═════════════════════╪═══════════════════════════┤
+│              HARDWARE                           │
+│  ┌──────┐  ┌──────┐  ┌──────┐  ┌──────┐        │
+│  │ CPU  │  │ RAM  │  │ Disk │  │ NIC  │        │
+│  └──────┘  └──────┘  └──────┘  └──────┘        │
+└─────────────────────────────────────────────────┘
+        </div>
+
+        <h3>System Calls: The Bridge Between Worlds</h3>
+
+        <p>When a user program needs the OS to do something (read a file, allocate memory, create a process), it makes a <strong>system call</strong>.</p>
+
+        <div class="visual-example">
+            <h4>How a System Call Works</h4>
+            <pre><code>// C code in user space
+int fd = open("/etc/passwd", O_RDONLY);  // Line 1
+
+What actually happens:
+1. Application calls open() wrapper function
+2. Wrapper loads system call number into register (e.g., EAX = 2 for open)
+3. Wrapper loads arguments into other registers
+4. Wrapper executes special instruction: "syscall" or "int 0x80"
+5. CPU switches to kernel mode (Ring 0)
+6. CPU jumps to system call handler in kernel
+7. Kernel validates arguments (security check!)
+8. Kernel performs operation (opens file)
+9. Kernel returns result
+10. CPU switches back to user mode (Ring 3)
+11. Wrapper function returns to application
+
+Cost: ~100-1000 nanoseconds (expensive!)</code></pre>
+        </div>
+
+        <div class="info-box">
+            <strong>Key Insight:</strong> System calls are expensive because of the mode switch. This is why high-performance programs minimize system calls by batching operations!
+        </div>
+
+        <h4>Common System Calls (Linux)</h4>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>System Calls</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Process Control</strong></td>
+                    <td>fork(), exec(), wait(), exit()</td>
+                    <td>Create, run, wait for, terminate processes</td>
+                </tr>
+                <tr>
+                    <td><strong>File Management</strong></td>
+                    <td>open(), read(), write(), close()</td>
+                    <td>File I/O operations</td>
+                </tr>
+                <tr>
+                    <td><strong>Memory</strong></td>
+                    <td>brk(), mmap(), munmap()</td>
+                    <td>Allocate/deallocate memory</td>
+                </tr>
+                <tr>
+                    <td><strong>Communication</strong></td>
+                    <td>pipe(), socket(), send(), recv()</td>
+                    <td>Inter-process communication</td>
+                </tr>
+                <tr>
+                    <td><strong>Information</strong></td>
+                    <td>getpid(), getuid(), time()</td>
+                    <td>Get system information</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>OS Architectures</h3>
+
+        <div class="visual-example">
+            <h4>Monolithic Kernel (Linux, Unix)</h4>
+            <div class="diagram">
+┌───────────────────────────────────────┐
+│         USER SPACE                    │
+│  Apps   Apps   Apps   Apps            │
+└─────────┬─────────────────────────────┘
+          │ System Calls
+┌─────────▼─────────────────────────────┐
+│         KERNEL SPACE                  │
+│  ┌─────────────────────────────────┐  │
+│  │  All OS services in one kernel  │  │
+│  │  • Process mgmt  • File system  │  │
+│  │  • Memory mgmt   • Drivers      │  │
+│  │  • Network       • Scheduler    │  │
+│  └─────────────────────────────────┘  │
+└───────────────────────────────────────┘
+            </div>
+            <p><strong>Pros:</strong> Fast (no message passing), efficient<br>
+            <strong>Cons:</strong> One bug can crash entire OS, harder to maintain</p>
+
+            <h4>Microkernel (Minix, QNX)</h4>
+            <div class="diagram">
+┌───────────────────────────────────────┐
+│         USER SPACE                    │
+│  Apps  File  Network  Device          │
+│        Server Server  Drivers         │
+└─────────┬────────┬─────────┬──────────┘
+          │ Message Passing  │
+┌─────────▼────────▼─────────▼──────────┐
+│      MICROKERNEL (minimal)            │
+│  • Inter-process communication        │
+│  • Basic scheduling                   │
+│  • Low-level memory management        │
+└───────────────────────────────────────┘
+            </div>
+            <p><strong>Pros:</strong> More reliable, modular, easier to maintain<br>
+            <strong>Cons:</strong> Slower (message passing overhead)</p>
+        </div>
+
+        <div class="success-box">
+            <h3>What's Next?</h3>
+            <p>Now that you understand the OS fundamentals, you're ready to dive deeper into specific topics:</p>
+            <ul>
+                <li><strong><a href="topic-1.3.1.html">Processes & Scheduling</a></strong> - How the OS manages multiple programs</li>
+                <li><strong><a href="topic-1.3.2.html">Virtual Memory</a></strong> - Memory management and paging</li>
+                <li><strong><a href="topic-1.3.3.html">I/O & File Systems</a></strong> - Disk operations and file management</li>
+                <li><strong><a href="topic-1.3.4.html">Synchronization & Concurrency</a></strong> - Managing shared resources</li>
+            </ul>
+        </div>
+
+        <div class="nav-links">
+            <a href="topic-1.2.html" class="nav-link">← Previous: Architecture Deep Dive</a>
+            <a href="topic-1.3.1.html" class="nav-link">Next: Processes & Scheduling →</a>
+        </div>
+
+        <hr style="margin: 40px 0; border: none; border-top: 2px solid #ddd;">
+
+        <div style="background-color: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; margin: 20px 0; border-radius: 5px;">
+            <strong>Deepen your understanding:</strong><br>
+            → <a href="topic-1.3.1.html">Topic 1.3.1: Processes & Scheduling</a> - Learn about process management<br>
+            → <a href="topic-1.3.2.html">Topic 1.3.2: Virtual Memory</a> - Deep dive into memory management<br>
+            → <a href="topic-1.3.3.html">Topic 1.3.3: I/O & File Systems</a> - Understanding disk I/O and file systems<br>
+            → <a href="topic-1.3.4.html">Topic 1.3.4: Synchronization & Concurrency</a> - Master thread synchronization
+        </div>
+    </div>
+</body>
+</html>
