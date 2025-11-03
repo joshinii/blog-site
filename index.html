@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Portfolio of Joshini Meenakshisundaram Naagraj - Software Engineer specializing in Full-Stack Development, Cloud Computing, and Computer Systems">
-    <meta name="keywords" content="portfolio, software engineer, full-stack developer, cloud computing, computer systems, Java, Python, Spring Boot">
-    <meta name="author" content="Joshini Meenakshisundaram Naagraj">
-    <title>Joshini M Naagraj - Software Engineer Portfolio</title>
+    <meta name="description" content="Computer Systems Learning Hub - Master fundamentals, systems architecture, networking, and distributed systems">
+    <title>Learning Hub - Computer Systems</title>
     <link rel="stylesheet" href="css/portfolio-styles.css">
+    <link rel="stylesheet" href="css/blog-styles.css">
 </head>
 <body>
+    <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
@@ -17,355 +17,431 @@
                 <span class="brand-text">Joshini M Naagraj</span>
             </div>
             <div class="nav-links">
-                <a href="index.html" class="active">Home</a>
-                <a href="#about">About</a>
-                <a href="#skills">Skills</a>
-                <a href="#projects">Projects</a>
-                <a href="blog.html">Blog</a>
-                <a href="#contact">Contact</a>
+                <a href="index.html">Learning Hub</a>
+                <a href="index.html#contact">Contact</a>
             </div>
         </div>
     </nav>
 
-    <header id="hero" class="hero">
-        <div class="hero-content">
-            <div class="hero-badge">👋 Welcome to my portfolio</div>
-            <h1 class="hero-title">Hi, I'm <span class="highlight-name">Joshini M Naagraj</span></h1>
-            <p class="hero-subtitle">Full-Stack Software Engineer | Cloud Computing Specialist | MS in Software Engineering</p>
-            <p class="hero-description">
-                Graduate Software Engineering student with 6+ years of professional experience in full-stack development.
-                I specialize in backend systems, cloud technologies, microservices architecture, and building scalable applications
-                using Java, Python, Spring Boot, and modern cloud platforms.
-            </p>
-            <div class="hero-buttons">
-                <a href="#projects" class="btn btn-primary">View My Work</a>
-                <a href="blog.html" class="btn btn-secondary">Read My Blog</a>
-                <a href="#contact" class="btn btn-outline">Get In Touch</a>
-            </div>
-            <div class="hero-social">
-                <a href="https://github.com/joshinii" target="_blank" class="social-link">
-                    <span class="social-icon">💻</span> GitHub
-                </a>
-                <a href="https://linkedin.com/in/joshini-m-n" target="_blank" class="social-link">
-                    <span class="social-icon">💼</span> LinkedIn
-                </a>
-                <a href="mailto:joshini.mn@gmail.com" class="social-link">
-                    <span class="social-icon">📧</span> Email
-                </a>
-            </div>
-        </div>
-    </header>
-
-    <section id="about" class="about-section">
-        <div class="container">
-            <h2 class="section-title">About Me</h2>
-            <div class="about-content">
-                <div class="about-image">
-                    <div class="avatar">
-                        <span class="avatar-text">JN</span>
-                    </div>
-                </div>
-                <div class="about-text">
-                    <p class="intro-text">
-                        I'm a graduate Software Engineering student at San José State University with 6+ years 
-                        of professional experience building production-ready, scalable applications.
+    <!-- Main Content -->
+    <main class="learning-hub">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-container">
+                <h1 class="hero-title">Computer Systems Learning Hub</h1>
+                <p class="hero-subtitle">
+                    Think of it as a friendly guide if you want to brush up on the fundamentals without getting lost in a sea of jargon.
                     </p>
-                    <p>
-                        My expertise spans <strong>full-stack development</strong>, <strong>cloud computing</strong>, 
-                        <strong>microservices architecture</strong>, and <strong>data engineering</strong>. 
-                        I have hands-on experience with Java, Python, Spring Boot, Angular, Apache Kafka, and cloud 
-                        platforms like AWS and Microsoft Azure. I believe in writing clean, maintainable code and 
-                        applying software engineering best practices.
-                    </p>
-                    <p>
-                        Throughout my career at LTIMindtree, Accenture, and Infosys, I've optimized system performance 
-                        (achieving 75% reduction in processing time), built RESTful APIs for high-volume transactions, 
-                        developed CI/CD pipelines, and collaborated effectively in Agile teams. Now, I'm sharing my 
-                        knowledge through educational content that breaks down complex computer systems concepts 
-                        into clear, practical lessons.
-                    </p>
-                    <div class="about-stats">
-                        <div class="stat">
-                            <div class="stat-number">6+</div>
-                            <div class="stat-label">Years Experience</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-number">100+</div>
-                            <div class="stat-label">Issues Resolved</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-number">4</div>
-                            <div class="stat-label">Tutorial Series</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-number">5hrs</div>
-                            <div class="stat-label">Educational Content</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="skills" class="skills-section">
-        <div class="container">
-            <h2 class="section-title">Technical Skills</h2>
-            <p class="section-subtitle">Expertise across the full computing stack</p>
-            
-            <div class="skills-grid">
-                <div class="skill-category">
-                    <div class="category-icon">💻</div>
-                    <h3>Programming Languages</h3>
-                    <div class="skill-list">
-                        <span class="skill-tag">Java</span>
-                        <span class="skill-tag">Python</span>
-                        <span class="skill-tag">JavaScript</span>
-                        <span class="skill-tag">TypeScript</span>
-                        <span class="skill-tag">C++</span>
-                        <span class="skill-tag">SQL</span>
-                        <span class="skill-tag">HTML/CSS</span>
-                    </div>
-                </div>
-
-                <div class="skill-category">
-                    <div class="category-icon">🔧</div>
-                    <h3>Frameworks & Libraries</h3>
-                    <div class="skill-list">
-                        <span class="skill-tag">Spring Boot</span>
-                        <span class="skill-tag">Hibernate</span>
-                        <span class="skill-tag">Angular</span>
-                        <span class="skill-tag">Apache Kafka</span>
-                        <span class="skill-tag">JUnit</span>
-                        <span class="skill-tag">Mockito</span>
-                        <span class="skill-tag">Jasmine</span>
-                    </div>
-                </div>
-
-                <div class="skill-category">
-                    <div class="category-icon">🌐</div>
-                    <h3>Web & Backend</h3>
-                    <div class="skill-list">
-                        <span class="skill-tag">RESTful APIs</span>
-                        <span class="skill-tag">Microservices</span>
-                        <span class="skill-tag">Full Stack</span>
-                        <span class="skill-tag">API Development</span>
-                        <span class="skill-tag">JMS</span>
-                        <span class="skill-tag">JAXB</span>
-                    </div>
-                </div>
-
-                <div class="skill-category">
-                    <div class="category-icon">💾</div>
-                    <h3>Data & Databases</h3>
-                    <div class="skill-list">
-                        <span class="skill-tag">Oracle</span>
-                        <span class="skill-tag">MongoDB</span>
-                        <span class="skill-tag">MySQL</span>
-                        <span class="skill-tag">IBM DB2</span>
-                        <span class="skill-tag">SQL Optimization</span>
-                        <span class="skill-tag">ETL Pipelines</span>
-                    </div>
-                </div>
-
-                <div class="skill-category">
-                    <div class="category-icon">☁️</div>
-                    <h3>Cloud & DevOps</h3>
-                    <div class="skill-list">
-                        <span class="skill-tag">AWS</span>
-                        <span class="skill-tag">Microsoft Azure</span>
-                        <span class="skill-tag">Jenkins</span>
-                        <span class="skill-tag">Git/Bitbucket</span>
-                        <span class="skill-tag">CI/CD</span>
-                        <span class="skill-tag">OpenShift</span>
-                        <span class="skill-tag">Terraform</span>
-                    </div>
-                </div>
-
-                <div class="skill-category">
-                    <div class="category-icon">📊</div>
-                    <h3>Development Practices</h3>
-                    <div class="skill-list">
-                        <span class="skill-tag">Agile/Scrum</span>
-                        <span class="skill-tag">TDD</span>
-                        <span class="skill-tag">Code Review</span>
-                        <span class="skill-tag">Debugging</span>
-                        <span class="skill-tag">System Design</span>
-                        <span class="skill-tag">Problem Solving</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="projects" class="projects-section">
-        <div class="container">
-            <h2 class="section-title">Featured Projects</h2>
-            <p class="section-subtitle">A selection of my best work</p>
-            
-            <div class="projects-grid">
-                <!-- Project 1 - Featured -->
-                <div class="project-card featured">
-                    <div class="project-badge">⭐ Featured</div>
-                    <div class="project-header">
-                        <div class="project-icon">📚</div>
-                        <h3>Computer Systems Mastery</h3>
-                        <div class="project-tags">
-                            <span class="tag">Education</span>
-                            <span class="tag">Tutorial Series</span>
-                            <span class="tag">Web</span>
-                        </div>
-                    </div>
-                    <p class="project-description">
-                        A comprehensive educational resource covering computer systems from binary fundamentals 
-                        to advanced CPU architecture. Features interactive exercises, visual diagrams, 
-                        and hands-on learning activities for aspiring systems programmers.
-                    </p>
-                    <div class="project-stats">
-                        <div class="stat-item">
-                            <span class="stat-icon">📄</span>
-                            <span>5 Topics</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-icon">💻</span>
-                            <span>75+ Examples</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-icon">⏱️</span>
-                            <span>5 Hours Content</span>
-                        </div>
-                    </div>
-                    <div class="project-links">
-                        <a href="blog.html" class="project-link primary">View Tutorials →</a>
-                        <a href="https://github.com/joshinii/computer-systems-guide" class="project-link">GitHub</a>
-                    </div>
-                </div>
-
-                <!-- Project 2 - DIFFERENT Health Equity Platform -->
-                <div class="project-card">
-                    <div class="project-header">
-                        <div class="project-icon">🏥</div>
-                        <h3>DIFFERENT: Health Equity Data Platform</h3>
-                        <div class="project-tags">
-                            <span class="tag">Python</span>
-                            <span class="tag">Cloud</span>
-                            <span class="tag">Data Pipelines</span>
-                        </div>
-                    </div>
-                    <p class="project-description">
-                        National data science platform evaluating technology's impact on health disparities. 
-                        Designing cloud-based pipelines to harmonize large-scale federal datasets (NVSS, MEPS, NHIS) 
-                        with secure access and reproducible analytics infrastructure.
-                    </p>
-                    <div class="project-links">
-                        <a href="#" class="project-link">Learn More →</a>
-                    </div>
-                </div>
-
-                <!-- Project 3 - AI Governance Portal -->
-                <div class="project-card">
-                    <div class="project-header">
-                        <div class="project-icon">🤖</div>
-                        <h3>AI Prompt & Model Governance Portal</h3>
-                        <div class="project-tags">
-                            <span class="tag">Python</span>
-                            <span class="tag">JavaScript</span>
-                            <span class="tag">API Gateway</span>
-                        </div>
-                    </div>
-                    <p class="project-description">
-                        Enterprise AI governance platform with unified ingest APIs, OAuth/SSO authentication, 
-                        and role-based access control. Implements policy engine with real-time compliance 
-                        detection for AI model usage monitoring.
-                    </p>
-                    <div class="project-links">
-                        <a href="#" class="project-link">View Project →</a>
-                    </div>
-                </div>
-
-                <!-- Project 4 - Banking Application -->
-                <div class="project-card">
-                    <div class="project-header">
-                        <div class="project-icon">🏦</div>
-                        <h3>Banking Transaction Platform</h3>
-                        <div class="project-tags">
-                            <span class="tag">Java</span>
-                            <span class="tag">Spring Boot</span>
-                            <span class="tag">Kafka</span>
-                        </div>
-                    </div>
-                    <p class="project-description">
-                        Production-ready banking application with RESTful APIs for high-volume transactions. 
-                        Migrated messaging from IBM MQ to Kafka, reducing processing time by 75%. 
-                        Deployed microservices on OpenShift with CI/CD pipeline.
-                    </p>
-                    <div class="project-links">
-                        <a href="#" class="project-link">Case Study →</a>
-                    </div>
-                </div>
-
-                <!-- Project 5 - Mental Health Analysis -->
-                <div class="project-card">
-                    <div class="project-header">
-                        <div class="project-icon">📊</div>
-                        <h3>Essential Workers Mental Health Analysis</h3>
-                        <div class="project-tags">
-                            <span class="tag">Python</span>
-                            <span class="tag">Data Science</span>
-                        </div>
-                    </div>
-                    <p class="project-description">
-                        Analyzed 60,000+ US Census survey records using Pandas, NumPy, and statistical libraries. 
-                        Developed reproducible data pipelines to generate insights on mental health patterns 
-                        among essential workers during pandemic.
-                    </p>
-                    <div class="project-links">
-                        <a href="#" class="project-link">View Analysis →</a>
-                    </div>
-                </div>
-
-                <!-- Project 6 - E-Commerce Platform -->
-                <div class="project-card">
-                    <div class="project-header">
-                        <div class="project-icon">🛒</div>
-                        <h3>E-Commerce Web Application</h3>
-                        <div class="project-tags">
-                            <span class="tag">AngularJS</span>
-                            <span class="tag">Java</span>
-                            <span class="tag">MySQL</span>
-                        </div>
-                    </div>
-                    <p class="project-description">
-                        Full-stack e-commerce platform with product catalog, shopping cart, and order processing. 
-                        Built with AngularJS frontend and Core Java backend services integrated with MySQL database 
-                        for data persistence.
-                    </p>
-                    <div class="project-links">
-                        <a href="#" class="project-link">View Project →</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="view-more">
-                <a href="https://github.com/joshinii" class="btn btn-secondary" target="_blank">
-                    View All Projects on GitHub →
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <section class="blog-preview-section">
-        <div class="container">
-            <div style="text-align: center; margin-bottom: 50px;">
-                <h2 class="section-title">Computer Systems</h2>
-                <p class="section-subtitle" style="max-width: 700px; margin: 0 auto 30px;">
-                    🤖Quick technical refreshers on how computer systems work.
-                    Perfect for brushing up on fundamentals.
+                <p class="hero-description">
+                    All the content here is LLM-generated (yep, AI helped me out!), breaking down tough concepts into something more easy-to-digest. <br>
+                    I honestly learned a lot while making this, so I figured… why not share it? If it helps even one person go "ohhh, that makes sense now," I'll consider that a win.
                 </p>
-                <a href="blog.html" class="btn btn-primary btn-large">Start Learning →</a>
             </div>
-        </div>
-    </section>
+        </section>
 
+        <!-- How to Use Section - MOVED UP for better onboarding -->
+        <section class="how-to-use">
+            <div class="how-container">
+                <h2 class="section-title">How to Use This Learning Hub</h2>
+                <p class="section-subtitle">Three ways to learn computer systems</p>
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3 class="step-title">Goal-Based Learning</h3>
+                        <p class="step-description">
+                            Pick a learning path based on your goals (Performance, System Design, Security, or Distributed Systems).
+                        </p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3 class="step-title">Hub-Based Learning</h3>
+                        <p class="step-description">
+                            Start with Fundamentals, then explore other hubs in any order based on your interests.
+                        </p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3 class="step-title">Topic-By-Topic</h3>
+                        <p class="step-description">
+                            Dive into specific topics you're curious about. Use breadcrumbs to explore related concepts.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Learning Paths Section - MOVED UP -->
+        <section class="learning-paths">
+            <div class="paths-container">
+                <h2 class="section-title">Guided Learning Paths</h2>
+                <p class="section-subtitle">Start with a clear goal in mind</p>
+
+                <div class="paths-grid">
+                    <!-- Path 1: Performance -->
+                    <article class="path-card" onclick="openPathModal('performance')">
+                        <div class="path-icon">🚀</div>
+                        <h3 class="path-title">Performance Optimization</h3>
+                        <p class="path-description">Why is my code running 100x slower than it should?</p>
+                        <div class="path-meta">
+                            <span>📚 3 hubs</span>
+                            <span>⏱️ ~8-12 hours</span>
+                        </div>
+                        <div class="path-hubs">
+                            <span class="hub-tag">Fundamentals</span>
+                            <span class="hub-tag">Systems</span>
+                            <span class="hub-tag">Memory</span>
+                        </div>
+                        <button class="path-cta">View Path →</button>
+                    </article>
+
+                    <!-- Path 2: Design -->
+                    <article class="path-card" onclick="openPathModal('design')">
+                        <div class="path-icon">🏗️</div>
+                        <h3 class="path-title">System Design & Architecture</h3>
+                        <p class="path-description">How do I design systems that scale?</p>
+                        <div class="path-meta">
+                            <span>📚 5 hubs</span>
+                            <span>⏱️ ~15-20 hours</span>
+                        </div>
+                        <div class="path-hubs">
+                            <span class="hub-tag">Fundamentals</span>
+                            <span class="hub-tag">Systems</span>
+                            <span class="hub-tag">Networking</span>
+                        </div>
+                        <button class="path-cta">View Path →</button>
+                    </article>
+
+                    <!-- Path 3: Security -->
+                    <article class="path-card" onclick="openPathModal('security')">
+                        <div class="path-icon">🔒</div>
+                        <h3 class="path-title">Security & Vulnerability Prevention</h3>
+                        <p class="path-description">How do I prevent exploits and vulnerabilities?</p>
+                        <div class="path-meta">
+                            <span>📚 5 hubs</span>
+                            <span>⏱️ ~12-16 hours</span>
+                        </div>
+                        <div class="path-hubs">
+                            <span class="hub-tag">Fundamentals</span>
+                            <span class="hub-tag">Low-Level</span>
+                            <span class="hub-tag">Systems</span>
+                        </div>
+                        <button class="path-cta">View Path →</button>
+                    </article>
+
+                    <!-- Path 4: Distributed -->
+                    <article class="path-card" onclick="openPathModal('distributed')">
+                        <div class="path-icon">⚡</div>
+                        <h3 class="path-title">Distributed Systems</h3>
+                        <p class="path-description">How do I build reliable systems at scale?</p>
+                        <div class="path-meta">
+                            <span>📚 5 hubs</span>
+                            <span>⏱️ ~15-18 hours</span>
+                        </div>
+                        <div class="path-hubs">
+                            <span class="hub-tag">Fundamentals</span>
+                            <span class="hub-tag">Systems</span>
+                            <span class="hub-tag">Networking</span>
+                        </div>
+                        <button class="path-cta">View Path →</button>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Learning Hub Cards Section -->
+        <section class="hub-showcase">
+            <div class="hub-container">
+                <h2 class="section-title">Explore Learning Hubs</h2>
+                <p class="section-subtitle">Choose a hub to start your learning journey or browse all topics organized by subject</p>
+
+                <div class="hub-grid">
+                    <!-- Hub 1: Fundamentals -->
+                    <article class="hub-card" data-hub="fundamentals">
+                        <div class="hub-card-icon">🧠</div>
+                        <h3 class="hub-card-title">Fundamentals Hub</h3>
+                        <p class="hub-card-description">
+                            Start here. Learn binary, data representation, timing, and memory basics—essential knowledge for everything else.
+                        </p>
+                        <div class="hub-card-meta">
+                            <span class="meta-item">📚 4 Topics</span>
+                            <span class="meta-item">⏱️ 2-3 hours</span>
+                            <span class="meta-badge badge-start">Beginner</span>
+                        </div>
+                        <a href="tutorials/hubs/fundamentals.html" class="hub-card-link">Explore Hub →</a>
+                    </article>
+
+                    <!-- Hub 2: Computer Systems -->
+                    <article class="hub-card" data-hub="systems">
+                        <div class="hub-card-icon">⚙️</div>
+                        <h3 class="hub-card-title">Computer Systems Hub</h3>
+                        <p class="hub-card-description">
+                            Deep dive into CPU architecture, OS internals, and how code executes from source to hardware.
+                        </p>
+                        <div class="hub-card-meta">
+                            <span class="meta-item">📚 12 Topics</span>
+                            <span class="meta-item">⏱️ 4-6 hours</span>
+                            <span class="meta-badge badge-core">Intermediate</span>
+                        </div>
+                        <a href="tutorials/hubs/systems.html" class="hub-card-link">Explore Hub →</a>
+                    </article>
+
+                    <!-- Hub 3: Memory & Storage -->
+                    <article class="hub-card" data-hub="memory">
+                        <div class="hub-card-icon">💾</div>
+                        <h3 class="hub-card-title">Memory & Storage Hub</h3>
+                        <p class="hub-card-description">
+                            Understand memory management, virtual memory, and storage systems that power modern computing.
+                        </p>
+                        <div class="hub-card-meta">
+                            <span class="meta-item">📚 2 Topics</span>
+                            <span class="meta-item">⏱️ 2-3 hours</span>
+                            <span class="meta-badge badge-core">Intermediate</span>
+                        </div>
+                        <a href="tutorials/hubs/memory-storage.html" class="hub-card-link">Explore Hub →</a>
+                    </article>
+
+                    <!-- Hub 4: Low-Level Programming -->
+                    <article class="hub-card" data-hub="lowlevel">
+                        <div class="hub-card-icon">🔧</div>
+                        <h3 class="hub-card-title">Low-Level Programming Hub</h3>
+                        <p class="hub-card-description">
+                            Master assembly language, compiler behavior, and hardware-level optimization techniques.
+                        </p>
+                        <div class="hub-card-meta">
+                            <span class="meta-item">📚 1 Topic</span>
+                            <span class="meta-item">⏱️ 2-3 hours</span>
+                            <span class="meta-badge badge-advanced">Advanced</span>
+                        </div>
+                        <a href="tutorials/hubs/low-level.html" class="hub-card-link">Explore Hub →</a>
+                    </article>
+
+                    <!-- Hub 5: Networking -->
+                    <article class="hub-card" data-hub="networking">
+                        <div class="hub-card-icon">🌐</div>
+                        <h3 class="hub-card-title">Networking Hub</h3>
+                        <p class="hub-card-description">
+                            Learn how computers communicate. Protocols, TCP/IP, HTTP/HTTPS, and network optimization.
+                        </p>
+                        <div class="hub-card-meta">
+                            <span class="meta-item">📚 5 Topics</span>
+                            <span class="meta-item">⏱️ 3-4 hours</span>
+                            <span class="meta-badge badge-core">Intermediate</span>
+                        </div>
+                        <a href="tutorials/hubs/networking.html" class="hub-card-link">Explore Hub →</a>
+                    </article>
+
+                    <!-- Hub 6: Distributed Systems -->
+                    <article class="hub-card" data-hub="distributed">
+                        <div class="hub-card-icon">🌍</div>
+                        <h3 class="hub-card-title">Distributed Systems Hub</h3>
+                        <p class="hub-card-description">
+                            Capstone topic. Build systems at scale with consensus, fault tolerance, and distributed coordination.
+                        </p>
+                        <div class="hub-card-meta">
+                            <span class="meta-item">📚 1 Topic</span>
+                            <span class="meta-item">⏱️ 2-3 hours</span>
+                            <span class="meta-badge badge-advanced">Advanced</span>
+                        </div>
+                        <a href="tutorials/hubs/distributed-systems.html" class="hub-card-link">Explore Hub →</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-number">25</div>
+                    <div class="stat-label">Topics</div>
+                    <div class="stat-description">Comprehensive coverage</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">Hubs</div>
+                    <div class="stat-description">Organized by domain</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Learning Paths</div>
+                    <div class="stat-description">Goal-aligned journeys</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Hours</div>
+                    <div class="stat-description">Complete learning</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal for Path Details -->
+    <div id="modal-overlay" class="modal-overlay" onclick="closePathModal()"></div>
+    <div id="path-modal" class="modal">
+        <button class="modal-close" onclick="closePathModal()">✕</button>
+
+        <!-- Performance Path -->
+        <div id="modal-performance" class="modal-content" style="display: none;">
+            <h2 class="modal-title">🚀 Performance Optimization Path</h2>
+            <p class="modal-description">Master the concepts behind high-performance systems.</p>
+            <div class="modal-hubs">
+                <a href="tutorials/hubs/fundamentals.html" class="modal-hub-link">
+                    <span class="hub-icon">🧠</span>
+                    <span class="hub-info">
+                        <strong>Fundamentals Hub</strong>
+                        <small>Start here: Binary, data, timing, memory</small>
+                    </span>
+                </a>
+                <a href="tutorials/hubs/systems.html" class="modal-hub-link">
+                    <span class="hub-icon">⚙️</span>
+                    <span class="hub-info">
+                        <strong>Computer Systems Hub</strong>
+                        <small>CPU, OS, code execution pipeline</small>
+                    </span>
+                </a>
+                <a href="tutorials/hubs/memory-storage.html" class="modal-hub-link">
+                    <span class="hub-icon">💾</span>
+                    <span class="hub-info">
+                        <strong>Memory & Storage Hub</strong>
+                        <small>Memory management, I/O systems</small>
+                    </span>
+                </a>
+            </div>
+            <a href="tutorials/hubs/fundamentals.html" class="modal-start-btn">Start Path →</a>
+        </div>
+
+        <!-- Design Path -->
+        <div id="modal-design" class="modal-content" style="display: none;">
+            <h2 class="modal-title">🏗️ System Design & Architecture Path</h2>
+            <p class="modal-description">Learn to design systems that scale and are reliable.</p>
+            <div class="modal-hubs">
+                <a href="tutorials/hubs/fundamentals.html" class="modal-hub-link">
+                    <span class="hub-icon">🧠</span>
+                    <span class="hub-info">
+                        <strong>Fundamentals Hub</strong>
+                        <small>Start here: Binary, data, timing, memory</small>
+                    </span>
+                </a>
+                <a href="tutorials/hubs/systems.html" class="modal-hub-link">
+                    <span class="hub-icon">⚙️</span>
+                    <span class="hub-info">
+                        <strong>Computer Systems Hub</strong>
+                        <small>CPU, OS, code execution pipeline</small>
+                    </span>
+                </a>
+                <a href="tutorials/hubs/memory-storage.html" class="modal-hub-link">
+                    <span class="hub-icon">💾</span>
+                    <span class="hub-info">
+                        <strong>Memory & Storage Hub</strong>
+                        <small>Memory management, I/O systems</small>
+                    </span>
+                </a>
+                <a href="tutorials/hubs/networking.html" class="modal-hub-link">
+                    <span class="hub-icon">🌐</span>
+                    <span class="hub-info">
+                        <strong>Networking Hub</strong>
+                        <small>Protocols, TCP/IP, communication</small>
+                    </span>
+                </a>
+                <a href="tutorials/hubs/distributed-systems.html" class="modal-hub-link">
+                    <span class="hub-icon">🌍</span>
+                    <span class="hub-info">
+                        <strong>Distributed Systems Hub</strong>
+                        <small>Building systems at scale</small>
+                    </span>
+                </a>
+            </div>
+            <a href="tutorials/hubs/fundamentals.html" class="modal-start-btn">Start Path →</a>
+        </div>
+
+        <!-- Security Path -->
+        <div id="modal-security" class="modal-content" style="display: none;">
+            <h2 class="modal-title">🔒 Security & Vulnerability Prevention Path</h2>
+            <p class="modal-description">Understand and prevent common security vulnerabilities.</p>
+            <div class="modal-hubs">
+                <a href="tutorials/hubs/fundamentals.html" class="modal-hub-link">
+                    <span class="hub-icon">🧠</span>
+                    <span class="hub-info">
+                        <strong>Fundamentals Hub</strong>
+                        <small>Start here: Binary, data, timing, memory</small>
+                    </span>
+                </a>
+                <a href="tutorials/hubs/systems.html" class="modal-hub-link">
+                    <span class="hub-icon">⚙️</span>
+                    <span class="hub-info">
+                        <strong>Computer Systems Hub</strong>
+                        <small>CPU, OS, code execution pipeline</small>
+                    </span>
+                </a>
+                <a href="tutorials/hubs/low-level.html" class="modal-hub-link">
+                    <span class="hub-icon">🔧</span>
+                    <span class="hub-info">
+                        <strong>Low-Level Programming Hub</strong>
+                        <small>Assembly, optimization, hardware details</small>
+                    </span>
+                </a>
+                <a href="tutorials/hubs/memory-storage.html" class="modal-hub-link">
+                    <span class="hub-icon">💾</span>
+                    <span class="hub-info">
+                        <strong>Memory & Storage Hub</strong>
+                        <small>Memory management, I/O systems</small>
+                    </span>
+                </a>
+                <a href="tutorials/hubs/networking.html" class="modal-hub-link">
+                    <span class="hub-icon">🌐</span>
+                    <span class="hub-info">
+                        <strong>Networking Hub</strong>
+                        <small>Protocols, TCP/IP, communication</small>
+                    </span>
+                </a>
+            </div>
+            <a href="tutorials/hubs/fundamentals.html" class="modal-start-btn">Start Path →</a>
+        </div>
+
+        <!-- Distributed Path -->
+        <div id="modal-distributed" class="modal-content" style="display: none;">
+            <h2 class="modal-title">⚡ Distributed Systems Path</h2>
+            <p class="modal-description">Master building reliable systems across multiple machines.</p>
+            <div class="modal-hubs">
+                <a href="tutorials/hubs/fundamentals.html" class="modal-hub-link">
+                    <span class="hub-icon">🧠</span>
+                    <span class="hub-info">
+                        <strong>Fundamentals Hub</strong>
+                        <small>Start here: Binary, data, timing, memory</small>
+                    </span>
+                </a>
+                <a href="tutorials/hubs/systems.html" class="modal-hub-link">
+                    <span class="hub-icon">⚙️</span>
+                    <span class="hub-info">
+                        <strong>Computer Systems Hub</strong>
+                        <small>CPU, OS, code execution pipeline</small>
+                    </span>
+                </a>
+                <a href="tutorials/hubs/memory-storage.html" class="modal-hub-link">
+                    <span class="hub-icon">💾</span>
+                    <span class="hub-info">
+                        <strong>Memory & Storage Hub</strong>
+                        <small>Memory management, I/O systems</small>
+                    </span>
+                </a>
+                <a href="tutorials/hubs/networking.html" class="modal-hub-link">
+                    <span class="hub-icon">🌐</span>
+                    <span class="hub-info">
+                        <strong>Networking Hub</strong>
+                        <small>Protocols, TCP/IP, communication</small>
+                    </span>
+                </a>
+                <a href="tutorials/hubs/distributed-systems.html" class="modal-hub-link">
+                    <span class="hub-icon">🌍</span>
+                    <span class="hub-info">
+                        <strong>Distributed Systems Hub</strong>
+                        <small>Building systems at scale</small>
+                    </span>
+                </a>
+            </div>
+            <a href="tutorials/hubs/fundamentals.html" class="modal-start-btn">Start Path →</a>
+        </div>
+    </div>
     <section id="contact" class="contact-section">
         <div class="container">
             <h2 class="section-title">Get In Touch</h2>
@@ -379,22 +455,19 @@
                             <h3>Email</h3>
                             <p><a href="mailto:joshini.mn@gmail.com">joshini.mn@gmail.com</a></p>
                         </div>
-                    </div>
-                    <div class="contact-item">
+                    
                         <div class="contact-icon">💼</div>
                         <div>
                             <h3>LinkedIn</h3>
                             <p><a href="https://linkedin.com/in/joshini-m-n" target="_blank">linkedin.com/in/joshini-m-n</a></p>
                         </div>
-                    </div>
-                    <div id="hero" class="contact-item">
+                    
                         <div class="contact-icon">💻</div>
                         <div>
                             <h3>GitHub</h3>
                             <p><a href="https://github.com/joshinii" target="_blank">github.com/joshinii</a></p>
                         </div>
-                    </div>
-                    <div class="contact-item">
+                    
                         <div class="contact-icon">📍</div>
                         <div>
                             <h3>Location</h3>
@@ -405,63 +478,25 @@
 
                 <div class="contact-cta">
                     <h3>Interested in working together?</h3>
-                    <p>
-                        With over 6 years of professional experience in full-stack development and a strong commitment 
-                        to continuous learning, I’m eager to contribute to impactful and innovative projects.
-
-                    </p>
                     <div class="cta-buttons">
                         <a href="mailto:joshini.mn@gmail.com" class="btn btn-primary">Send me an email</a>
-                        <a id="hero" href="files/Joshini_M_Naagraj_-_Professional_Resume.pdf" class="btn btn-secondary" download>Download Resume</a>
-                    </div>
+                        </div>
                 </div>
             </div>
         </div>
     </section>
-
+    <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Joshini M Naagraj</h4>
-                    <p>Full-Stack Software Engineer & Explorer</p>
-                    <p>Building scalable systems, one line of code at a time.</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#skills">Skills</a></li>
-                        <li><a href="#projects">Projects</a></li>
-                        <li><a href="blog.html">Blog</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Blog Series</h4>
-                    <ul>
-                        <li><a href="blog.html#topic-0.1">Binary Fundamentals</a></li>
-                        <li><a href="blog.html#topic-1.1">Computer Systems</a></li>
-                        <li><a href="blog.html#topic-1.2">Architecture Deep Dive</a></li>
-                        <li><a href="blog.html#advanced">Advanced Topics</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Connect</h4>
-                    <ul>
-                        <li><a href="https://github.com/joshinii" target="_blank">GitHub</a></li>
-                        <li><a href="https://linkedin.com/in/joshini-m-n" target="_blank">LinkedIn</a></li>
-                        <li><a href="mailto:joshini.mn@gmail.com">Email</a></li>
-                        <li><a href="#contact">Contact Form</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 Joshini M Naagraj. All rights reserved.</p>
-                <p>Built with passion for computer systems education</p>
+        <div class="footer-content">
+            <p>&copy; 2025 Computer Systems Learning Hub. All content created with AI assistance.</p>
+            <div class="footer-links">
+                <a href="index.html">Learning Hub</a>
+                <a href="index.html#contact">Contact</a>
             </div>
         </div>
     </footer>
 
-    <script src="js/portfolio.js"></script>
+    <!-- JavaScript -->
+    <script src="js/blog.js"></script>
 </body>
 </html>

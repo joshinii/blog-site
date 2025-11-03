@@ -1,6 +1,6 @@
 /* ================================================
    BLOG/LEARNING HUB STYLES
-   Organized, semantic CSS for blog.html
+   Organized, semantic CSS for index.html
    ================================================ */
 
 /* Root Variables */
@@ -39,6 +39,7 @@
     font-weight: 800;
     margin-bottom: 20px;
     line-height: 1.2;
+    color: var(--warning-color);
 }
 
 .hero-subtitle {
@@ -305,7 +306,8 @@
    ================================================ */
 .how-to-use {
     padding: 60px 20px;
-    background: #f8f9fa;
+    background: white;
+    border-bottom: 1px solid #eee;
 }
 
 .how-container {
@@ -315,8 +317,8 @@
 
 .steps-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 40px;
 }
 
 .step-card {

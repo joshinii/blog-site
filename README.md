@@ -63,7 +63,7 @@ How do I build reliable systems at scale?
 ```
 blog-site/
 ├── index.html                      # Home page
-├── blog.html                       # Learning Hub landing page
+├── index.html                       # Learning Hub landing page
 ├── css/
 │   ├── portfolio-styles.css       # Global styles
 │   └── blog-styles.css            # Blog/hub styles
@@ -173,7 +173,7 @@ blog-site/
 1. Click "Learning Hub" in navigation
 2. See all 6 hubs and 4 learning paths
 
-**From Blog (blog.html):**
+**From Blog (index.html):**
 1. Browse hub cards directly
 2. Click "Explore Hub" on any card
 3. Or click "View Path" on any learning path
@@ -278,18 +278,18 @@ For questions or feedback, contact through the portfolio site.
 
 ## 🎯 Quick Links
 
-- [Learning Hub](blog.html) - Start exploring
+- [Learning Hub](index.html) - Start exploring
 - [Home](index.html) - Back to home
-- [Performance Path](blog.html) - Optimize code
-- [System Design Path](blog.html) - Build scalable systems
-- [Security Path](blog.html) - Prevent vulnerabilities
-- [Distributed Systems Path](blog.html) - Master scale
+- [Performance Path](index.html) - Optimize code
+- [System Design Path](index.html) - Build scalable systems
+- [Security Path](index.html) - Prevent vulnerabilities
+- [Distributed Systems Path](index.html) - Master scale
 
 ---
 
 **Status:** ✅ Production Ready
 
-**Last Updated:** October 29, 2024
+**Last Updated:** October 29, 2025
 
 **Version:** 1.0.0
 
